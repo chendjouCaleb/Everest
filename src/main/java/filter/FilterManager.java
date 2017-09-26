@@ -1,9 +1,8 @@
 package filter;
 
-import router.Controller;
-
-import java.lang.reflect.Method;
-import java.util.Objects;
+import component.http.Controller;
+import component.http.Request;
+import component.http.Response;
 
 public class FilterManager {
     FilterChain filterChain;
@@ -19,7 +18,7 @@ public class FilterManager {
         filterChain.addFilter(filter);
     }
 
-    public void filterRequest(String request, String response){
+    public void filterRequest(Request request, Response response){
         filterChain.execute(request, response);
     }
 

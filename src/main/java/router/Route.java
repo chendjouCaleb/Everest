@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Route {
-    String path;
-    Method method;
-    String name;
-    Class<?> controller;
-    String regex;
-    String[] parameters;
+    private String path;
+    private Method method;
+    private String name;
+    private Class<?> controller;
+    private String regex;
+    private String[] parameters;
 
     public void setPath(String path) {
         path = path.replaceAll("^/", "").replaceAll("/$", "");
@@ -23,10 +23,10 @@ public class Route {
 
     public String url(String... params){
         String url = path;
-        System.out.println("REGEX: " + regex);
         for (int i = 0; i < params.length; i++) {
             url = url.replaceFirst(":\\w+|[(].+[)]", params[i]);
         }
+
         return url;
     }
 

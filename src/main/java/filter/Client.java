@@ -1,5 +1,8 @@
 package filter;
 
+import component.http.Request;
+import component.http.Response;
+
 public class Client {
     FilterManager filterManager;
 
@@ -7,7 +10,7 @@ public class Client {
         this.filterManager = filterManager;
     }
 
-    public void sendRequest(String request, String response){
+    public void sendRequest(Request request, Response response){
         filterManager.filterRequest(request, response);
     }
 }

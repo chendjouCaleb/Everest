@@ -1,6 +1,8 @@
 package filter;
 
-import router.Controller;
+import component.http.Controller;
+import component.http.Request;
+import component.http.Response;
 import router.RouterUtils;
 
 import java.util.ArrayList;
@@ -16,12 +18,22 @@ public class FilterChain {
     public void addFilter(Filter filter){
         filters.add(filter);
     }
-    public void execute(String request, String response){
-        Filter filter = filters.get(index);
-        filter.execute(request, response, this);
+    public void execute(Request request, Response response){
+        if(filters.size() > 0){
+            System.out.println("NOMBRE DE FILTRE: " + filters.size());
+            Filter filter = filters.get(index);
+            filter.execute(request, response, this);
+        }else{
+            try {
+                System.out.println("PAS DE FILTRE.");
+                RouterUtils.callRemote(controller, target, targetParams);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void doNext(String request, String response){
+    public void doNext(Request request, Response response){
         this.index +=1;
         System.out.println("INDEX: " + index);
         if(index < filters.size()){

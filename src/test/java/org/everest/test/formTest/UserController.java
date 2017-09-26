@@ -4,7 +4,7 @@ import annotation.HttpController;
 import annotation.Path;
 import filter.Authentication;
 import filter.Debug;
-import router.Controller;
+import component.http.Controller;
 
 @HttpController(prefix = "user")
 public class UserController extends Controller{
@@ -19,5 +19,10 @@ public class UserController extends Controller{
     @Path(route = "/")
     public void getAll(){
         System.out.println("GET ALL USERS");
+    }
+
+    @Override
+    public void init() {
+
     }
 }

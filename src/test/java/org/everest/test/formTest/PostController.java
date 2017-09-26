@@ -1,11 +1,10 @@
 package org.everest.test.formTest;
 
 import annotation.HttpController;
-import annotation.HttpMethod;
 import annotation.Path;
 import filter.Authentication;
 import filter.Debug;
-import router.Controller;
+import component.http.Controller;
 
 @HttpController(prefix = "")
 public class PostController extends Controller{
@@ -15,5 +14,10 @@ public class PostController extends Controller{
     @Path(route = "/:gi/([0-9]+)/:slug", name = "post")
     public void getPost(String id, String slug, String id2){
         System.out.println("GET ALL POSTS: " + id);
+    }
+
+    @Override
+    public void init() {
+
     }
 }

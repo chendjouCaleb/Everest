@@ -7,34 +7,35 @@ import filter.Filter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RouterUtils {
-    public static List<Filter> getFilters(Method method){
-        List<Filter> annotations = new ArrayList<>();
-        for (Annotation annotation:method.getDeclaredAnnotations()){
+    public static List<Filter> getFilters(Class controller, Method method){
+        List<Filter> filters = new ArrayList<>();
+        List<Annotation> annotations = new ArrayList<>();
+        annotations.addAll(Arrays.asList(controller.getAnnotations()));
+        annotations.addAll(Arrays.asList(method.getAnnotations()));
+        for (Annotation annotation:annotations){
             System.out.println("Annotation: " + annotation.annotationType().getName());
             FilterBy filter = annotation.annotationType().getAnnotation(FilterBy.class);
             if(filter != null){
                 System.out.println("CLASSE FILTER" + filter.filter().getName());
                 try {
                     Filter ins = (Filter)(filter.filter().getConstructor().newInstance());
-                    annotations.add(ins);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                    ins.init(annotation);
+                    filters.add(ins);
+                } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
-        return annotations;
+        return filters;
     }
     public static Object callRemote(Object instance, String sMethod, Object... arguments) throws Exception {
         Class<?>[] argumentTypes = createArgumentTypes(arguments);

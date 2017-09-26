@@ -1,10 +1,18 @@
 package filter;
 
-public class AuthenticationFilter implements Filter {
+import component.http.Request;
+import component.http.Response;
+
+public class AuthenticationFilter implements Filter<Authentication> {
+
     @Override
-    public void execute(String request,String response, FilterChain filterChain) {
-        request = request + "2";
-        System.out.println("Authentification\n Ihave edit request: " + request);
-        filterChain.doNext(request, response);
+    public void init(Authentication annotation) {
+
     }
+
+    @Override
+    public void execute(Request request, Response Response, FilterChain filterChain) {
+
+    }
+
 }

@@ -1,9 +1,17 @@
 package filter;
 
+import component.http.Request;
+import component.http.Response;
+
 public class DebugFilter implements Filter {
+
     @Override
-    public void execute(String request, String response, FilterChain filterChain) {
-        System.out.println("Debug log: " + request);
-        filterChain.doNext(request, response);
+    public void init(Object annotation) {
+
+    }
+
+    @Override
+    public void execute(Request request, Response Response, FilterChain filterChain) {
+
     }
 }
