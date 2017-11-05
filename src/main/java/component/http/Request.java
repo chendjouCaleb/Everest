@@ -2,6 +2,7 @@ package component.http;
 
 
 import org.jtwig.web.servlet.JtwigRenderer;
+import router.Route;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import java.io.IOException;
 public class Request {
     HttpServletRequest servetRequest;
     private Session session;
+    private Route route;
     public Request(HttpServletRequest request){
         this.servetRequest = request;
     }
@@ -67,4 +69,7 @@ public class Request {
     public void setSession(Session session) {
         this.session = session;
     }
+
+    public Route getRoute() { return route; }
+    public void setRoute(Route route) {this.route = route; }
 }

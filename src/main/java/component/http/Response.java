@@ -51,7 +51,6 @@ public class Response {
     }
 
     public void redirect(String url){
-        System.out.println("REDIRECTION: " + url);
         try {
             servletResponse.sendRedirect(url);
         } catch (IOException e) {

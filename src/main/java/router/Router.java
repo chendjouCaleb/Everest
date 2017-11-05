@@ -21,13 +21,15 @@ public class Router {
     private Class filters[];
     private Response response;
     private Request request;
+    private Map<String, List<Route>> routes = new HashMap<>();
+
     private static Router instance=null;
 
     private Router(Class[] controllers){
         this.controllers = controllers;
         populate();
     }
-    private Map<String, List<Route>> routes = new HashMap<String, List<Route>>();
+
 
     private void populate(){
         for(Class<?> controller : controllers){
@@ -47,7 +49,7 @@ public class Router {
         String method = request.getHttpMethod();
         Route route = getInvoked(url, method);
         if(route == null){
-           throw new NotFoundRouteException("route non trové");
+           throw new NotFoundRouteException("route non trouvée");
         }
         Controller controller = getInvokedController(route);
         invokeMethod(controller, route);
@@ -68,17 +70,12 @@ public class Router {
         Controller controller = null;
         try {
              controller = (Controller)route.getController().getConstructor().newInstance();
+             request.setRoute(route);
              controller.setRequest(request);
              controller.setResponse(response);
              controller.init();
              controller.setRouter(instance);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return controller;
@@ -106,16 +103,13 @@ public class Router {
         }
     }
 
-
-
-    public String url(String name, String... params){
+    public String url(String name, Object... params){
         Route route = findRoute(name);
+        String url = null;
         if(route != null){
-            String url = request.getContextPath() + "/" + route.url(params);
-            System.out.println("URL: " + url);
-            return url;
+            url = request.getContextPath() + "/" + route.url(params);
         }
-        return null;
+        return url;
     }
 
     private Route findRoute(String name){
@@ -130,14 +124,20 @@ public class Router {
     }
 
     /**
+     * Add general filters for all routes in the application
+     * @param filters
+     */
+    public void setFilters(Class[] filters) {
+        this.filters = filters;
+    }
+
+    /**
      *
      * @param url "url called by http Request"
      * @param method "method of http request"
      * @return "finded route"
      */
     private Route getInvoked(String url, String method){
-        System.out.println("URL: " + url);
-        System.out.println("METHODE HTTP: " + method);
         List<Route> get = routes.get(method);
             for (int i = 0; i < get.size(); i++) {
                 Route route = get.get(i);
@@ -157,7 +157,6 @@ public class Router {
             if(path != null){
                 Route route = new Route();
                 route.setMethod(method);
-                System.out.println("METHOD: " + method.getName());
                 route.setName(path.name());
                 route.setController(controller);
                 String routePath = path.route().replaceAll("^/", "").replaceAll("/$", "");

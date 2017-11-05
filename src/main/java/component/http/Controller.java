@@ -8,8 +8,9 @@ public abstract class Controller {
     protected Router router;
 
     public abstract void init();
-    public String url(String name, String... params){
 
+
+    public String url(String name, Object... params){
         return router.url(name, params);
     }
 

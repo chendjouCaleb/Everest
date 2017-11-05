@@ -16,10 +16,8 @@ public class RouterUtils {
         annotations.addAll(Arrays.asList(controller.getAnnotations()));
         annotations.addAll(Arrays.asList(method.getAnnotations()));
         for (Annotation annotation:annotations){
-            System.out.println("Annotation: " + annotation.annotationType().getName());
             FilterBy filter = annotation.annotationType().getAnnotation(FilterBy.class);
             if(filter != null){
-                System.out.println("CLASSE FILTER" + filter.filter().getName());
                 try {
                     Filter ins = (Filter)(filter.filter().getConstructor().newInstance());
                     ins.init(annotation);
@@ -37,26 +35,7 @@ public class RouterUtils {
         }
         return filters;
     }
-    public static Object callRemote(Object instance, String sMethod, Object... arguments) throws Exception {
-        Class<?>[] argumentTypes = createArgumentTypes(arguments);
-        Method method = instance.getClass().getMethod(sMethod, argumentTypes);
-        Object[] argumentsWithSession = createArguments(arguments);
-        return method.invoke(instance, argumentsWithSession);
-    }
 
-    public static Object[] createArguments(Object[] arguments) {
-        Object[] args = new Object[arguments.length];
-        System.arraycopy(arguments, 0, args, 0, arguments.length);
-        return args;
-    }
-
-    public static Class<?>[] createArgumentTypes(Object[] arguments) {
-        Class<?>[] types = new Class[arguments.length];
-        for (int i = 0; i < arguments.length; i++) {
-            types[i] = arguments[i].getClass();
-        }
-        return types;
-    }
 
     public static Object castStringToNumber(String string, Class<?> type) throws Exception{
         Object value;

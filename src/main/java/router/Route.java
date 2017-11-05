@@ -21,10 +21,10 @@ public class Route {
         setRegex(parsedPath);
     }
 
-    public String url(String... params){
+    public String url(Object... params){
         String url = path;
         for (int i = 0; i < params.length; i++) {
-            url = url.replaceFirst(":\\w+|[(].+[)]", params[i]);
+            url = url.replaceFirst(":\\w+|[(].+[)]", params[i].toString());
         }
 
         return url;
@@ -35,10 +35,8 @@ public class Route {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url);
         if (matcher.matches()) {
-            System.out.println("METHODE: " + method.getName());
             parameters = new String[matcher.groupCount()];
             for (int j = 0; j < matcher.groupCount(); j++){
-                System.out.println(j + " : " + matcher.group(j+1));
                 parameters[j] = matcher.group(j+1);
             }
             return true;
