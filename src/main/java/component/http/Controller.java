@@ -7,7 +7,7 @@ public abstract class Controller {
     protected Session session;
     protected Router router;
 
-    public abstract void init();
+    public void init(){}
 
 
     public String url(String name, Object... params){

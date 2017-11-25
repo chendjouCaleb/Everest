@@ -19,6 +19,9 @@ public class Request {
     private Route route;
     public Request(HttpServletRequest request){
         this.servetRequest = request;
+        session = new Session(this);
+
+        this.session = session;
     }
 
     public void setAttr(String name, Object obj){
@@ -27,7 +30,7 @@ public class Request {
 
 
     /**
-     * Check whether request is ajac request
+     * Check whether request is ajax request
      * @return
      */
     public boolean isXHR(){

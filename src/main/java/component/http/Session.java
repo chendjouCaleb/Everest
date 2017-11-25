@@ -6,9 +6,8 @@ import java.util.Objects;
 public class Session {
     HttpSession session;
     Session(Request request){
-
         session = request.getServletRequest().getSession();
-        request.setSession(this);
+
     }
 
     public void set(String name, Object object){

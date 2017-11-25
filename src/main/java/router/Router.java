@@ -5,103 +5,51 @@ import annotation.Path;
 import component.http.Controller;
 import component.http.Request;
 import component.http.Response;
+import dic.Container;
 import exception.NotFoundRouteException;
-import filter.Client;
-import filter.Filter;
-import filter.FilterManager;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class Router {
-    private Class<?> controllers[];
-    private Class filters[];
-    private Response response;
-    private Request request;
     private Map<String, List<Route>> routes = new HashMap<>();
+    private Request request;
 
-    private static Router instance=null;
+    public Router(){
 
-    private Router(Class[] controllers){
-        this.controllers = controllers;
-        populate();
     }
-
-
-    private void populate(){
-        for(Class<?> controller : controllers){
-            System.out.println("Controller: " + controller.getName());
-            populateRoute(controller);
-        }
-    }
-
-    private void refresh(HttpServletRequest request, HttpServletResponse response){
-        this.request = new Request(request);
-        this.response = new Response(response);
-    }
-
-    public void run(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws NotFoundRouteException {
-        refresh(servletRequest, servletResponse);
+    public Route getCalledRoute(Request request){
+        this.request = request;
         String url = request.getPathInfo();
         String method = request.getHttpMethod();
-        Route route = getInvoked(url, method);
+        Route route = getInvokedRoute(url, method);
         if(route == null){
-           throw new NotFoundRouteException("route non trouvée");
+            try {
+                throw new NotFoundRouteException("route non trouvée");
+            } catch (NotFoundRouteException e) {
+                e.printStackTrace();
+            }
         }
-        Controller controller = getInvokedController(route);
-        invokeMethod(controller, route);
-    }
-
-    public static Router invoke(Class[] controllers,HttpServletRequest servletRequest, HttpServletResponse servletResponse){
-        if(instance == null){
-            instance = new Router(controllers);
-            System.out.println("NOUVELLE INSTANCIATION");
-        }
-        instance.refresh(servletRequest, servletResponse);
-        return instance;
+        return route;
     }
 
 
 
-    private Controller getInvokedController(Route route){
+
+    private Controller getInvokedController(Route route, Request request, Response response){
         Controller controller = null;
         try {
-             controller = (Controller)route.getController().getConstructor().newInstance();
+             controller = (Controller) Container.getService(route.getController());
              request.setRoute(route);
              controller.setRequest(request);
              controller.setResponse(response);
              controller.init();
-             controller.setRouter(instance);
+             controller.setRouter((Router)Container.getService(Router.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return controller;
     }
 
-    public void handleFilter(Controller controller, Route route, Object[] params){
-        FilterManager filterManager = new FilterManager(controller, route.getMethod().getName(), params);
-        List<Filter> filters = RouterUtils.getFilters(controller.getClass(), route.getMethod());
-        for (Filter filter: filters){
-            filterManager.addFilter(filter);
-        }
-        Client client = new Client();
-        client.setFilterManager(filterManager);
-        client.sendRequest(request, response);
-    }
-
-    private void invokeMethod(Controller controller, Route route){
-        try {
-            Object[] params = RouterUtils.params(route.getParameters(), route.getMethod());
-            RouterUtils.getFilters(controller.getClass(), route.getMethod());
-            //RouterUtils.callRemote(controller, route.getMethod().getName(), params);
-            handleFilter(controller, route, params);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public String url(String name, Object... params){
         Route route = findRoute(name);
@@ -124,30 +72,25 @@ public class Router {
     }
 
     /**
-     * Add general filters for all routes in the application
-     * @param filters
-     */
-    public void setFilters(Class[] filters) {
-        this.filters = filters;
-    }
-
-    /**
      *
      * @param url "url called by http Request"
      * @param method "method of http request"
      * @return "finded route"
      */
-    private Route getInvoked(String url, String method){
-        List<Route> get = routes.get(method);
-            for (int i = 0; i < get.size(); i++) {
-                Route route = get.get(i);
-                if(route.matche(url)){
-                    return route;
-                }
+    private Route getInvokedRoute(String url, String method){
+        for (Route route : routes.get(method)) {
+            if (route.matche(url)) {
+                return route;
             }
+        }
         return null;
     }
 
+    public void init(Class[] controllers){
+        for (Class ctrl: controllers){
+            populateRoute(ctrl);
+        }
+    }
     private void populateRoute(Class<?> controller) {
         HttpController httpController = controller.getAnnotation(HttpController.class);
         String prefix = httpController.prefix().replaceAll("^/", "").replaceAll("/$", "");

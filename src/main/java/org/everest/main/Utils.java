@@ -1,4 +1,4 @@
-package main;
+package org.everest.main;
 
 import java.lang.reflect.Method;
 
