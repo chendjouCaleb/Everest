@@ -15,6 +15,7 @@ public class AppServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("POST REQUEST-URL: [" + req.getRequestURI() + req.getQueryString() + "]");
         App.getApp().run(req, resp);
     }
 }
