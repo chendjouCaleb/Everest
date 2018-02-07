@@ -1,5 +1,7 @@
 package org.everest.main;
 
+import org.everest.main.component.http.ErrorHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,14 @@ public abstract class AbstractApp {
     }
 
     public List<Class> getAppEventListeners(){
-        List<Class> classes = getEventListenerClass();
-        classes.addAll(getPrimaryEventListenerClass());
+        List<Class> classes = getPrimaryEventListenerClass();
+        if(getEventListenerClass() != null){
+            classes.addAll(getEventListenerClass());
+        }
         return classes;
     }
+
+    public abstract List<ErrorHandler>getErrorHandlers();
 
     public AbstractApp(){
         System.out.println("App Configuration was initialized");

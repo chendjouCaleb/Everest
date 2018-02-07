@@ -1,9 +1,9 @@
-package component.http;
+package org.everest.main.component.http;
 
 import org.jtwig.web.servlet.JtwigRenderer;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -23,19 +23,15 @@ public class Response {
     private static final JtwigRenderer renderer = JtwigRenderer.defaultRenderer();
 
 
-    public void twigRender(Request request, String path){
-        try {
+    public void twigRender(Request request, String path) throws ServletException, IOException {
+
             renderer.dispatcherFor(TEMPLATE_PATH_PREFIX + path + TWIG_FILE_EXTENSION)
                     .with("router", this)
                     .render(request.getServletRequest(), servletResponse);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+
     }
 
-    public void render(Request request, String path){
+    public void render(Request request, String path) throws ServletException, IOException {
         if(path.endsWith(".jsp")){
             try {
                 request.getServletRequest().getServletContext().getRequestDispatcher(path)
@@ -56,5 +52,12 @@ public class Response {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCookie(String name, String value, int maxAge){
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(maxAge);
+        cookie.setPath("/");
+        servletResponse.addCookie(cookie);
     }
 }

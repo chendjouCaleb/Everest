@@ -1,7 +1,8 @@
 package filter;
 
-import component.http.Request;
-import component.http.Response;
+
+import org.everest.main.component.http.Request;
+import org.everest.main.component.http.Response;
 
 public interface Filter<T> {
     public void init(T annotation);

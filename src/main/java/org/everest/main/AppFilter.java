@@ -14,9 +14,9 @@ public class AppFilter implements Filter {
         String path = request.getPathInfo();
         System.out.println("Request PAth: " + filterConfig.getServletContext().getContextPath());
 
-        String appClass = filterConfig.getInitParameter("app-class");
-        App app = App.getApp(appClass);
-        app.run(request, resp);
+       // String appClass = filterConfig.getInitParameter("app-class");
+        //App app = App.getApp(appClass);
+       // app.run(request, resp);
         //filterChain.doFilter(servletRequest, servletResponse);
     }
 

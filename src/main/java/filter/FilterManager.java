@@ -1,8 +1,8 @@
 package filter;
 
-import component.http.Controller;
-import component.http.Request;
-import component.http.Response;
+import org.everest.main.component.http.Controller;
+import org.everest.main.component.http.Request;
+import org.everest.main.component.http.Response;
 import router.Route;
 import router.RouterUtils;
 
@@ -10,13 +10,6 @@ import java.util.List;
 
 public class FilterManager {
     private FilterChain filterChain;
-
-    /*public FilterManager(Controller controller, String target, Object[] params){
-        filterChain = new FilterChain();
-        filterChain.setTarget(target);
-        filterChain.setController(controller);
-        filterChain.setTargetParams(params);
-    }*/
 
     public void handleFilter(Route route, Request request, Response response){
         filterChain = new FilterChain();

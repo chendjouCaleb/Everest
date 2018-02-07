@@ -2,11 +2,10 @@ package router;
 
 import annotation.HttpController;
 import annotation.Path;
-import component.http.Controller;
-import component.http.Request;
-import component.http.Response;
-import dic.Container;
-import exception.NotFoundRouteException;
+import org.everest.main.component.http.Controller;
+import org.everest.main.component.http.Request;
+import org.everest.main.component.http.Response;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -22,33 +21,9 @@ public class Router {
         String url = request.getPathInfo();
         String method = request.getHttpMethod();
         Route route = getInvokedRoute(url, method);
-        if(route == null){
-            try {
-                throw new NotFoundRouteException("route non trouvée");
-            } catch (NotFoundRouteException e) {
-                e.printStackTrace();
-            }
-        }
         return route;
     }
 
-
-
-
-    private Controller getInvokedController(Route route, Request request, Response response){
-        Controller controller = null;
-        try {
-             controller = (Controller) Container.getService(route.getController());
-             request.setRoute(route);
-             controller.setRequest(request);
-             controller.setResponse(response);
-             controller.init();
-             controller.setRouter((Router)Container.getService(Router.class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return controller;
-    }
 
 
     public String url(String name, Object... params){
@@ -93,6 +68,9 @@ public class Router {
     }
     private void populateRoute(Class<?> controller) {
         HttpController httpController = controller.getAnnotation(HttpController.class);
+        if(httpController == null){
+            return;
+        }
         String prefix = httpController.prefix().replaceAll("^/", "").replaceAll("/$", "");
 
         for(Method method: controller.getDeclaredMethods()){
@@ -111,6 +89,7 @@ public class Router {
                     routes.put(httpMethod, new ArrayList<Route>());
                 }
                 routes.get(httpMethod).add(route);
+                System.out.println("New route add: " + route.getPath() + " : " + route.getMethod().getName());
             }
         }
     }

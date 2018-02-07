@@ -10,8 +10,6 @@ import java.util.Map;
 
 public class EventEmitter {
     private static EventEmitter instance;
-    private Listener actualListener;
-    private Method actualMethod;
     private List<Listener> listeners = new ArrayList<>();
 
     public void addListener(Listener listener){
@@ -40,8 +38,10 @@ public class EventEmitter {
     }
 
     public void emit(String event, Object... args){
+        System.out.println("New event Was been emitted: " + event);
     for (Map.Entry<Listener, Method> entry: getCalledListeners(event).entrySet())
         try {
+            System.out.println("Listener execution: " + entry.getKey() + " : " + entry.getValue().getName());
             Utils.callRemote(entry.getKey(), entry.getValue().getName(), args);
         } catch (Exception e) {
             try {
@@ -52,7 +52,7 @@ public class EventEmitter {
             }
         }
     }
-    public Map<Listener, Method> getCalledListeners(String event){
+    private Map<Listener, Method> getCalledListeners(String event){
         Map<Listener, Method> listeners = new HashMap<>();
         for (Listener listener: this.listeners){
             OnListen onListen = listener.getClass().getAnnotation(OnListen.class);
@@ -68,38 +68,4 @@ public class EventEmitter {
         }
         return listeners;
     }
-
-    /*public void addCalledListenerMethods(Map<Listener, Method> listeners, Class listener, String event){
-        Method[] methods = listener.getMethods();
-        for (Method method: methods){
-            OnListen onListen = method.getAnnotation(OnListen.class);
-            if(onListen != null && onListen.value()){
-
-            }
-        }
-    }*/
-
-    /*public void setCalledListener(String event){
-        actualListener = null;
-        actualMethod = null;
-        String calledEvent = "";
-        for (Listener listener:listeners){
-            OnListen classListen = listener.getClass().getAnnotation(OnListen.class);
-            if(classListen != null){
-                calledEvent = classListen.value() + ".";
-            }
-
-            for (Method method: listener.getClass().getDeclaredMethods()){
-                OnListen methodListen = method.getAnnotation(OnListen.class);
-                if(methodListen != null){
-                    calledEvent += methodListen.value();
-                }
-
-                if(calledEvent.equals(event)){
-                    actualListener = (listener.getClass().cast(listener));
-                    actualMethod =  method;
-                }
-            }
-        }
-    }*/
 }

@@ -3,6 +3,7 @@ package router;
 import annotation.FilterBy;
 import exception.RouteParamsException;
 import filter.Filter;
+import org.everest.main.Utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -19,17 +20,11 @@ public class RouterUtils {
             FilterBy filter = annotation.annotationType().getAnnotation(FilterBy.class);
             if(filter != null){
                 try {
-                    Filter ins = (Filter)(filter.filter().getConstructor().newInstance());
-                    ins.init(annotation);
-                    filters.add(ins);
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    Filter instance = (Filter)(filter.filter().getConstructor().newInstance());
+                    instance.init(annotation);
+                    filters.add(instance);
+                }catch (Exception e) {
+                    Utils.throwException(e);
                 }
             }
         }
@@ -68,7 +63,7 @@ public class RouterUtils {
         throw new Exception("La chaine " + string + " n'a pas pu etre convertir en " + type.getName());
     }
 
-    public static Object[] params(String[] params, Method method) throws RouteParamsException {
+    public static Object[] params(String[] params, Method method){
         Object[] values = new Object[params.length];
 
         for(int i = 0; i < values.length; i++){
@@ -76,9 +71,8 @@ public class RouterUtils {
             try {
                 values[i] = castStringToNumber(params[i], type);
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new RouteParamsException(e.getMessage()  + "\n\n" +
-                        "Le paramètre " + params[i] + " l'url n'a pas pu etre convertir en " + type.getName());
+                String message ="Le paramètre " + params[i] + " l'url n'a pas pu etre convertir en " + type.getName();
+                Utils.throwException(new RouteParamsException(message));
             }
         }
         return values;

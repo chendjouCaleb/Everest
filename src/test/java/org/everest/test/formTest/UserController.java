@@ -4,7 +4,7 @@ import annotation.HttpController;
 import annotation.Path;
 import filter.Authentication;
 import filter.Debug;
-import component.http.Controller;
+import org.everest.main.component.http.Controller;
 
 @HttpController(prefix = "user")
 public class UserController extends Controller{
