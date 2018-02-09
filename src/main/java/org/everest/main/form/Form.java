@@ -4,16 +4,15 @@ import org.apache.bval.jsr.ApacheValidationProvider;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.everest.main.component.http.Request;
+import org.everest.main.form.annotation.NotMapped;
 import org.joda.time.DateTime;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class Form {
     private Object model;
@@ -29,42 +28,58 @@ public class Form {
         init(_model, _request);
     }
     public void init(Object _model, Request _request){
-        addDateConverter();
+        addConverter();
         this.model = _model;
         this.request = _request;
         this.errors = new HashMap<>();
-        setProperties();
+        setProperties(_model.getClass());
     }
 public Form(){}
     public Form(Object _model, Map<String, Object> _properties){
-        addDateConverter();
+        addConverter();
         this.model = _model;
         this.properties = _properties;
     }
-    private void addDateConverter(){
+    private void addConverter(){
         DateConverter converter = new DateConverter();
+        BooleanConverter booleanConverter = new BooleanConverter();
         DateTimeConverter timeConverter = new DateTimeConverter();
         ConvertUtils.register(converter, DateTime.class);
+        ConvertUtils.register(booleanConverter, Boolean.class);
         //ConvertUtils.register(timeConverter, DateTime.class);
     }
 
-    private void setProperties(){
+    private List<String> getParamsName(Class clazz){
+        List<String> paramsName = new ArrayList<>();
+
+        for (Field field: clazz.getDeclaredFields()){
+            field.setAccessible(true);
+            NotMapped notMapped = field.getAnnotation(NotMapped.class);
+            if(notMapped == null){
+                paramsName.add(field.getName());
+            }
+
+        }
+        return paramsName;
+    }
+
+    private void setProperties(Class clazz){
         this.properties = new HashMap<>();
-        Enumeration<String> parameterNames= request.getServletRequest().getParameterNames();
-        while (parameterNames.hasMoreElements()){
-            String param = parameterNames.nextElement();
-            if(request.getServletRequest().getParameterValues(param).length > 1){
+        List<String> parameterNames= getParamsName(clazz);
+
+        parameterNames.forEach(param -> {
+            if(request.getServletRequest().getParameter(param) != null && request.getServletRequest().getParameterValues(param).length > 1){
                 properties.put(param, request.getServletRequest().getParameterValues(param));
             }else{
                 properties.put(param, request.getServletRequest().getParameter(param));
             }
-
-        }
+        });
     }
 
     public Object getModel() {
         try {
             BeanUtils.populate(model, properties);
+            System.out.println(properties.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
