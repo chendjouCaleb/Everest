@@ -1,6 +1,6 @@
 package org.everest.main;
 
-import org.everest.main.component.http.ErrorHandler;
+import org.everest.main.component.errorHandler.IErrorHandler;
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
 
@@ -15,6 +15,17 @@ public class Utils {
         return method.invoke(instance, argumentsWithSession);
     }
 
+    public Object instanciateClass(Class className){
+        Object obj = null;
+        try {
+            obj = className.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
     public static Object[] createArguments(Object[] arguments) {
         Object[] args = new Object[arguments.length];
         System.arraycopy(arguments, 0, args, 0, arguments.length);
@@ -48,9 +59,9 @@ public class Utils {
         }
     }
     public static void handleError(Request request, Response response, Throwable throwable){
-        App app = App.getApp();
+        WebApplication app = WebApplication.getApp();
         System.out.println("Error was occurred during thr request handling: " + throwable.getClass());
-        for(ErrorHandler errorHandler: app.getErrorHandlers()){
+        for(IErrorHandler errorHandler: app.getErrorHandlers()){
             if (throwable.getClass().equals(errorHandler.getErrorType())){
                 errorHandler.handleError(request, response, throwable);
                 return;

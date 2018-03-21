@@ -1,6 +1,8 @@
 package org.everest.main.component.http;
 
-import router.Route;
+import org.everest.main.StaticContext;
+import org.everest.mvc.router.Route;
+import org.everest.mvc.router.Router;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +19,6 @@ public class Request {
     public Request(HttpServletRequest request){
         this.servletRequest = request;
         session = new Session(this);
-
-
     }
 
     public void setAttr(String name, Object obj){
@@ -110,4 +110,9 @@ public class Request {
 
     public Route getRoute() { return route; }
     public void setRoute(Route route) {this.route = route; }
+
+    public String redirectToRoute(String name, Object... params) {
+        Router router = StaticContext.context.getInstance(Router.class);
+        return "redirect:" + router.relativeUrl(name, params);
+    }
 }

@@ -1,10 +1,9 @@
 package filter;
 
-import org.everest.main.component.http.Controller;
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
-import router.Route;
-import router.RouterUtils;
+import org.everest.mvc.router.Route;
+import org.everest.mvc.router.RouterUtils;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class FilterManager {
 
     public void handleFilter(Route route, Request request, Response response){
         filterChain = new FilterChain();
-        List<Filter> filters = RouterUtils.getFilters(route.getController(), route.getMethod());
+        List<Filter> filters = RouterUtils.getFilters(route.getController().getClass(), route.getMethod());
         for (Filter filter: filters){
             filterChain.addFilter(filter);
         }

@@ -3,8 +3,11 @@ package org.everest.main.form;
 import org.apache.bval.jsr.ApacheValidationProvider;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.everest.exception.FormValidationException;
 import org.everest.main.component.http.Request;
 import org.everest.main.form.annotation.NotMapped;
+import org.everest.main.form.converter.BooleanConverter;
 import org.joda.time.DateTime;
 
 import javax.validation.ConstraintViolation;
@@ -41,12 +44,21 @@ public Form(){}
         this.properties = _properties;
     }
     private void addConverter(){
-        DateConverter converter = new DateConverter();
-        BooleanConverter booleanConverter = new BooleanConverter();
-        DateTimeConverter timeConverter = new DateTimeConverter();
+        BooleanConverter.DateConverter converter = new BooleanConverter.DateConverter();
         ConvertUtils.register(converter, DateTime.class);
+        BooleanConverter booleanConverter = new BooleanConverter();
+        BooleanConverter.DateTimeConverter timeConverter = new BooleanConverter.DateTimeConverter();
+
         ConvertUtils.register(booleanConverter, Boolean.class);
+        ConvertUtils.register(new BooleanConverter.IntegerConverter(), Integer.class);
         //ConvertUtils.register(timeConverter, DateTime.class);
+    }
+
+    public void addConverter(Converter converter, Class target){
+        ConvertUtils.register(converter, target);
+    }
+    public void addConverters(Map<Converter, Class> converters){
+        converters.forEach(ConvertUtils::register);
     }
 
     private List<String> getParamsName(Class clazz){
@@ -58,7 +70,6 @@ public Form(){}
             if(notMapped == null){
                 paramsName.add(field.getName());
             }
-
         }
         return paramsName;
     }
@@ -78,8 +89,9 @@ public Form(){}
 
     public Object getModel() {
         try {
-            BeanUtils.populate(model, properties);
             System.out.println(properties.toString());
+            BeanUtils.populate(model, properties);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,7 +112,12 @@ public Form(){}
         return errors.isEmpty();
     }
 
-    private void validate(){
+    public void validate(){
+        if(!isValid()){
+            throw new FormValidationException("This form is not valid");
+        }
+    }
+    private void doValidation(){
         ValidatorFactory validatorFactory = Validation
                 .byProvider(ApacheValidationProvider.class)
                 .configure().buildValidatorFactory();
@@ -115,7 +132,7 @@ public Form(){}
 
     public void handle(){
         getModel();
-        validate();
+        doValidation();
         request.setAttr("form", this);
         request.setAttr("model", model);
     }

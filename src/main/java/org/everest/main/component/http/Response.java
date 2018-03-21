@@ -1,5 +1,7 @@
 package org.everest.main.component.http;
 
+import org.everest.main.StaticContext;
+import org.everest.mvc.router.Router;
 import org.jtwig.web.servlet.JtwigRenderer;
 
 import javax.servlet.ServletException;
@@ -9,7 +11,7 @@ import java.io.IOException;
 
 public class Response {
 
-    HttpServletResponse servletResponse;
+    private HttpServletResponse servletResponse;
     public Response(HttpServletResponse response){
         this.servletResponse = response;
     }
@@ -26,7 +28,7 @@ public class Response {
     public void twigRender(Request request, String path) throws ServletException, IOException {
 
             renderer.dispatcherFor(TEMPLATE_PATH_PREFIX + path + TWIG_FILE_EXTENSION)
-                    .with("router", this)
+                    .with("org/everest/mvc/router", this)
                     .render(request.getServletRequest(), servletResponse);
 
     }
@@ -45,7 +47,10 @@ public class Response {
                 twigRender(request, path);
         }
     }
-
+    public String redirectToRoute(String name, Object... params) {
+        Router router = StaticContext.context.getInstance(Router.class);
+        return "redirect:" + router.relativeUrl(name, params);
+    }
     public void redirect(String url){
         try {
             servletResponse.sendRedirect(url);

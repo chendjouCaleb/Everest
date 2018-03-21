@@ -1,6 +1,7 @@
 package org.everest.dic.test;
 
 import dic.Container;
+import org.everest.service.Message;
 import org.junit.Assert;
 import org.junit.Test;
 

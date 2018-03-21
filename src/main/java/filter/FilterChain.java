@@ -16,7 +16,6 @@ public class FilterChain {
     }
     public void execute(Request request, Response response){
         if(filters.size() > 0){
-            System.out.println("NOMBRE DE FILTRE: " + filters.size());
             Filter filter = filters.get(index);
             filter.execute(request, response, this);
         }

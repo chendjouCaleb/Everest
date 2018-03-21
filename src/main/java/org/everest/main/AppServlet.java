@@ -10,12 +10,12 @@ import java.io.IOException;
 public class AppServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        App.getApp().run(req, resp);
+        WebApplication.getApp().run(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("POST REQUEST-URL: [" + req.getRequestURI() + req.getQueryString() + "]");
-        App.getApp().run(req, resp);
+        WebApplication.getApp().run(req, resp);
     }
 }

@@ -1,44 +1,52 @@
 package org.everest.main;
 
+import org.everest.exception.RouteNotFoundException;
 import org.everest.main.component.http.Controller;
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
-import dic.Container;
 import filter.FilterManager;
-import router.Route;
-import router.Router;
-import router.RouterUtils;
+import org.everest.main.StaticContext;
+import org.everest.mvc.component.ResponseHandler;
+import org.everest.mvc.router.Route;
+import org.everest.mvc.router.Router;
+import org.everest.mvc.router.RouterUtils;
+import org.everest.mvc.router.variableResolver.RequestVariableResolver;
 
-import java.io.IOException;
 
 public class FrontalController {
-    private Router router = (Router)Container.getService(Router.class);
-    private FilterManager filterManager = (FilterManager)Container.getService(FilterManager.class);
-
-    void addControllers(Class[] controllers){
-        router.init(controllers);
-    }
+    private Router router = StaticContext.context.getInstance(Router.class);
+    private FilterManager filterManager = StaticContext.context.getInstance(FilterManager.class);
+    private RequestVariableResolver requestVariableResolver = new RequestVariableResolver();
+    private ResponseHandler responseHandler = new ResponseHandler();
 
     void handleRequest(Request request, Response response) throws Exception {
-        Route route = router.getCalledRoute(request);
+        Route route = router.getCalledRoute(request.getPathInfo(), request.getHttpMethod());
+
         if(route == null){
-            try {
-                System.out.println("La route demandée n'existe pas!");
-                String message = "Aucune route ne correspondont à l'URL: " + request.getPathInfo();
-                response.getServletResponse().sendError(404, message);
-            } catch (IOException e) {
-                Utils.handleError(request, response, e);
-            }
+            throw new RouteNotFoundException("Aucune route ne correspondont à l'URL: " + request.getPathInfo());
         }else {
-            Controller controller = (Controller) Container.getService(route.getController());
+            System.out.println("ROUTE: " + route.toString());
+            handle(request, response, route);
+        }
+    }
+
+    private void handle(Request request, Response response, Route route) throws Exception {
+        Object ctrl = route.getController();
+        request.setAttr("ctrl", router);
+        if(ctrl instanceof Controller){
+            Controller controller = (Controller) ctrl;
             controller.setRequest(request);
             controller.setResponse(response);
             controller.setRouter(router);
-            filterManager.handleFilter(route, request, response);
-            controller.init();
-            Object[] params = RouterUtils.params(route.getParameters(), route.getMethod());
-            Utils.callRemote(controller, route.getMethod().getName(), params);
+        }
 
+        filterManager.handleFilter(route, request, response);
+        //controller.init();
+        //Object[] params = RouterUtils.params(route.getParameters(), route.getMethod());
+        Object[] params = requestVariableResolver.getVariables(request, response, route);
+        Object result = Utils.callRemote(ctrl, route.getMethod().getName(), params);
+        if(!route.getMethod().getReturnType().equals(void.class) && result != null){
+            responseHandler.handleResponse(request, response, result);
         }
     }
 

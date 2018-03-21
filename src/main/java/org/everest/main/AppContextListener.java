@@ -11,7 +11,7 @@ public class AppContextListener implements ServletContextListener {
         String clazz = sce.getServletContext().getInitParameter("app-class");
 
         System.out.println("App started\nInit Class: " + clazz);
-        App.getApp().init(clazz);
+        WebApplication.getApp().init(clazz);
     }
 
     @Override

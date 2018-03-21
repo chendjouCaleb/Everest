@@ -1,7 +1,7 @@
 package org.everest.main;
 
-import event.Listener;
-import event.OnListen;
+import org.everest.core.Listener;
+import org.everest.core.OnListen;
 
 @OnListen("OnApp")
 public class LifeCycleListener implements Listener {

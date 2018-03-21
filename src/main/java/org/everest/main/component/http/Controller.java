@@ -1,9 +1,8 @@
 package org.everest.main.component.http;
 
 import org.everest.main.Utils;
-import router.Router;
+import org.everest.mvc.router.Router;
 
-import javax.servlet.ServletException;
 
 public abstract class Controller {
     protected Response response;
@@ -26,6 +25,7 @@ public abstract class Controller {
     }
 
 
+    @Deprecated
     public void render(String path) {
         request.setAttr("router", router);
         try {
@@ -39,14 +39,17 @@ public abstract class Controller {
         this.router = router;
     }
 
+    @Deprecated()
     public void redirectTo(String name, Object... params) {
         String url = router.url(name, params);
         response.redirect(url);
     }
 
 
-    public void redirect(String url) {
 
+
+    @Deprecated
+    public void redirect(String url) {
         response.redirect(request.getContextPath() + url);
     }
 
