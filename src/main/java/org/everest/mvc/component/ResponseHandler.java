@@ -10,11 +10,15 @@ import java.util.Map;
 public class ResponseHandler {
     private Map<Class<?>, IResponseResolver<?>> resolvers = new HashMap<>();
     public ResponseHandler(){
-        addResponseResolvers(String.class, new StringResponseResolver());
-        addResponseResolvers(Event.class, new EventResponseResolver());
+        addResponseResolvers(new StringResponseResolver());
+        addResponseResolvers(new EventResponseResolver());
+        addResponseResolvers(new RenderResponseResolver());
+        addResponseResolvers(new RedirectionResponseResolver());
+        addResponseResolvers(new RedirectToRouteResponseResolver());
+        addResponseResolvers(new JSONResponseResolver());
     }
-    public void addResponseResolvers(Class<?> type, IResponseResolver<?> resolver){
-        resolvers.put(type, resolver);
+    public void addResponseResolvers(IResponseResolver<?> resolver){
+        resolvers.put(resolver.getType(), resolver);
     }
 
     public void handleResponse(Request request, Response response, Object result){

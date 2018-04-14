@@ -2,6 +2,7 @@ package org.everest.main;
 import annotation.HttpController;
 import filter.FilterManager;
 import org.everest.context.ApplicationContext;
+import org.everest.context.classHandler.ConverterHandler;
 import org.everest.context.classHandler.RepositoryHandler;
 import org.everest.decorator.ErrorHandler;
 import org.everest.exception.ApplicationInitialisationException;
@@ -21,6 +22,8 @@ import java.util.*;
 import org.everest.mvc.router.Router;
 import org.everest.mvc.router.variableResolver.RequestVariableResolver;
 import org.everest.mvc.router.variableResolver.VariableResolverHandler;
+import org.everest.mvc.service.JSONService;
+import org.everest.utils.ReflexionUtils;
 
 public class WebApplication {
 
@@ -67,6 +70,7 @@ public class WebApplication {
         context.addClassHandler(new RepositoryHandler());
         context.addClassHandler(new RequestFilterHandler());
         context.addClassHandler(new VariableResolverHandler());
+        context.addClassHandler(new ConverterHandler());
 
     }
 
@@ -79,6 +83,7 @@ public class WebApplication {
         context.addInstance(frontalController);
         context.addInstance(EventEmitter.getInstance());
         context.addInstance(new Form());
+        context.addInstance(new JSONService());
         context.initialize();
 
     }
@@ -116,7 +121,11 @@ public class WebApplication {
             context.initialize();
             router.init(controllers.toArray());
             System.out.println("There are " + context.countDependencies() + "Instance in context");
-
+            Class[] classes = ReflexionUtils.getClasses(initializer.getBasePackages()[0]);
+            //Class[] classes = ReflexionUtils.getClasses("org.everest");
+            System.out.println("---------------------------------");
+            System.out.println("Application has :" + classes.length + " classes");
+            System.out.println("---------------------------------");
 
             System.out.println("Error handlers registered: " + errorHandlers.size());
             EventEmitter.getInstance().emit("OnApp.Start");

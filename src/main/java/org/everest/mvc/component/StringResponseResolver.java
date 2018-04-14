@@ -31,4 +31,9 @@ public class StringResponseResolver implements IResponseResolver<String>{
             response.redirect(router.url(param));
         }
     }
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
 }

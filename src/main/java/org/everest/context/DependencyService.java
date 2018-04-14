@@ -40,6 +40,7 @@ class DependencyService {
         for (String basePackage : basePackages) {
             addDependenciesByPackage(basePackage, context);
         }
+
     }
 
     public void addDependency(Container container, Class clazz) {

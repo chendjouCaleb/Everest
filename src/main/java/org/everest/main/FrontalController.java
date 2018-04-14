@@ -26,6 +26,7 @@ public class FrontalController {
             throw new RouteNotFoundException("Aucune route ne correspondont à l'URL: " + request.getPathInfo());
         }else {
             System.out.println("ROUTE: " + route.toString());
+            request.setRoute(route);
             handle(request, response, route);
         }
     }
@@ -44,7 +45,7 @@ public class FrontalController {
         //controller.init();
         //Object[] params = RouterUtils.params(route.getParameters(), route.getMethod());
         Object[] params = requestVariableResolver.getVariables(request, response, route);
-        Object result = Utils.callRemote(ctrl, route.getMethod().getName(), params);
+        Object result = Utils.callRemote(ctrl, route.getMethod(), params);
         if(!route.getMethod().getReturnType().equals(void.class) && result != null){
             responseHandler.handleResponse(request, response, result);
         }

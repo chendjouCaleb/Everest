@@ -1,5 +1,6 @@
 package org.everest.main.component.http;
 
+import org.everest.core.event.EventEmitter;
 import org.everest.main.StaticContext;
 import org.everest.mvc.router.Router;
 import org.jtwig.web.servlet.JtwigRenderer;
@@ -34,6 +35,8 @@ public class Response {
     }
 
     public void render(Request request, String path) throws ServletException, IOException {
+        EventEmitter eventEmitter = StaticContext.context.getInstance(EventEmitter.class);
+        eventEmitter.emit("response.render", request, path);
         if(path.endsWith(".jsp")){
             try {
                 request.getServletRequest().getServletContext().getRequestDispatcher(path)

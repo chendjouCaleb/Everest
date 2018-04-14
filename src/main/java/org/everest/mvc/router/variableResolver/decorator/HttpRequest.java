@@ -1,7 +1,6 @@
 package org.everest.mvc.router.variableResolver.decorator;
 
-import org.everest.mvc.router.variableResolver.resolver.HttpRequestResolver;
-import org.everest.mvc.router.variableResolver.resolver.PathVariableResolver;
+import org.everest.mvc.router.variableResolver.resolver.byAnnotation.HttpRequestResolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

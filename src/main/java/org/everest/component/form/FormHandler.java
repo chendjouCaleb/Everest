@@ -1,17 +1,14 @@
 package org.everest.component.form;
 
-import com.google.common.base.Objects;
 import org.apache.bval.jsr.ApacheValidationProvider;
 import org.apache.commons.beanutils.BeanUtils;
 import org.everest.component.form.exception.FormHandlerException;
-import org.everest.core.dic.decorator.Bean;
 import org.everest.exception.FormValidationException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -33,10 +30,7 @@ public class FormHandler<T> {
 
     private void handleModel(){
         try {
-            System.out.println("Model: " + model);
-            System.out.println("Properties: " + properties.toString());
             BeanUtils.populate(model, properties);
-            System.out.println("Model: " + model);
         } catch (Exception e) {
             throw new FormHandlerException(e);
         }

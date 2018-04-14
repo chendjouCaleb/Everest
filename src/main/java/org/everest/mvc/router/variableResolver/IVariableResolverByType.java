@@ -8,6 +8,7 @@ import org.everest.mvc.router.Route;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 
-public interface IVariableResolver<T extends Annotation> {
-    Object getVariable(Request request, Response response, Route route, Parameter parameter, T annotation);
+public interface IVariableResolverByType<T> {
+    Class<? extends T> getType();
+    T getValue(Request request, Response response, Route route, Parameter parameter);
 }

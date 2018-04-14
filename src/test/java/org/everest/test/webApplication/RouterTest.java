@@ -41,6 +41,7 @@ public class RouterTest {
     public void getInvokedGETRouteWithParamTest(){
         Router router = application.getContext().getInstance(Router.class);
         Route edit = router.getCalledRoute("/edit/5", "GET");
+        System.out.println("URL" + router.htmlLink("édition","edit"));
         Assert.assertEquals(edit.getName(), "editIdGET");
     }
 

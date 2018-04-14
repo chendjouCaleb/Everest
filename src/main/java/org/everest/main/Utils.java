@@ -15,6 +15,12 @@ public class Utils {
         return method.invoke(instance, argumentsWithSession);
     }
 
+    public static Object callRemote(Object instance, Method method, Object... arguments) throws Exception {
+        method.setAccessible(true);
+        Object[] argumentsWithSession = createArguments(arguments);
+        return method.invoke(instance, argumentsWithSession);
+    }
+
     public Object instanciateClass(Class className){
         Object obj = null;
         try {

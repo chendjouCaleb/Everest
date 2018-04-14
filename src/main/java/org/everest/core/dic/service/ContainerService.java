@@ -5,6 +5,7 @@ import org.everest.core.dic.contract.IContainerService;
 import org.everest.core.dic.contract.IRetrieverService;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.core.dic.exception.ComponentCreationException;
+import org.everest.exception.InstanceNotFoundException;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -64,8 +65,15 @@ public class ContainerService implements IContainerService {
             AutoWired autoWired = field.getAnnotation(AutoWired.class);
             if(autoWired != null){
                 if(autoWired.qualifier().equals("")){
-                    Instance dependency = retrieverService.getInstance(field.getType(), instances);
-                    dependencies.add(dependency.getKey());
+                    try{
+                        Instance dependency = retrieverService.getInstance(field.getType(), instances);
+                        dependencies.add(dependency.getKey());
+                    }catch (InstanceNotFoundException e){
+                        System.out.println("Error during the resolving the field " + field.getName() +
+                                " of " + instance.getType());
+                        throw new InstanceNotFoundException(e);
+                    }
+
                 }else {
                     dependencies.add(autoWired.qualifier());
                 }

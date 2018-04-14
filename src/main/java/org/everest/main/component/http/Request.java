@@ -25,7 +25,12 @@ public class Request {
         servletRequest.setAttribute(name, obj);
     }
 
-
+    public Object getRouteParams(int index){
+        return this.getRoute().getParameters()[index];
+    }
+    public int getRouteIntParams(int index){
+        return Integer.valueOf(this.getRoute().getParameters()[index]);
+    }
     /**
      * Check whether request is ajax request
      * @return

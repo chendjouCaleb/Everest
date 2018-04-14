@@ -58,7 +58,9 @@ public class ApplicationContext {
     public <T> T getInstance(String key, Class<? extends T> clazz){
         return (T) container.getInstance(key).getInstance();
     }
-
+    public Object getInstance(String key){
+        return container.getInstance(key).getInstance();
+    }
     public List<Object> findInstanceByAnnotation(Class<? extends Annotation> annotation){
         List<Object> instances = new ArrayList<>();
         for (Instance instance : container.getInstances().values()){

@@ -1,6 +1,6 @@
 package org.everest.mvc.router.variableResolver.decorator;
 
-import org.everest.mvc.router.variableResolver.IVariableResolver;
+import org.everest.mvc.router.variableResolver.IVariableResolverByAnnotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +11,5 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 @Target(ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ResolvedBy {
-    Class<? extends IVariableResolver> value();
+    Class<? extends IVariableResolverByAnnotation> value();
 }

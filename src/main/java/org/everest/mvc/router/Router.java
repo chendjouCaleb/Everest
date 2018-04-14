@@ -31,6 +31,11 @@ public class Router {
         return  StaticContext.applicationInitializer.getAppBaseUrl() + url;
     }
 
+    public String htmlLink(String value, String name, Object... params) {
+        String url = url(name, params);
+        return  "<a href='" + url +"'> " + value + " </a>";
+    }
+
     public String relativeUrl(String name, Object... params) {
         Route route = findRoute(name);
         String url = null;
@@ -66,10 +71,11 @@ public class Router {
     }
 
     public void init(Object[] controllers) {
-        System.out.println("Controllers: " + controllers.length);
+
         for (Object ctrl : controllers) {
             populateRoute(ctrl);
         }
+        System.out.println("Controllers: " + controllers.length + "; Route: " + routes.size());
     }
 
     private void populateRoute(Object controller) {

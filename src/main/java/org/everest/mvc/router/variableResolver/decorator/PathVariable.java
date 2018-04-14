@@ -1,6 +1,6 @@
 package org.everest.mvc.router.variableResolver.decorator;
 
-import org.everest.mvc.router.variableResolver.resolver.PathVariableResolver;
+import org.everest.mvc.router.variableResolver.resolver.byAnnotation.PathVariableResolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
