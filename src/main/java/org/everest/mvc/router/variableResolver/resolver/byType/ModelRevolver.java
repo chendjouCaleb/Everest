@@ -7,6 +7,7 @@ import org.everest.mvc.router.Route;
 import org.everest.mvc.router.variableResolver.IVariableResolverByType;
 
 import java.lang.reflect.Parameter;
+import java.util.List;
 
 public class ModelRevolver implements IVariableResolverByType<Model> {
     @Override
@@ -18,7 +19,9 @@ public class ModelRevolver implements IVariableResolverByType<Model> {
     public Model getValue(Request request, Response response, Route route, Parameter parameter) {
         Model model = new Model();
         request.setAttr("model", model.getObjects());
-        request.getSession().setAttribute("flashMessage", model.getFlashs());
+        List flashMessage = (List) request.getSession().getAttr("flashMessage");
+        flashMessage.addAll(model.getFlashs());
+
         return model;
     }
 

@@ -5,12 +5,15 @@ import annotation.Path;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.main.StaticContext;
 import org.everest.mvc.router.variableResolver.RequestVariableResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class Router {
     private Map<String, Route> routes = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(Router.class);
 
     @AutoWired
     private RequestVariableResolver variableResolver;
@@ -61,7 +64,6 @@ public class Router {
      */
     public Route getInvokedRoute(String url, String method) {
         String regex = toRegex(url);
-        System.out.println("REGEX: " + regex);
         for (Route route : routes.values()) {
             if (route.matche(url) && route.getHttpMethod().equals(method)) {
                 return route;
@@ -75,7 +77,7 @@ public class Router {
         for (Object ctrl : controllers) {
             populateRoute(ctrl);
         }
-        System.out.println("Controllers: " + controllers.length + "; Route: " + routes.size());
+        logger.debug("Controllers:  {} ; Routes: {}",controllers.length, routes.size());
     }
 
     private void populateRoute(Object controller) {

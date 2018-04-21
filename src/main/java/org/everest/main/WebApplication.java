@@ -24,9 +24,11 @@ import org.everest.mvc.router.variableResolver.RequestVariableResolver;
 import org.everest.mvc.router.variableResolver.VariableResolverHandler;
 import org.everest.mvc.service.JSONService;
 import org.everest.utils.ReflexionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebApplication {
-
+    private Logger logger = LoggerFactory.getLogger(WebApplication.class);
     private static WebApplication app;
 
     private FrontalController frontalController;
@@ -120,17 +122,15 @@ public class WebApplication {
             addErrorHandlers();
             context.initialize();
             router.init(controllers.toArray());
-            System.out.println("There are " + context.countDependencies() + "Instance in context");
+            logger.debug("There are {} Instance in context", context.countDependencies());
             Class[] classes = ReflexionUtils.getClasses(initializer.getBasePackages()[0]);
             //Class[] classes = ReflexionUtils.getClasses("org.everest");
-            System.out.println("---------------------------------");
-            System.out.println("Application has :" + classes.length + " classes");
-            System.out.println("---------------------------------");
+            logger.debug("---------------------------------");
+            logger.debug("Application has {} classes", classes.length);
+            logger.debug("---------------------------------");
 
-            System.out.println("Error handlers registered: " + errorHandlers.size());
+            logger.debug("Error handlers registered: {}", errorHandlers.size());
             EventEmitter.getInstance().emit("OnApp.Start");
-            System.out.println("App initialisation is finished. There are " +
-                    context.findInstanceByAnnotation(HttpController.class).size() + " Controllers");
         } catch (ClassNotFoundException e) {
             throw new ApplicationInitialisationException("The App initiator Class'" +
                     appClassString + "' not found");
