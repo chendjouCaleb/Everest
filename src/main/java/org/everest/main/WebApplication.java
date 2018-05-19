@@ -1,6 +1,6 @@
 package org.everest.main;
 import annotation.HttpController;
-import filter.FilterManager;
+import org.everest.mvc.filter.FilterManager;
 import org.everest.context.ApplicationContext;
 import org.everest.context.classHandler.ConverterHandler;
 import org.everest.context.classHandler.RepositoryHandler;

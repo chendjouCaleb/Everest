@@ -2,8 +2,8 @@ package org.everest.test.formTest;
 
 import annotation.HttpController;
 import annotation.Path;
-import filter.Authentication;
-import filter.Debug;
+import org.everest.mvc.filter.Authentication;
+import org.everest.mvc.filter.Debug;
 import org.everest.main.component.http.Controller;
 
 @HttpController(prefix = "user")

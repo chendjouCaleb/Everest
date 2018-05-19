@@ -20,7 +20,7 @@ public class BooleanConverter implements Converter{
             DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
             String date = (String)o;
             if( date == null || date.length() < 1) return null;
-            return formatter.parseDateTime(date);
+            return formatter.parseDateTime(date.trim());
 
 
         }

@@ -1,4 +1,4 @@
-package filter;
+package org.everest.mvc.filter;
 
 public class Target {
     public void execute(String request, String response){

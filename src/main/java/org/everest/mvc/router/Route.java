@@ -89,6 +89,9 @@ public class Route {
     public String[] getParameters(){
         return parameters;
     }
+    public String[] getParams(){
+        return parameters;
+    }
 
     @Override
     public String toString() {

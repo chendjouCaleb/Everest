@@ -1,4 +1,4 @@
-package filter;
+package org.everest.mvc.filter;
 
 import annotation.FilterBy;
 

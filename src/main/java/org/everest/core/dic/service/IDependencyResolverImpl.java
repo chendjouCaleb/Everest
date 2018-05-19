@@ -14,12 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class IDependencyResolverImpl implements IDependencyResolver {
-
-    @Override
-    public Instance createInstance() {
-        return null;
-    }
-
     @Override
     public void resolveInjection(IRetrieverService retrieverService, Instance instance,
                                  Map<String, Instance> instances, Collection<String> dependencyKeys) {
@@ -58,7 +52,7 @@ public class IDependencyResolverImpl implements IDependencyResolver {
     }
 
     @Override
-    public void resolveContructorInjection(Instance instance, List<String> dependencyKeys) {
+    public void resolveConstructorInjection(Instance instance, List<String> dependencyKeys) {
 
     }
 }

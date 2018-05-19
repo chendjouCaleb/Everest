@@ -101,7 +101,7 @@ public class Router {
                 String key = httpMethod + route.getRegex();
                 this.routes.put(key, route);
 
-                System.out.println("New route add:  Key: " + key + " : " + route.getMethod().getName());
+                logger.info("New route add:  Key: " + key + " : " + route.getMethod().getName());
             }
         }
     }

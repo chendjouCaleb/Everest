@@ -1,10 +1,7 @@
 package org.everest.core.dic.contract;
 
-import org.everest.core.dic.Container;
 import org.everest.core.dic.Instance;
-import org.everest.core.dic.service.RetrieverService;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

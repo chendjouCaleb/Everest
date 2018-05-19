@@ -1,4 +1,4 @@
-package org.everest.mvc.component;
+package org.everest.mvc.component.responseResolver;
 
 import org.everest.main.StaticContext;
 import org.everest.main.component.http.Request;

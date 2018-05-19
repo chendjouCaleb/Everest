@@ -1,9 +1,9 @@
 package org.everest.mvc.router;
 
 import annotation.FilterBy;
-import dic.Container;
 import exception.RouteParamsException;
-import filter.Filter;
+import org.everest.mvc.FilterExecutionException;
+import org.everest.mvc.filter.Filter;
 import org.everest.main.Utils;
 import org.everest.main.StaticContext;
 
@@ -23,11 +23,11 @@ public class RouterUtils {
             if(filter != null){
                 try {
                     Filter instance = (Filter)StaticContext.context.getInstance(filter.filter());
-                            //(Filter)(Container.getService(filter.filter()));
+                            //(Filter)(Container.getService(org.everest.mvc.filter.org.everest.mvc.filter()));
                     instance.init(annotation);
                     filters.add(instance);
                 }catch (Exception e) {
-                    Utils.throwException(e);
+                    throw new FilterExecutionException(e);
                 }
             }
         }

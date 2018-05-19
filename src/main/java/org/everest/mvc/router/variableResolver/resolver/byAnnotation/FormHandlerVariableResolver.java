@@ -19,6 +19,7 @@ public class FormHandlerVariableResolver implements IVariableResolverByAnnotatio
         FormService formService = StaticContext.context.getInstance(FormService.class);
         FormHandler formHandler = formService.buildForm(request, ReflexionUtils.instantiateClass(form.value()));
         formHandler.handle();
+        request.getModel().add(form.modelAttr(), formHandler.getModel());
         return formHandler;
     }
 }

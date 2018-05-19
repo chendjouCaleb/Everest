@@ -1,4 +1,4 @@
-package org.everest.mvc.component;
+package org.everest.mvc.component.responseResolver;
 
 import org.everest.core.event.Event;
 import org.everest.core.event.EventEmitter;

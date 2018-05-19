@@ -1,6 +1,7 @@
 package org.everest.main.component.http;
 
 import org.everest.main.StaticContext;
+import org.everest.mvc.model.Model;
 import org.everest.mvc.router.Route;
 import org.everest.mvc.router.Router;
 
@@ -16,6 +17,7 @@ public class Request {
     private HttpServletRequest servletRequest;
     private Session session;
     private Route route;
+    private Model model = new Model();
     public Request(HttpServletRequest request){
         this.servletRequest = request;
         session = new Session(this);
@@ -119,5 +121,13 @@ public class Request {
     public String redirectToRoute(String name, Object... params) {
         Router router = StaticContext.context.getInstance(Router.class);
         return "redirect:" + router.relativeUrl(name, params);
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 }

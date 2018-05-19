@@ -22,6 +22,10 @@ public class Model {
         objects.put(key, value);
     }
 
+    public <T> T getObject(String key, Class<? extends T> type){
+        return (T) objects.get(key);
+    }
+
     public void addFlash(String content, String type){
         flashs.add(new Message(content, type));
     }

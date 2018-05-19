@@ -1,6 +1,5 @@
 package org.everest.test.formTest;
 
-import filter.*;
 import org.junit.Test;
 
 public class FIlterTest {

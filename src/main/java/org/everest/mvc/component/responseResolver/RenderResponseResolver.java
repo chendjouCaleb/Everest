@@ -1,10 +1,8 @@
-package org.everest.mvc.component;
+package org.everest.mvc.component.responseResolver;
 
-import org.everest.main.StaticContext;
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
 import org.everest.mvc.action.Render;
-import org.everest.mvc.router.Router;
 
 import javax.servlet.ServletException;
 import java.io.IOException;

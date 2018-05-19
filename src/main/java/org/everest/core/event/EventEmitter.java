@@ -2,12 +2,15 @@ package org.everest.core.event;
 
 import org.everest.core.OnListen;
 import org.everest.main.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class EventEmitter {
     private static EventEmitter instance;
+    private Logger logger = LoggerFactory.getLogger(EventEmitter.class);
     private List<Object> listeners = new ArrayList<>();
 
     public void addListener(Object listener) {
@@ -37,10 +40,10 @@ public class EventEmitter {
     }
 
     public void emit(String event, Object... args) {
-        System.out.println("New event Was been emitted: " + event);
+        logger.info("New event Was been emitted: " + event);
         for (Map.Entry<Object, Method> entry : getCalledListeners(event).entrySet())
             try {
-                System.out.println("Listener execution: " + entry.getKey() + " : " + entry.getValue().getName());
+                logger.info("Listener execution: " + entry.getKey() + " : " + entry.getValue().getName());
                 Utils.callRemote(entry.getKey(), entry.getValue().getName(), args);
             } catch (Exception e) {
                 e.printStackTrace();

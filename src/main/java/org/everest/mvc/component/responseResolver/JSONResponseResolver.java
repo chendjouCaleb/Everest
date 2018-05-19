@@ -1,13 +1,11 @@
-package org.everest.mvc.component;
+package org.everest.mvc.component.responseResolver;
 
 import org.everest.main.StaticContext;
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
 import org.everest.mvc.action.JSON;
-import org.everest.mvc.action.Render;
 import org.everest.mvc.service.JSONService;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 
 public class JSONResponseResolver implements IResponseResolver<JSON>{

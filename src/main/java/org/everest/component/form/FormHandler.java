@@ -4,6 +4,8 @@ import org.apache.bval.jsr.ApacheValidationProvider;
 import org.apache.commons.beanutils.BeanUtils;
 import org.everest.component.form.exception.FormHandlerException;
 import org.everest.exception.FormValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -18,6 +20,7 @@ public class FormHandler<T> {
     private T model;
     private T initialModel;
     private Map<String, String> errors = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(FormHandler.class);
 
     public FormHandler(Map<String, Object> properties, T model) {
         this.properties = properties;
@@ -45,7 +48,8 @@ public class FormHandler<T> {
     public void handle(){
         cloneModel();
         handleModel();
-        doValidation();
+        logger.info("Form Values: " + properties);
+        logger.info("Form Model: " + model);
     }
 
     public void resetModel(){
@@ -56,6 +60,7 @@ public class FormHandler<T> {
         }
     }
     public boolean isValid(){
+        doValidation();
         return errors.isEmpty();
     }
 
@@ -73,7 +78,9 @@ public class FormHandler<T> {
         Validator validator = validatorFactory.getValidator();
         Set<ConstraintViolation<Object>> er= validator.validate(model);
         for (ConstraintViolation violation: er){
-            errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+            String key = violation.getPropertyPath().toString().equals("")
+                    ? "model":violation.getPropertyPath().toString();
+            errors.put(key, violation.getMessage());
         }
         validatorFactory.close();
     }

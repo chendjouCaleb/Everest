@@ -1,12 +1,12 @@
-package filter;
+package org.everest.mvc.filter;
 
 import org.everest.main.component.http.Request;
 import org.everest.main.component.http.Response;
 
-public class DebugFilter implements Filter {
+public class AuthenticationFilter implements Filter<Authentication> {
 
     @Override
-    public void init(Object annotation) {
+    public void init(Authentication annotation) {
 
     }
 
@@ -14,4 +14,5 @@ public class DebugFilter implements Filter {
     public void execute(Request request, Response Response, FilterChain filterChain) {
 
     }
+
 }

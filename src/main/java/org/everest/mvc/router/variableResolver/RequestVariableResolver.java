@@ -28,6 +28,7 @@ public class RequestVariableResolver {
         addVariableResolverByAnnotation(new ComponentResolver());
         addVariableResolverByAnnotation(new HttpRequestVariableResolver());
         addVariableResolverByAnnotation(new FormHandlerVariableResolver());
+        addVariableResolverByAnnotation(new SessionAttributeResolver());
 
         addVariableResolverByType(new RequestRevolver());
         addVariableResolverByType(new ResponseRevolver());

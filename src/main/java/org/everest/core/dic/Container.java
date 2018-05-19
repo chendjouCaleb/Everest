@@ -41,7 +41,7 @@ public class Container {
         return retrieverService.getInstance(clazz, instances);
     }
 
-    public void resolveDependencies(Instance instance){
+    private void resolveDependencies(Instance instance){
         Set<String> dependencies = containerService.getDependencies(retrieverService, instance, instances);
         injectionService.resolveInjection(retrieverService, instance, instances, dependencies);
     }
