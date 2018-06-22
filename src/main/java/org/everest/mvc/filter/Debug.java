@@ -1,6 +1,7 @@
 package org.everest.mvc.filter;
 
-import annotation.FilterBy;
+
+import org.everest.mvc.httpContext.decorator.FilterBy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
 package org.everest.decorator;
 
-import org.everest.main.component.classHandler.ListenerHandler;
+import org.everest.mvc.classHandler.ListenerHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

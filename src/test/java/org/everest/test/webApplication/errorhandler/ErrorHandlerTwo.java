@@ -2,9 +2,8 @@ package org.everest.test.webApplication.errorhandler;
 
 
 import org.everest.decorator.ErrorHandler;
-import org.everest.main.component.errorHandler.IErrorHandler;
-import org.everest.main.component.http.Request;
-import org.everest.main.component.http.Response;
+import org.everest.mvc.errorHandler.IErrorHandler;
+import org.everest.mvc.httpContext.HttpContext;
 
 @ErrorHandler
 public class ErrorHandlerTwo implements IErrorHandler<Throwable> {
@@ -15,7 +14,7 @@ public class ErrorHandlerTwo implements IErrorHandler<Throwable> {
     }
 
     @Override
-    public void handleError(Request request, Response response, Throwable exception) {
+    public void handleError(HttpContext httpContext, Throwable exception) {
 
     }
 }

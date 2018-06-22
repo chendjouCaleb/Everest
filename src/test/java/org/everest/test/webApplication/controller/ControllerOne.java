@@ -1,12 +1,12 @@
 package org.everest.test.webApplication.controller;
 
-import annotation.HttpController;
-import annotation.HttpMethod;
-import annotation.Path;
-import org.everest.main.component.http.Controller;
+import org.everest.mvc.httpContext.Controller;
+import org.everest.mvc.httpContext.decorator.HttpController;
+import org.everest.mvc.httpContext.HttpMethod;
+import org.everest.mvc.httpContext.decorator.Path;
 
 @HttpController
-public class ControllerOne extends Controller{
+public class ControllerOne extends Controller {
     @Path(route = "home", name = "home")
     public void home(Integer id){
 

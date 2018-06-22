@@ -1,13 +1,13 @@
 package org.everest.test.formTest;
 
-import annotation.HttpController;
-import annotation.Path;
+import org.everest.mvc.httpContext.Controller;
+import org.everest.mvc.httpContext.decorator.HttpController;
+import org.everest.mvc.httpContext.decorator.Path;
 import org.everest.mvc.filter.Authentication;
 import org.everest.mvc.filter.Debug;
-import org.everest.main.component.http.Controller;
 
 @HttpController(prefix = "")
-public class PostController extends Controller{
+public class PostController extends Controller {
 
     @Authentication()
     @Debug(priority = 1)
@@ -16,7 +16,6 @@ public class PostController extends Controller{
         System.out.println("GET ALL POSTS: " + id);
     }
 
-    @Override
     public void init() {
 
     }

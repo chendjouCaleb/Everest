@@ -1,6 +1,6 @@
 package org.everest.mvc.service.message;
 
-import org.everest.main.component.http.Request;
+import org.everest.mvc.httpContext.Request;
 
 public class flashService {
     public void sendFlash(Request request, String message, String type){

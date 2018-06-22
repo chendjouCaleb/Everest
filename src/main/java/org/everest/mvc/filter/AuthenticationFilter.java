@@ -1,17 +1,15 @@
 package org.everest.mvc.filter;
 
-import org.everest.main.component.http.Request;
-import org.everest.main.component.http.Response;
+import org.everest.mvc.httpContext.Request;
+import org.everest.mvc.httpContext.Response;
 
-public class AuthenticationFilter implements Filter<Authentication> {
+public class AuthenticationFilter implements IFilter<Authentication> {
 
-    @Override
     public void init(Authentication annotation) {
 
     }
 
-    @Override
-    public void execute(Request request, Response Response, FilterChain filterChain) {
+    public void execute(Request request, Response Response) {
 
     }
 

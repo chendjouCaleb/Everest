@@ -1,6 +1,8 @@
 package org.everest.core.event;
 
-public class Event {
+import org.everest.mvc.result.ActionResult;
+
+public class Event extends ActionResult {
     private String name;
     private Object[] params;
 

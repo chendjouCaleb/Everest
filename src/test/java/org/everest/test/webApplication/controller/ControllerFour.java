@@ -1,7 +1,7 @@
 package org.everest.test.webApplication.controller;
 
-import annotation.HttpController;
-import annotation.Path;
+import org.everest.mvc.httpContext.decorator.HttpController;
+import org.everest.mvc.httpContext.decorator.Path;
 
 @HttpController
 public class ControllerFour {

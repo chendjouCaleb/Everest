@@ -1,9 +1,7 @@
 package org.everest.test.webApplication;
 
-import org.everest.main.ApplicationInitializer;
-import org.everest.main.component.errorHandler.IErrorHandler;
-
-import java.util.List;
+import org.everest.mvc.infrastructure.ApplicationInitializer;
+import org.everest.mvc.component.servlet.MultiPartConfig;
 
 public class AppInitializer extends ApplicationInitializer {
     @Override
@@ -18,5 +16,10 @@ public class AppInitializer extends ApplicationInitializer {
     @Override
     public String getAppBaseUrl() {
         return "/";
+    }
+
+    @Override
+    public MultiPartConfig multiPartConfig() {
+        return null;
     }
 }

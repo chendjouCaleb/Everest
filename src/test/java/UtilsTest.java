@@ -1,6 +1,4 @@
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.everest.mvc.router.variableResolver.RequestVariableResolver;
+import org.everest.mvc.variableResolver.RequestVariableResolver;
 import org.junit.Test;
 
 public class UtilsTest {

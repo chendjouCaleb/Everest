@@ -1,12 +1,13 @@
 package org.everest.core.event;
 
 import org.everest.core.OnListen;
-import org.everest.main.Utils;
+import org.everest.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
+
 
 public class EventEmitter {
     private static EventEmitter instance;

@@ -18,6 +18,7 @@ public class ApplicationContext {
     private DependencyService dependencyService = new DependencyService();
     public ApplicationContext(){
         container = new Container();
+        container.addInstance(this);
         addClassHandler(new ComponentHandler());
         addClassHandler(new InstanceHandler());
         addClassHandler(new FactoryHandler());
@@ -52,7 +53,7 @@ public class ApplicationContext {
     }
 
     public int countDependencies(){
-        return container.countInstances();
+        return container.countInstances() - 1;
     }
 
     public <T> T getInstance(String key, Class<? extends T> clazz){

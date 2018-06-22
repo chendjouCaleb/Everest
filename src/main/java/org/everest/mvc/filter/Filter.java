@@ -1,10 +1,20 @@
 package org.everest.mvc.filter;
 
+import org.everest.mvc.result.IFilterResult;
+import org.everest.mvc.result.Next;
+import org.everest.mvc.result.Redirection;
+import org.everest.mvc.result.RouteRedirection;
 
-import org.everest.main.component.http.Request;
-import org.everest.main.component.http.Response;
+public abstract class Filter<T> implements IFilter<T>{
+    protected Next Next(){
+        return new Next();
+    }
 
-public interface Filter<T> {
-    void init(T annotation);
-    void execute(Request request, Response Response, FilterChain filterChain);
+    protected RouteRedirection RouteRedirection(String target, Object... params){
+        return new RouteRedirection(target, params);
+    }
+
+    protected IFilterResult Redirection(String url){
+        return new Redirection(url);
+    }
 }

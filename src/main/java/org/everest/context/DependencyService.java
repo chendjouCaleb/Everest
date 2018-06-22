@@ -26,7 +26,7 @@ class DependencyService {
                     if(classHandler != null){
                         classHandler.handleClass(classe, annotation, context);
                     }else {
-                        String message = "The classHandler " + handler.handler() + " not found in context classHandlers. Please add it" +
+                        String message = "The classHandler " + handler.handler() + " not found in httpContext classHandlers. Please add it" +
                                 " to your ApplicationContext";
                         throw new ContextInstanceException(message);
                     }

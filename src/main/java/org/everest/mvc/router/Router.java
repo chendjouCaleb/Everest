@@ -1,10 +1,10 @@
 package org.everest.mvc.router;
 
-import annotation.HttpController;
-import annotation.Path;
+import org.everest.mvc.httpContext.decorator.HttpController;
+import org.everest.mvc.httpContext.decorator.Path;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.main.StaticContext;
-import org.everest.mvc.router.variableResolver.RequestVariableResolver;
+import org.everest.mvc.infrastructure.StaticContext;
+import org.everest.mvc.variableResolver.RequestVariableResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class Router {
         Route route = findRoute(name);
         String url = null;
         if (route != null) {
-            url = "/" + route.url(params);
+            url = route.url(params);
         }
         return  StaticContext.applicationInitializer.getAppBaseUrl() + url;
     }
@@ -49,6 +49,12 @@ public class Router {
     }
 
     private Route findRoute(String name) {
+        if(name.contains(".") && name.contains("#")){
+            return routes.get(name);
+        }
+        if(name.contains(".")){
+            return routes.get(name+"#GET");
+        }
         for (Route route : routes.values()) {
             if (route.getName().equals(name)) {
                 return route;
@@ -97,11 +103,11 @@ public class Router {
                 String regex = toRegex(finalPath);
                 route.setPath(finalPath);
                 route.setRegex(toRegex(regex));
-                String httpMethod = path.httpMethod().toString();
-                String key = httpMethod + route.getRegex();
+                String key = controller.getClass().getSimpleName().replace("Controller", "")
+                        + "." + method.getName() + "#" + path.httpMethod();
                 this.routes.put(key, route);
 
-                logger.info("New route add:  Key: " + key + " : " + route.getMethod().getName());
+                logger.info("New route add:  Key=[{}], mapping=[{}], verbs=[{}] ", key,finalPath, path.httpMethod());
             }
         }
     }

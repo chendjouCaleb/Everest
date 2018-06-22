@@ -1,39 +1,13 @@
 package org.everest.mvc.router;
 
-import annotation.FilterBy;
-import exception.RouteParamsException;
-import org.everest.mvc.FilterExecutionException;
-import org.everest.mvc.filter.Filter;
-import org.everest.main.Utils;
-import org.everest.main.StaticContext;
+import org.everest.exception.RouteParamsException;
+import org.everest.utils.Utils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class RouterUtils {
-    public static List<Filter> getFilters(Class controller, Method method){
-        List<Filter> filters = new ArrayList<>();
-        List<Annotation> annotations = new ArrayList<>();
-        annotations.addAll(Arrays.asList(controller.getAnnotations()));
-        annotations.addAll(Arrays.asList(method.getAnnotations()));
-        for (Annotation annotation:annotations){
-            FilterBy filter = annotation.annotationType().getAnnotation(FilterBy.class);
-            if(filter != null){
-                try {
-                    Filter instance = (Filter)StaticContext.context.getInstance(filter.filter());
-                            //(Filter)(Container.getService(org.everest.mvc.filter.org.everest.mvc.filter()));
-                    instance.init(annotation);
-                    filters.add(instance);
-                }catch (Exception e) {
-                    throw new FilterExecutionException(e);
-                }
-            }
-        }
-        return filters;
-    }
-
 
     public static Object castStringToNumber(String string, Class<?> type) throws Exception{
         Object value;

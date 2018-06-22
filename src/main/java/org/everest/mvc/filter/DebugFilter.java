@@ -1,17 +1,16 @@
 package org.everest.mvc.filter;
 
-import org.everest.main.component.http.Request;
-import org.everest.main.component.http.Response;
+import org.everest.mvc.httpContext.Request;
+import org.everest.mvc.httpContext.Response;
 
-public class DebugFilter implements Filter {
+public class DebugFilter implements IFilter {
 
     @Override
     public void init(Object annotation) {
 
     }
 
-    @Override
-    public void execute(Request request, Response Response, FilterChain filterChain) {
+    public void execute(Request request, Response Response) {
 
     }
 }

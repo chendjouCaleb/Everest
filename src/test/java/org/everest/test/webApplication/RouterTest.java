@@ -1,6 +1,6 @@
 package org.everest.test.webApplication;
 
-import org.everest.main.WebApplication;
+import org.everest.mvc.infrastructure.WebApplication;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

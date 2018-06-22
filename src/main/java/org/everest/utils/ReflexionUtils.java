@@ -1,15 +1,21 @@
 package org.everest.utils;
 
 import org.everest.exception.ReflexionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
 public class ReflexionUtils {
+    private static Logger logger = LoggerFactory.getLogger(ReflexionUtils.class);
     public static Object instantiateClass(Class className) {
         Object obj;
         try {
@@ -21,7 +27,7 @@ public class ReflexionUtils {
     }
 
     /**
-     * Scans all classes accessible from the context class loader which belong to the given package and subpackages.
+     * Scans all classes accessible from the httpContext class loader which belong to the given package and subpackages.
      *
      * @param packageName The base package
      * @return The classes
@@ -75,5 +81,33 @@ public class ReflexionUtils {
             }
         }
         return classes;
+    }
+
+    public static Method findMethodByAnnotation(Class type, Class<? extends Annotation> annotation){
+        Method[] methods = type.getDeclaredMethods();
+        for (Method method:methods){
+            Annotation decorator = method.getAnnotation(annotation);
+            if(decorator != null){
+                return method;
+            }
+        }
+        return null;
+    }
+
+    public static boolean isImplement(Class type, Class superType){
+        if(type == superType){
+            return true;
+        }
+        return Arrays.asList(type.getInterfaces()).contains(superType);
+    }
+
+    public static Method getMethod(Class type, String name){
+        Method[] methods = type.getDeclaredMethods();
+        for (Method method: methods){
+            if(method.getName().equals(name)){
+                return method;
+            }
+        }
+return null;
     }
 }

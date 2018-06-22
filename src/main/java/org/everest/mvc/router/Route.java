@@ -11,7 +11,7 @@ public class Route {
     private String name;
     private Object controller;
     private String regex;
-    private String[] parameters;
+    private String[] parameters = new String[]{};
     private String httpMethod;
 
     public void setPath(String path) {
@@ -91,6 +91,13 @@ public class Route {
     }
     public String[] getParams(){
         return parameters;
+    }
+
+    public String data(int index){
+        if(index < parameters.length ){
+            return parameters[index];
+        }
+        return null;
     }
 
     @Override

@@ -2,8 +2,8 @@ package org.everest.component.form;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.everest.component.form.converter.DateTimeConverter;
-import org.everest.main.component.http.Request;
-import org.everest.main.form.annotation.NotMapped;
+import org.everest.mvc.httpContext.Request;
+import org.everest.mvc.form.annotation.NotMapped;
 import org.joda.time.DateTime;
 
 import java.lang.reflect.Field;
@@ -67,7 +67,9 @@ public class FormService {
 
         return values;
     }
+
     private void addConverter(){
         ConvertUtils.register(new DateTimeConverter(), DateTime.class);
     }
+    public ModelValidator getModelValidator(){return new ModelValidator();}
 }

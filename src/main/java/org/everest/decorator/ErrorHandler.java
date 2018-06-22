@@ -1,6 +1,6 @@
 package org.everest.decorator;
 
-import org.everest.main.component.classHandler.ErrorClassHandler;
+import org.everest.mvc.classHandler.ErrorClassHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

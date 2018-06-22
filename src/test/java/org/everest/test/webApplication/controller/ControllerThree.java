@@ -1,6 +1,6 @@
 package org.everest.test.webApplication.controller;
 
-import annotation.HttpController;
+import org.everest.mvc.httpContext.decorator.HttpController;
 
 @HttpController
 public class ControllerThree {

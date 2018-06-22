@@ -1,7 +1,7 @@
 package org.everest.mvc.filter;
 
-import org.everest.main.component.http.Request;
-import org.everest.main.component.http.Response;
+import org.everest.mvc.httpContext.Request;
+import org.everest.mvc.httpContext.Response;
 
 public class Client {
     FilterManager filterManager;
@@ -10,7 +10,7 @@ public class Client {
         this.filterManager = filterManager;
     }
 
-    public void sendRequest(Request request, Response response){
-        filterManager.filterRequest(request, response);
-    }
+//    public void sendRequest(Request request, Response response){
+//        filterManager.filterRequest(request, response);
+//    }
 }
