@@ -39,6 +39,7 @@ public class RequestVariableResolver {
         addVariableResolverByType(new RouteRevolver());
         addVariableResolverByType(new HttpContextResolver());
         addVariableResolverByType(new BindingStateRevolver());
+        addVariableResolverByType(new IdentityAccountResolver());
 
     }
 

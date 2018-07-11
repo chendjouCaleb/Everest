@@ -1,9 +1,15 @@
 package org.everest.mvc.infrastructure;
 
+import org.everest.context.ApplicationContext;
+import org.everest.core.dic.decorator.AutoWired;
 import org.everest.mvc.component.servlet.MultiPartConfig;
+import org.everest.mvc.renderer.ThymeleafViewRenderer;
+import org.everest.mvc.renderer.ViewRenderer;
 
 
 public abstract class ApplicationInitializer {
+
+    @AutoWired private ApplicationContext applicationContext;
     public abstract String[] getBasePackages();
 
     public abstract String getAppBaseUrl();
@@ -25,4 +31,12 @@ public abstract class ApplicationInitializer {
     }
 
     public abstract MultiPartConfig multiPartConfig();
+
+    public ViewRenderer viewRenderer(){
+        return new ThymeleafViewRenderer(applicationContext);
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 }

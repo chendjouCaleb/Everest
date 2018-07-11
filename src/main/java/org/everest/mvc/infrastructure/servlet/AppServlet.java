@@ -19,4 +19,12 @@ public class AppServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebApplication.getApp().run(req, resp);
     }
+
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+        resp.addHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token, Authorization");
+    }
 }

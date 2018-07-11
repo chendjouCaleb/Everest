@@ -19,17 +19,27 @@ public class Model {
         return objects;
     }
 
+    @Deprecated
     public void add(String key, Object value){
         objects.put(key, value);
     }
     public void addData(String key, Object value){
         objects.put(key, value);
     }
+    public <T> T getData(String key, Class<? extends T> type){
+        return (T) objects.get(key);
+    }
 
+    public Object getData(String key){
+        if(objects.containsKey(key)) return objects.get(key); else return null;
+    }
+
+    @Deprecated
     public <T> T getObject(String key, Class<? extends T> type){
         return (T) objects.get(key);
     }
 
+    @Deprecated
     public Object getObject(String key){
         if(objects.containsKey(key)) return objects.get(key); else return null;
     }

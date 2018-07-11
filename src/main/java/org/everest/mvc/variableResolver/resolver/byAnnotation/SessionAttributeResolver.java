@@ -9,6 +9,8 @@ import java.lang.reflect.Parameter;
 public class SessionAttributeResolver implements IVariableResolverByAnnotation<SessionAttribute> {
     @Override
     public Object getVariable(HttpContext httpContext, Parameter parameter, SessionAttribute annotation) {
-        return httpContext.getSession().getAttribute(annotation.value());
+        String name = annotation.value();
+
+        return httpContext.getSession().getAttribute(name);
     }
 }

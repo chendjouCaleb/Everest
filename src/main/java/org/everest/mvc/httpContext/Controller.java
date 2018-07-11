@@ -1,14 +1,14 @@
 package org.everest.mvc.httpContext;
 
-import org.everest.mvc.result.JSON;
-import org.everest.mvc.result.Redirection;
-import org.everest.mvc.result.Render;
-import org.everest.mvc.result.RouteRedirection;
+import org.everest.mvc.result.*;
 
 public abstract class Controller {
     final protected Render Render(String viewPath, Object... objects){
-
         return new Render(viewPathPrefix()+viewPath, objects);
+    }
+
+    final protected View View(String viewPath){
+        return new View(viewPath);
     }
 
     final protected RouteRedirection RouteRedirection(String target, Object... params) {
@@ -17,6 +17,9 @@ public abstract class Controller {
 
     final protected Redirection Redirection(String url){
         return new Redirection(url);
+    }
+    final protected Redirection Redirection(String url, HttpStatus status){
+        return (Redirection) new Redirection(url).statusCode(status.value());
     }
 
     final protected JSON Json(Object models){

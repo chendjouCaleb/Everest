@@ -64,4 +64,12 @@ public class Response {
         cookie.setPath("/");
         servletResponse.addCookie(cookie);
     }
+
+    public void setStatusCode(int code){
+        this.getServletResponse().setStatus(code);
+    }
+
+    public void getStatusCode(){
+        this.getServletResponse().getStatus();
+    }
 }

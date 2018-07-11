@@ -1,6 +1,7 @@
 package org.everest.mvc.httpContext;
 
 import org.everest.mvc.filter.FilterChain;
+import org.everest.mvc.identity.IdentityAccount;
 import org.everest.mvc.model.BindingState;
 import org.everest.mvc.model.Model;
 import org.everest.mvc.router.Route;
@@ -16,6 +17,7 @@ public class HttpContext {
     private Object actionResult;
     private BindingState bindingState;
     private Object requestBody;
+    private IdentityAccount identityAccount;
 
     public Request getRequest() {
         return request;
@@ -98,5 +100,13 @@ public class HttpContext {
 
     public void setRequestBody(Object requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public IdentityAccount getIdentityAccount() {
+        return identityAccount;
+    }
+
+    public void setIdentityAccount(IdentityAccount identityAccount) {
+        this.identityAccount = identityAccount;
     }
 }

@@ -53,6 +53,9 @@ public class Request {
     public String getParam(String name){
         return servletRequest.getParameter(name);
     }
+    public String[] getParams(String name){
+        return servletRequest.getParameterValues(name);
+    }
     public String getParam(String name, boolean nullable){
         String param = getParam(name);
         if(nullable && param.trim().length() == 0){return null;}

@@ -20,6 +20,7 @@ public class ApplicationContextListener implements ServletContextListener {
         String clazz = sce.getServletContext().getInitParameter("app-class");
         logger.info("App started\nInit Class: " + clazz);
         initializer = initializeApplication(clazz);
+        WebApplication.getApp().getContext().addInstance(sce.getServletContext(), "servletContext");
 
         String[] staticResources = initializer.getStaticResourceFolders();
         addResourceServlets(sce, staticResources);

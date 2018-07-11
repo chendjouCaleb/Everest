@@ -2,6 +2,7 @@ package org.everest.mvc.variableResolver.resolver.byAnnotation;
 
 import org.everest.component.form.FormHandler;
 import org.everest.component.form.FormService;
+import org.everest.exception.FormValidationException;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.infrastructure.StaticContext;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
@@ -26,8 +27,11 @@ public class RequestBodyResolver implements IVariableResolverByAnnotation<Reques
         }
         httpContext.setRequestBody(obj);
 
-        formHandler.validate();
-        httpContext.getBindingState().setErrors(formHandler.getErrors());
+        try{
+            formHandler.validate();
+            httpContext.getBindingState().setErrors(formHandler.getErrors());
+        }catch (FormValidationException ignore){}
+
 
         return obj;
     }

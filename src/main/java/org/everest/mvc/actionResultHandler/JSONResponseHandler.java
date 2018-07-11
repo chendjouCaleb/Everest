@@ -13,6 +13,7 @@ public class JSONResponseHandler implements IResultHandler<JSON> {
     public void handleResponse(HttpContext httpContext, JSON result) {
         JSONService jsonService = StaticContext.context.getInstance(JSONService.class);
         try {
+            httpContext.getResponse().getServletResponse().setStatus(result.getStatusCode());
             jsonService.sendJSON(httpContext.getResponse(), result.getModel());
         } catch (IOException e) {
             e.printStackTrace();

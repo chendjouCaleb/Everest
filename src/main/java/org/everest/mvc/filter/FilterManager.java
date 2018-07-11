@@ -62,7 +62,7 @@ public class FilterManager {
         } catch (Exception e) {
             String message = "Erreur durant l'exécution du filtre: " + filter.getClass().getName();
             logger.error(message, e);
-            throw new FilterExecutionException(message);
+            throw new FilterExecutionException(message, e);
         }
     }
 

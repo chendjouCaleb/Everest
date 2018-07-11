@@ -10,7 +10,12 @@ import java.lang.reflect.Parameter;
 public class QueryVariableResolver implements IVariableResolverByAnnotation<QueryVariable> {
     @Override
     public Object getVariable(HttpContext httpContext, Parameter parameter, QueryVariable annotation) {
-        String stringVal = httpContext.getRequest().getParam(annotation.value());
+        Object stringVal;
+        if(parameter.getType().isArray()){
+            stringVal = httpContext.getRequest().getParams(annotation.value());
+        }else {
+            stringVal = httpContext.getRequest().getParam(annotation.value());
+        }
         return ConvertUtils.convert(stringVal, parameter.getType());
     }
 }

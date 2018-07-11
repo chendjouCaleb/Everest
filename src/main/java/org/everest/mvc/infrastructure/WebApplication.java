@@ -119,6 +119,7 @@ public class WebApplication {
             context.addInstance(appClass);
             initializer = context.getInstance(ApplicationInitializer.class);
             StaticContext.applicationInitializer = initializer;
+            initializer.setApplicationContext(context);
             context.addByPackages(initializer.getBasePackages());
             addServiceInstance();
             context.initialize();

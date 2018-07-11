@@ -14,6 +14,7 @@ import org.everest.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,7 +57,7 @@ public class FrontalController {
                     responseHandler.handleActionResult(httpContext);
                 }
             }catch (Exception e){
-                throw new ActionExecutionException("Error was occuring during the execution of action: " + route.getMethod().getName(), e);
+                throw new ActionExecutionException("Error was occuring during the execution of action: " + httpContext.getController().getClass().getSimpleName() + ":"+ route.getMethod().getName(), e);
             }
 
 
@@ -64,6 +65,9 @@ public class FrontalController {
             responseHandler.handleActionResult(httpContext);
         }
 
+        if(httpContext.getSession().getAttribute("flashMessage") == null){
+            httpContext.getSession().setAttribute("flashMessage", new ArrayList<Message>());
+        }
         List<Message> flashMessages = (List<Message>) httpContext.getSession().getAttribute("flashMessage");
         flashMessages.addAll(httpContext.getModel().getFlashs());
 

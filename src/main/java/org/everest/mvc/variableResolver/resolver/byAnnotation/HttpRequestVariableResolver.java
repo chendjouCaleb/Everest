@@ -10,7 +10,9 @@ import java.lang.reflect.Parameter;
 public class HttpRequestVariableResolver implements IVariableResolverByAnnotation<RequestVariable> {
     @Override
     public Object getVariable(HttpContext httpContext, Parameter parameter, RequestVariable annotation) {
-        String stringVal = httpContext.getRequest().getParam(annotation.value());
+        String name = annotation.value();
+
+        String stringVal = httpContext.getRequest().getParam(name);
         return ConvertUtils.convert(stringVal, parameter.getType());
     }
 }

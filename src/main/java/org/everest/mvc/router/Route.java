@@ -100,6 +100,14 @@ public class Route {
         return null;
     }
 
+    public String[] getData(int[] index){
+        String[] datas = new String[index.length];
+        for (int i = 0; i < index.length; i++){
+            datas[i] = data(index[i]);
+        }
+        return datas;
+    }
+
     @Override
     public String toString() {
         return "Route{" +

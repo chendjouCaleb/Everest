@@ -16,6 +16,8 @@ public class RenderResponseHandler implements IResultHandler<Render> {
                 name = name.substring(0, 1).toLowerCase() + name.substring(1, name.length());
                 httpContext.getRequest().addAttribute(name, obj);
             }
+
+            result.getData().forEach((key, value) -> httpContext.getModel().addData(key, value));
             httpContext.getResponse().render(httpContext.getRequest(), result.getView());
         } catch (ServletException e) {
             e.printStackTrace();
