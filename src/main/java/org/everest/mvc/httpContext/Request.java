@@ -13,29 +13,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Request {
     private HttpServletRequest servletRequest;
-    private Session session;
-    private Route route;
-    private Model model = new Model();
     public Request(HttpServletRequest request){
         this.servletRequest = request;
     }
 
-    @Deprecated()
-    public void setAttr(String name, Object obj){
-        servletRequest.setAttribute(name, obj);
-    }
     public void addAttribute(String name, Object obj){
         servletRequest.setAttribute(name, obj);
     }
 
-    public Object getRouteParams(int index){
-        return this.getRoute().getParameters()[index];
-    }
-    public int getRouteIntParams(int index){
-        return Integer.valueOf(this.getRoute().getParameters()[index]);
-    }
     /**
-     * Check whether request is ajax request
+     * Check whether request is AJAX request
      * @return
      */
     public boolean isXHR(){
@@ -111,25 +98,6 @@ public class Request {
         return servletRequest;
     }
 
-    @Deprecated
-    public Session getSession() {
-        return session;
-    }
 
-    public void setSession(Session sess) {
-        session = sess;
-    }
 
-    @Deprecated
-    public Route getRoute() { return route; }
-    public void setRoute(Route route) {this.route = route; }
-
-    @Deprecated
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
-    }
 }

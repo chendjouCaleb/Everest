@@ -7,6 +7,7 @@ import org.everest.context.classHandler.FactoryHandler;
 import org.everest.context.classHandler.InstanceHandler;
 import org.everest.core.dic.Container;
 import org.everest.core.dic.Instance;
+import org.everest.mvc.classHandler.ControllerHandler;
 import org.everest.utils.ReflexionUtils;
 
 import java.lang.annotation.Annotation;

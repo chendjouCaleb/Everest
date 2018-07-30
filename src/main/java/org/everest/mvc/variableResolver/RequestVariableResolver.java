@@ -40,6 +40,7 @@ public class RequestVariableResolver {
         addVariableResolverByType(new HttpContextResolver());
         addVariableResolverByType(new BindingStateRevolver());
         addVariableResolverByType(new IdentityAccountResolver());
+        addVariableResolverByType(new RouteContextResolver());
 
     }
 
@@ -83,7 +84,7 @@ public class RequestVariableResolver {
     }
 
     public Object[] getVariables(HttpContext httpContext) {
-        Method method = httpContext.getRoute().getMethod();
+        Method method = httpContext.getMethod();
         return getVariables(method, httpContext);
     }
 

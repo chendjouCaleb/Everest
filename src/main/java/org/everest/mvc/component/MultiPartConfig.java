@@ -1,4 +1,4 @@
-package org.everest.mvc.component.servlet;
+package org.everest.mvc.component;
 
 public class MultiPartConfig {
     private String location;

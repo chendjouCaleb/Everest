@@ -21,9 +21,9 @@ public class RequestBodyResolver implements IVariableResolverByAnnotation<Reques
         Object obj = formHandler.getModel();
 
         if(!annotation.value().equals("")){
-            httpContext.getModel().add(annotation.value(), obj);
+            httpContext.getModel().addData(annotation.value(), obj);
         }else {
-            httpContext.getModel().add(annotation.value(), obj.getClass().getSimpleName().toLowerCase());
+            httpContext.getModel().addData(annotation.value(), obj.getClass().getSimpleName().toLowerCase());
         }
         httpContext.setRequestBody(obj);
 

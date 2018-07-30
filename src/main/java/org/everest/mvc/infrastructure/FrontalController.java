@@ -32,7 +32,6 @@ public class FrontalController {
             throw new RouteNotFoundException("Aucune route ne correspondont à l'URL: " + httpContext.getRequest().getPathInfo());
         }else {
             logger.info("Request route: " + route.toString());
-            httpContext.getRequest().setRoute(route);
             httpContext.setRoute(route);
             handle(httpContext);
         }

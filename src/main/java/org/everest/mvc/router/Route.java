@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated()
 public class Route {
     private String path;
     private Method method;

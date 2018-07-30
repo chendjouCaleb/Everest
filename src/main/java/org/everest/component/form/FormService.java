@@ -19,7 +19,7 @@ public class FormService {
         Set<String> paramNames = getParamsName(model.getClass());
         Map<String, Object> properties = getProperties(request, paramNames);
         FormHandler<T> formHandler = new  FormHandler<>(properties, model);
-        request.setAttr("form", formHandler);
+        request.addAttribute("form", formHandler);
         return formHandler;
     }
 

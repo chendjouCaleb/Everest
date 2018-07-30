@@ -133,8 +133,7 @@ public Form(){}
     public void handle(){
         getModel();
         doValidation();
-        request.setAttr("form", this);
-        request.setAttr("model", model);
+        request.addAttribute("form", this);
     }
     public Form handle(Request request, Class entityClass){
         this.model = null;

@@ -5,7 +5,8 @@ public enum HttpMethod {
     GET("GET"),
     DELETE("DELETE"),
     PUT("PUT"),
-    OPTIONS("OPTIONS");
+    OPTIONS("OPTIONS"),
+    PATH("PATH");
 
     private String description;
     HttpMethod(String desc){

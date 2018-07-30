@@ -1,7 +1,7 @@
 package org.everest.test.webApplication;
 
 import org.everest.mvc.infrastructure.ApplicationInitializer;
-import org.everest.mvc.component.servlet.MultiPartConfig;
+import org.everest.mvc.component.MultiPartConfig;
 
 public class AppInitializer extends ApplicationInitializer {
     @Override

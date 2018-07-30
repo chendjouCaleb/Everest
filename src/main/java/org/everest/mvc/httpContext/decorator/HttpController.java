@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface HttpController {
     String name() default "";
-    String prefix() default "";
+    @Deprecated String prefix() default "";
 }

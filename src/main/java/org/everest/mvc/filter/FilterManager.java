@@ -85,7 +85,7 @@ public class FilterManager {
 
     FilterChain getFilterChain(HttpContext context) {
         FilterChain filterChain = new FilterChain();
-        List<IFilter>filters = getFilters(context.getController().getClass(), context.getRoute().getMethod());
+        List<IFilter>filters = getFilters(context.getController().getClass(), context.getMethod());
         logger.info("Filters: {}", filters.size());
         filterChain.setFilters(filters);
         context.setFilterChain(filterChain);

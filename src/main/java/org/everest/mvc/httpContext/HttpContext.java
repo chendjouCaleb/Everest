@@ -1,10 +1,14 @@
 package org.everest.mvc.httpContext;
 
+import org.everest.mvc.context.RouteContext;
 import org.everest.mvc.filter.FilterChain;
 import org.everest.mvc.identity.IdentityAccount;
+import org.everest.mvc.infrastructure.RouteModel;
 import org.everest.mvc.model.BindingState;
 import org.everest.mvc.model.Model;
 import org.everest.mvc.router.Route;
+
+import java.lang.reflect.Method;
 
 public class HttpContext {
     private Object controller;
@@ -18,6 +22,8 @@ public class HttpContext {
     private BindingState bindingState;
     private Object requestBody;
     private IdentityAccount identityAccount;
+    private RouteModel routeModel;
+    private RouteContext routeContext;
 
     public Request getRequest() {
         return request;
@@ -51,7 +57,7 @@ public class HttpContext {
         this.model = model;
     }
 
-    public Route getRoute() {
+    @Deprecated public Route getRoute() {
         return route;
     }
 
@@ -108,5 +114,27 @@ public class HttpContext {
 
     public void setIdentityAccount(IdentityAccount identityAccount) {
         this.identityAccount = identityAccount;
+    }
+
+    public RouteModel getRouteModel() {
+        return routeModel;
+    }
+
+    public void setRouteModel(RouteModel routeModel) {
+        this.routeModel = routeModel;
+    }
+
+    public RouteContext getRouteContext() {
+        return routeContext;
+    }
+
+    public void setRouteContext(RouteContext routeContext) {
+        this.routeContext = routeContext;
+    }
+
+    public Method getMethod(){
+        if(route != null)
+            return route.getMethod();
+        return routeModel.getMethod();
     }
 }

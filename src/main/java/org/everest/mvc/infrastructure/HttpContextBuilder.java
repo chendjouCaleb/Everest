@@ -15,14 +15,11 @@ public class HttpContextBuilder {
         Request request = new Request(servletRequest);
         Response response = new Response(servletResponse);
         Session session = new Session(servletRequest.getSession());
-        request.setSession(session);
-
-        Model model = request.getModel();
 
         httpContext.setRequest(request);
         httpContext.setResponse(response);
-        httpContext.setModel(model);
         httpContext.setSession(session);
+        httpContext.setModel(new Model());
 
         return httpContext;
     }

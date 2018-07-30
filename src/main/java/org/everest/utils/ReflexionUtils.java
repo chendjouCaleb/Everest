@@ -86,12 +86,62 @@ public class ReflexionUtils {
     public static Method findMethodByAnnotation(Class type, Class<? extends Annotation> annotation){
         Method[] methods = type.getDeclaredMethods();
         for (Method method:methods){
-            Annotation decorator = method.getAnnotation(annotation);
-            if(decorator != null){
+            if(method.getAnnotation(annotation) != null){
                 return method;
             }
         }
         return null;
+    }
+
+    public static boolean isAnnotatedBy(Method method, Class<? extends Annotation> annotation){
+        return method.getAnnotation(annotation) != null;
+    }
+
+    public static boolean isAnnotatedByAnnotatedAnnotation(Method method, Class<? extends Annotation> annotation){
+        if(method.getAnnotation(annotation) != null){
+            return true;
+        }
+        Annotation[] annotations = method.getAnnotations();
+        for (Annotation annotation1: annotations){
+            if (annotation1.annotationType().getAnnotation(annotation) != null){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static Annotation annotatedAnnotation(Method method, Class<? extends Annotation> annotation){
+        if(method.getAnnotation(annotation) != null){
+            return method.getAnnotation(annotation);
+        }
+        Annotation[] annotations = method.getAnnotations();
+        for (Annotation annotation1: annotations){
+            if (annotation1.annotationType().getAnnotation(annotation) != null){
+                return annotation1;
+            }
+        }
+        return null;
+    }
+
+
+    public static List<Method> findMethodsByAnnotation(Class type, Class<? extends Annotation> annotation){
+        List<Method> methods = new ArrayList<>();
+        Method[] declaredMethods = type.getDeclaredMethods();
+        for (Method method:declaredMethods){
+            if(isAnnotatedBy(method, annotation)){
+                methods.add(method);
+            }
+        }
+        return methods;
+    }
+    public static List<Method> findMethodsByAnnotatedAnnotation(Class type, Class<? extends Annotation> annotation){
+        List<Method> methods = new ArrayList<>();
+        Method[] declaredMethods = type.getDeclaredMethods();
+        for (Method method:declaredMethods){
+            if(isAnnotatedByAnnotatedAnnotation(method, annotation)){
+                methods.add(method);
+            }
+        }
+        return methods;
     }
 
     public static boolean isImplement(Class type, Class superType){

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Deprecated
 public class Router {
     private Map<String, Route> routes = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(Router.class);

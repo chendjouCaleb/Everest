@@ -1,7 +1,7 @@
 package org.everest.mvc.infrastructure;
 
 import org.everest.exception.ConflictException;
-import org.everest.mvc.component.servlet.MultiPartConfig;
+import org.everest.mvc.component.MultiPartConfig;
 import org.everest.mvc.infrastructure.servlet.AppServlet;
 import org.everest.mvc.infrastructure.servlet.ResourceServlet;
 import org.everest.utils.ArrayUtils;

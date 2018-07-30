@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
 import org.everest.mvc.variableResolver.decorator.ModelAttribute;
+import org.everest.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +14,15 @@ public class ModelAttributeVariableResolver implements IVariableResolverByAnnota
     private Logger logger = LoggerFactory.getLogger(ModelAttributeVariableResolver.class);
 
     public Object getVariable(HttpContext httpContext, Parameter parameter, ModelAttribute modelAttribute) {
+        String name;
+        if(modelAttribute.value().equals("")){
+            name = parameter.getType().getSimpleName();
+            name = StringUtils.lowerFist(name);
+        }else {
+             name = modelAttribute.value();
+        }
 
-        String name = modelAttribute.value();
-        Object o = httpContext.getModel().getObject(name, parameter.getType());
+        Object o = httpContext.getModel().getData(name, parameter.getType());
         return ConvertUtils.convert(o, parameter.getType());
     }
 }

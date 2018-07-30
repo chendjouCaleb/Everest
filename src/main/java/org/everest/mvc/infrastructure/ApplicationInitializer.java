@@ -2,7 +2,7 @@ package org.everest.mvc.infrastructure;
 
 import org.everest.context.ApplicationContext;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.mvc.component.servlet.MultiPartConfig;
+import org.everest.mvc.component.MultiPartConfig;
 import org.everest.mvc.renderer.ThymeleafViewRenderer;
 import org.everest.mvc.renderer.ViewRenderer;
 
