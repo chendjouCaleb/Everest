@@ -16,21 +16,16 @@ import java.util.*;
 public class ApplicationContext {
     private Container container;
     private Map<Class<?> , ClassHandler> classHandlers = new HashMap<>();
-    private DependencyService dependencyService = new DependencyService();
     public ApplicationContext(){
         container = new Container();
-        container.addInstance(this);
+        container.addSingletonObject(this);
         addClassHandler(new ComponentHandler());
         addClassHandler(new InstanceHandler());
         addClassHandler(new FactoryHandler());
     }
 
-    public void addByPackage(String packageName){
-        dependencyService.addDependenciesByPackage(packageName, this);
-    }
-    public void addByPackages(String[] packageNames){
-
-        dependencyService.addDependenciesByPackages(packageNames, this);
+    public void addByPackages(String... packageNames){
+        container.addPackage(packageNames);
     }
     public void addClassHandler(ClassHandler classHandler){
         classHandlers.put(classHandler.getClass(), classHandler);
@@ -38,20 +33,7 @@ public class ApplicationContext {
     public void printComponent(){
         container.printAllComponent();
     }
-    public void addInstance(Class<?> clazz, String key){
-        container.addInstance(ReflexionUtils.instantiateClass(clazz), key);
-    }
-    public void addInstance(Class<?> clazz){
-        container.addInstance(ReflexionUtils.instantiateClass(clazz));
-    }
 
-    public void addInstance(Object object, String key){
-        container.addInstance(object, key);
-    }
-
-    public void addInstance(Object object){
-        container.addInstance(object);
-    }
 
     public int countDependencies(){
         return container.countInstances() - 1;
@@ -65,7 +47,7 @@ public class ApplicationContext {
     }
     public List<Object> findInstanceByAnnotation(Class<? extends Annotation> annotation){
         List<Object> instances = new ArrayList<>();
-        for (Instance instance : container.getInstances().values()){
+        for (Instance instance : container.getInstanceList()){
             Annotation annotation1 = instance.getInstance().getClass().getAnnotation(annotation);
             if (annotation1 != null){
                 instances.add(instance.getInstance());
@@ -78,11 +60,23 @@ public class ApplicationContext {
         return (T) container.getInstance(clazz).getInstance();
     }
 
-    public void initialize(){
-        container.resolveAllDependencies();
+    public void addInstance(Object object){
+        container.addSingletonObject(object);
+    }
+
+    public void addInstance(Object object, String name){
+        container.addSingletonObject(object).setKey(name);
     }
 
     Map<Class<?>, ClassHandler> getClassHandlers() {
         return classHandlers;
+    }
+
+    public void initialize(){
+        container.initialize();
+    }
+
+    public Container getContainer(){
+        return container;
     }
 }

@@ -21,13 +21,9 @@ public class RequestVariableResolver {
     private Logger logger = LoggerFactory.getLogger(RequestVariableResolver.class);
     public RequestVariableResolver(){
         addVariableResolverByAnnotation(new PathVariableResolver());
-        addVariableResolverByAnnotation(new HttpSessionResolver());
-        addVariableResolverByAnnotation(new HttpRequestResolver());
-        addVariableResolverByAnnotation(new HttpResponseResolver());
         addVariableResolverByAnnotation(new QueryVariableResolver());
         addVariableResolverByAnnotation(new ComponentResolver());
         addVariableResolverByAnnotation(new HttpRequestVariableResolver());
-        addVariableResolverByAnnotation(new FormHandlerVariableResolver());
         addVariableResolverByAnnotation(new SessionAttributeResolver());
         addVariableResolverByAnnotation(new ModelAttributeVariableResolver());
         addVariableResolverByAnnotation(new RequestBodyResolver());

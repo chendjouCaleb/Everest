@@ -2,6 +2,8 @@ package org.everest.mvc.httpContext;
 
 import org.everest.mvc.result.*;
 
+import java.util.Map;
+
 public abstract class Controller {
     final protected Render Render(String viewPath, Object... objects){
         return new Render(viewPathPrefix()+viewPath, objects);
@@ -12,6 +14,9 @@ public abstract class Controller {
     }
 
     final protected RouteRedirection RouteRedirection(String target, Object... params) {
+        return new RouteRedirection(target, params);
+    }
+    final protected RouteRedirection RouteRedirection(String target, Map<String, String> params) {
         return new RouteRedirection(target, params);
     }
 

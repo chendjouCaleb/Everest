@@ -8,8 +8,8 @@ public class UrlGeneratorTest {
 
     @Test
     public void generateWithPathParam(){
-        String model = "/area/{areaId}/user/{userId}/";
-        String url = "/area/10/user/20/";
+        String model = "area/{areaId}/user/{userId}/";
+        String url = "/area/10/user/20";
         UrlGenerator generator = new UrlGenerator(model);
         generator.addPathParam("areaId", "10")
                 .addPathParam("userId", "20");
@@ -71,14 +71,21 @@ public class UrlGeneratorTest {
 
     @Test
     public void generateWithParam_And_Host_And_PORT(){
-        String model = "/area/{areaId}/user/{userId}";
+        String model = "area/{areaId}/user/{userId}";
         String url = "localhost:50/area/10/user/20";
         UrlGenerator generator = new UrlGenerator(model);
         generator.addParam("areaId", "10")
                 .addParam("userId", "20")
-                .host("localhost")
-                .port(50);
+                .port(50)
+                .host("localhost");
 
+        UrlGenerator urlGenerator = new UrlGenerator("school/{id}")
+                .addParam("id", "10")
+                .host("localhost")
+                .port(8080);
+        System.out.println("URL: " + urlGenerator.generate());
+
+        System.out.println(generator.generate());
         assertEquals(url, generator.generate());
     }
 

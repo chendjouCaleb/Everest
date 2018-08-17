@@ -1,6 +1,5 @@
 package org.everest.mvc.infrastructure;
 
-import org.everest.component.form.FormService;
 import org.everest.context.ApplicationContext;
 
 public class StaticContext {
@@ -11,7 +10,4 @@ public class StaticContext {
         context = ctx;
     }
 
-    public static void addComponent(){
-        context.addInstance(new FormService());
-    }
 }

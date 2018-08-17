@@ -1,6 +1,8 @@
 package org.everest.mvc.errorHandler;
 
 import org.everest.mvc.httpContext.HttpContext;
+import org.everest.mvc.result.ActionResult;
+import org.everest.mvc.result.Render;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -14,7 +16,7 @@ public class DefaultErrorHandler implements IErrorHandler<Throwable> {
     }
 
     @Override
-    public void handleError(HttpContext httpContext, Throwable exception) {
+    public ActionResult handleError(HttpContext httpContext, Throwable exception) {
         String sep = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
         StringWriter sw = new StringWriter();
         exception.printStackTrace(new PrintWriter(sw));
@@ -28,12 +30,6 @@ public class DefaultErrorHandler implements IErrorHandler<Throwable> {
         httpContext.getRequest().addAttribute("type", exception.getClass().getCanonicalName());
 
 
-        try {
-            httpContext.getResponse().render(httpContext.getRequest(), "error");
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return new Render("error");
     }
 }

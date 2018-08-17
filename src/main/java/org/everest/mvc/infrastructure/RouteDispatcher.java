@@ -18,12 +18,12 @@ public class RouteDispatcher {
     public RouteModel getCalledRoute(List<RouteModel> routeModels, String url, String verb){
         for (RouteModel routeModel: routeModels){
             url = StringUtils.trim(url, "/");
-            logger.info("mapping: {}", routeModel.getMapping());
+            //logger.info("mapping: {}", routeModel.getMapping());
             if(isMatch(routeModel.getMapping(), url) && routeModel.getVerbs().toString().equalsIgnoreCase(verb)){
                 return routeModel;
             }
         }
-        throw new RouteNotFoundException("Aucun route correspondant à " + url + "#" + verb + " n'a été trouvée");
+        throw new RouteNotFoundException("Aucune route correspondant à " + url + "#" + verb + " n'a été trouvée");
     }
 
     public RouteContext createRouteContext(RouteModel routeModel, String url){

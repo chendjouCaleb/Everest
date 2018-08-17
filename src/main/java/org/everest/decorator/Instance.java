@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.TYPE, ElementType.METHOD})
 public @interface Instance {
     String value() default "";
-    Scope scope() default Scope.SINGLETION;
+    Scope scope() default Scope.SINGLETON;
 }

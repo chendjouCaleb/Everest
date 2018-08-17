@@ -1,6 +1,7 @@
 package org.everest.mvc.httpContext;
 
 import org.everest.core.event.EventEmitter;
+import org.everest.mvc.http.MediaType;
 import org.everest.mvc.infrastructure.StaticContext;
 import org.everest.mvc.renderer.JtwigView;
 import org.everest.mvc.router.Router;
@@ -19,8 +20,18 @@ public class Response {
 
     private HttpServletResponse servletResponse;
 
+    private String contentType;
+
+    public Response(){
+        contentType = MediaType.APPLICATION_JSON_VALUE;
+    }
+
+
+
     public Response(HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         this.servletResponse = response;
+        contentType = MediaType.APPLICATION_JSON_VALUE;
     }
 
     public HttpServletResponse getServletResponse() {
@@ -71,5 +82,12 @@ public class Response {
 
     public void getStatusCode(){
         this.getServletResponse().getStatus();
+    }
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

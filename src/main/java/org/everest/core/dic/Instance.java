@@ -1,6 +1,7 @@
 package org.everest.core.dic;
 
 import org.everest.core.dic.enumeration.Scope;
+import org.everest.core.dic.exception.InstanceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,24 +9,20 @@ import java.util.List;
 public class Instance {
     private Object instance;
     private String key;
-    private Scope scope;
-    private List<Class> dependencies = new ArrayList<>();
-    private Class type;
+    private Scope scope = Scope.SINGLETON;
+    private Class registeredType;
+    private Class concreteType;
 
     public List<Class> getDependencies() {
-        return dependencies;
+        return new ArrayList<>();
     }
 
-    public void setDependencies(List<Class> dependencies) {
-        this.dependencies = dependencies;
+    public Class getRegisteredType() {
+        return registeredType;
     }
 
-    public Class getType() {
-        return type;
-    }
-
-    public void setType(Class type) {
-        this.type = type;
+    public void setRegisteredType(Class registeredType) {
+        this.registeredType = registeredType;
     }
 
     public Object getInstance() {
@@ -60,5 +57,16 @@ public class Instance {
 
     public void setScope(Scope scope) {
         this.scope = scope;
+    }
+
+    public Class getConcreteType() {
+        return concreteType;
+    }
+
+    public void setConcreteType(Class concreteType) {
+        if(concreteType.isInterface()){
+            throw new InstanceException("The type '" + concreteType.getName() + "' is not a instantiable class");
+        }
+        this.concreteType = concreteType;
     }
 }

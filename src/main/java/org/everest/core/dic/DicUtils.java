@@ -1,7 +1,7 @@
 package org.everest.core.dic;
 
 import org.everest.core.dic.exception.ComponentCreationException;
-import org.everest.core.dic.exception.ComponentException;
+import org.everest.core.dic.exception.InstanceException;
 import org.everest.exception.ReflexionException;
 
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ public class DicUtils {
             field.set(object, value);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new ComponentException(e);
+            throw new InstanceException(e);
         }
     }
 

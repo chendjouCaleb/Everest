@@ -2,40 +2,44 @@ package org.everest.core.dic.service;
 
 import org.everest.core.dic.Instance;
 import org.everest.core.dic.contract.IContainerService;
-import org.everest.core.dic.contract.IRetrieverService;
-import org.everest.core.dic.decorator.AutoWired;
-import org.everest.core.dic.exception.ComponentCreationException;
-import org.everest.exception.InstanceNotFoundException;
+import org.everest.utils.StringUtils;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class ContainerService implements IContainerService {
 
-    @Override
-    public void setInstanceKey(Instance instance, String key, Map<String, Instance> instances) {
-        if (key != null) {
-            if (instances.containsKey(key)) {
-                String message = "Error during the adding the component of class '" +
-                        instance.getInstance().getClass() + "'. " +
-                        "The key '" + key + "' is already used by another component : '"+
-                        instances.get(key).getType() + "'.";
 
-                throw new ComponentCreationException(message);
-            }
-            instance.setKey(key);
-        } else {
-
-            Class className = instance.getInstance().getClass();
-
-            if (countInstanceWithClass(className, instances) == 0) {
-                instance.setKey(getKey(className));
+    public void setInstanceKey(List<? extends Instance> instances) {
+        instances.forEach(instance -> {
+            String key = StringUtils.lowerFist(instance.getRegisteredType().getSimpleName());
+            if (!keyIsUsed(key, instances)) {
+                instance.setKey(key);
             } else {
-                instance.setKey(getKey(className) + "#" + countInstanceWithClass(className, instances));
+                instance.setKey(key + "#" + countInstanceByKey(key, instances));
             }
-            //System.out.println("Instance: " + instance.getType() + "; Key: " + instance.getKey());
-        }
+        });
+    }
 
+    boolean keyIsUsed(String key, List<? extends Instance> instances) {
+        for (Instance instance : instances) {
+
+            if (instance.getKey() != null && instance.getKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int countInstanceByKey(String key, List<? extends Instance> instances) {
+        int counter = 0;
+        for (Instance instance : instances) {
+            if (instance.getKey().equals(key)) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
     private String getKey(Class<?> className) {
@@ -44,49 +48,11 @@ public class ContainerService implements IContainerService {
         return name;
     }
 
-    @Override
-    public Instance getInstance(Class<?> clazz, Map<String, Instance> instances) {
-        return null;
-    }
-
-    @Override
-    public Instance getInstance(String name, Map<String, Instance> instances) {
-        return null;
-    }
-
-    @Override
-    public Set<String> getDependencies(IRetrieverService retrieverService, Instance instance, Map<String, Instance> instances) {
-        Set<String> dependencies = new HashSet<>();
-
-        Field[] fields = instance.getType().getDeclaredFields();
-
-        for (Field field: fields){
-            field.setAccessible(true);
-            AutoWired autoWired = field.getAnnotation(AutoWired.class);
-            if(autoWired != null){
-                if(autoWired.qualifier().equals("")){
-                    try{
-                        Instance dependency = retrieverService.getInstance(field.getType(), instances);
-                        dependencies.add(dependency.getKey());
-                    }catch (InstanceNotFoundException e){
-                        System.out.println("Error during the resolving the field " + field.getName() +
-                                " of " + instance.getType());
-                        throw new InstanceNotFoundException(e);
-                    }
-
-                }else {
-                    dependencies.add(autoWired.qualifier());
-                }
-            }
-        }
-        return dependencies;
-    }
-
     private int countInstanceWithClass(Class className, Map<String, Instance> instances) {
         int count = 0;
         Collection<Instance> ins = instances.values();
         for (Instance instance : ins) {
-            if (instance.getType().equals(className)) {
+            if (instance.getRegisteredType().equals(className)) {
                 count++;
             }
         }

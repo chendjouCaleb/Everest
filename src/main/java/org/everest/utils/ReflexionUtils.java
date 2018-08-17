@@ -1,5 +1,6 @@
 package org.everest.utils;
 
+import org.apache.commons.lang3.AnnotationUtils;
 import org.everest.exception.ReflexionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
+import java.text.CollationElementIterator;
+import java.util.*;
 
 public class ReflexionUtils {
     private static Logger logger = LoggerFactory.getLogger(ReflexionUtils.class);
@@ -83,6 +83,19 @@ public class ReflexionUtils {
         return classes;
     }
 
+    public static List<Class> getClasses(String... packageNames){
+        List<Class> classList = new ArrayList<>();
+        for(String name: packageNames){
+            classList.addAll(Arrays.asList(getClasses(name)));
+        }
+        return classList;
+    }
+    public static List<Class> getClasses(Collection<String> packageNames){
+        List<Class> classList = new ArrayList<>();
+        packageNames.forEach(name -> classList.addAll(Arrays.asList(getClasses(name))));
+        return classList;
+    }
+
     public static Method findMethodByAnnotation(Class type, Class<? extends Annotation> annotation){
         Method[] methods = type.getDeclaredMethods();
         for (Method method:methods){
@@ -93,8 +106,41 @@ public class ReflexionUtils {
         return null;
     }
 
-    public static boolean isAnnotatedBy(Method method, Class<? extends Annotation> annotation){
-        return method.getAnnotation(annotation) != null;
+    public static boolean isAnnotatedBy(Method method, Class<? extends Annotation>[] annotations){
+        for (Class annotation:annotations) {
+            if (method.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isAnnotatedBy(Method method, Collection<Class<? extends Annotation>> annotations){
+        for (Class annotation:annotations) {
+            if (method.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAnnotatedBy(Class type, Class<? extends Annotation> annotation){
+        return type.getAnnotation(annotation) != null;
+    }
+
+
+    public static boolean isAnnotatedBy(Class<?> type, Collection<Class<? extends Annotation>> annotations){
+        for (Class annotation:annotations){
+            if (type.getAnnotation(annotation) != null){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+
+    public static boolean isAnnotatedBy(Field field, Class<? extends Annotation> annotation){
+        return field.getAnnotation(annotation) != null;
     }
 
     public static boolean isAnnotatedByAnnotatedAnnotation(Method method, Class<? extends Annotation> annotation){
@@ -127,12 +173,60 @@ public class ReflexionUtils {
         List<Method> methods = new ArrayList<>();
         Method[] declaredMethods = type.getDeclaredMethods();
         for (Method method:declaredMethods){
-            if(isAnnotatedBy(method, annotation)){
+            if(isAnnotatedBy(method, new Class[]{annotation})){
                 methods.add(method);
             }
         }
         return methods;
     }
+
+    public static List<Method> findMethodsByAnnotation(Class type, Class<? extends Annotation>... annotations){
+        List<Method> methods = new ArrayList<>();
+        Method[] declaredMethods = type.getDeclaredMethods();
+        for (Method method:declaredMethods){
+            if(isAnnotatedBy(method, annotations)){
+                methods.add(method);
+            }
+        }
+        return methods;
+    }
+
+    public static List<Field> findFieldsByAnnotation(Class type, Class<? extends Annotation> annotation){
+        List<Field> fields = new ArrayList<>();
+        Field[] declaredFields = type.getDeclaredFields();
+        for (Field field: declaredFields){
+            if(isAnnotatedBy(field, annotation)){
+                fields.add(field);
+            }
+        }
+        return fields;
+    }
+
+    public static List<Field> getAllFields(Class type){
+        List<Field> fields = new ArrayList<>();
+        Class current = type;
+        while (current.getSuperclass() != null){
+            fields.addAll(Arrays.asList(current.getDeclaredFields()));
+            current = current.getSuperclass();
+        }
+        return fields;
+    }
+
+    @SafeVarargs
+    public static List<Field> findFieldsByAnnotation(Class type, Class<? extends Annotation>... annotations){
+        List<Field> fields = new ArrayList<>();
+        List<Field> typeFields = getAllFields(type);
+        for (Field field: typeFields){
+            //System.out.println("Fields: " + field.getName());
+            for (Class<? extends Annotation> annotation:annotations){
+                if(isAnnotatedBy(field, annotation) && !fields.contains(field)){
+                    fields.add(field);
+                }
+            }
+        }
+        return fields;
+    }
+
     public static List<Method> findMethodsByAnnotatedAnnotation(Class type, Class<? extends Annotation> annotation){
         List<Method> methods = new ArrayList<>();
         Method[] declaredMethods = type.getDeclaredMethods();

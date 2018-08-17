@@ -1,8 +1,9 @@
 package org.everest.mvc.infrastructure;
-import org.everest.exception.RouteNotFoundException;
 import org.everest.mvc.actionResultHandler.ActionResultHandler;
-import org.everest.mvc.context.RouteContext;
+import org.everest.mvc.binding.ModelBinder;
+import org.everest.mvc.binding.ModelValidator;
 import org.everest.mvc.decorator.HttpMapping;
+import org.everest.mvc.errorHandler.ErrorEventManager;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.httpContext.decorator.HttpController;
 import org.everest.mvc.filter.FilterManager;
@@ -18,17 +19,15 @@ import org.everest.mvc.classHandler.RequestFilterHandler;
 import org.everest.mvc.errorHandler.DefaultErrorHandler;
 import org.everest.mvc.errorHandler.IErrorHandler;
 import org.everest.core.event.EventEmitter;
-import org.everest.mvc.form.Form;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import org.everest.mvc.router.Router;
+
+import org.everest.mvc.service.RequestBodyHandler;
 import org.everest.mvc.variableResolver.RequestVariableResolver;
-import org.everest.mvc.variableResolver.VariableResolverHandler;
 import org.everest.mvc.service.JSONService;
 import org.everest.utils.ReflexionUtils;
-import org.everest.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,25 +37,25 @@ public class WebApplication {
     private HttpContextBuilder httpContextBuilder = new HttpContextBuilder();
     private ApplicationInitializer initializer;
 
-    private FrontalController frontalController;
     private ApplicationContext context;
     private List<IErrorHandler> errorHandlers = new ArrayList<>();
     private List<Object> controllers = new ArrayList<>();
     private List<Object> listeners = new ArrayList<>();
     private List<RouteModel> routeModels = new ArrayList<>();
 
+private ErrorEventManager errorEventManager = new ErrorEventManager();
     private DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler();
-    private Router router;
     private RouteLoader routeLoader;
-    private RouteDispatcher routeDispatcher = new RouteDispatcher();
+    private RouteBuilder routeBuilder = new RouteBuilder();
     private FilterManager filterManager = new FilterManager();
     private RequestVariableResolver variableResolver = new RequestVariableResolver();
     private ActionResultHandler actionResultHandler = new ActionResultHandler();
+    private MvcRunner mvcRunner = new MvcRunner();
+
 
     public WebApplication(){
         context = new ApplicationContext();
         StaticContext.setContext(context);
-        StaticContext.addComponent();
         addClassHandler();
 
     }
@@ -68,77 +67,38 @@ public class WebApplication {
         return app;
     }
 
-    public void run(HttpServletRequest servletRequest, HttpServletResponse servletResponse){
-
-        EventEmitter.getInstance().emit("OnApp.Request");
+    public void run(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         HttpContext httpContext = httpContextBuilder.build(servletRequest, servletResponse);
-        try{
-            frontalController.handleRequest(httpContext);
-        }catch (RouteNotFoundException ex){
-            String pathInfo = httpContext.getRequest().getPathInfo();
-            RouteModel routeModel = routeDispatcher.getCalledRoute(routeModels, pathInfo, httpContext.getRequest().getHttpMethod());
-            RouteContext routeContext = routeDispatcher.createRouteContext(routeModel, pathInfo);
-            httpContext.setRouteModel(routeModel);
-            httpContext.setRouteContext(routeContext);
-            httpContext.setController(routeModel.getControllerModel().getObject());
-            httpContext.getRequest().addAttribute("ctrl", router);
-            httpContext.getRequest().addAttribute("route", httpContext.getRouteContext());
-            httpContext.getRequest().addAttribute("model", httpContext.getModel().getObjects());
-
-            filterManager.handleFilter(httpContext);
-
-            if(httpContext.getFilterChain().isFinished()){
-
-                try {
-                    Object[] params = variableResolver.getVariables(httpContext);
-                    Object result = Utils.callRemote(routeModel.getControllerModel().getObject(), routeModel.getMethod(), params);
-                    httpContext.setActionResult(result);
-                    if(!routeModel.getMethod().getReturnType().equals(void.class) && result != null){
-                        actionResultHandler.handleActionResult(httpContext);
-                    }
-                }catch (Exception e){
-                    throw new ActionExecutionException("Error was occuring during the execution of action: " + httpContext.getController().getClass().getSimpleName() + ":"+ routeModel.getMethod().getName(), e);
-                }
-
-
-            }else {
-                actionResultHandler.handleActionResult(httpContext);
-            }
-
-            httpContext.getModel().getSessionsObjects().forEach((key, value) -> {
-                httpContext.getSession().setAttribute(key, value);
-            });
-
-        }
-        catch (Throwable e){
-            Utils.handleError(httpContext, e);
-        }
+        EventEmitter.getInstance().emit("OnApp.Request");
+        mvcRunner.run(httpContext);
     }
 
     private void addClassHandler(){
+
         context.addClassHandler(new ControllerHandler());
         context.addClassHandler(new ListenerHandler());
         context.addClassHandler(new ErrorClassHandler());
         context.addClassHandler(new RepositoryHandler());
         context.addClassHandler(new RequestFilterHandler());
-        context.addClassHandler(new VariableResolverHandler());
         context.addClassHandler(new ConverterHandler());
 
     }
 
     private void addServiceInstance(){
+        context.addInstance(errorEventManager);
         context.addInstance(filterManager);
         context.addInstance(variableResolver);
         context.addInstance(actionResultHandler);
-        router = new Router();
-        context.addInstance(router);
+        context.addInstance(routeBuilder);
         routeLoader = new RouteLoader();
         context.addInstance(routeLoader);
-        frontalController = new FrontalController();
-        context.addInstance(frontalController);
+        context.addInstance(mvcRunner);
         context.addInstance(EventEmitter.getInstance());
-        context.addInstance(new Form());
+        context.addInstance(new ModelValidator());
+        context.addInstance(new ModelBinder());
         context.addInstance(new JSONService());
+        context.addInstance(new RequestBodyHandler());
+        context.addInstance(new RouteDispatcher());
         context.initialize();
 
     }
@@ -160,6 +120,7 @@ public class WebApplication {
         }
         routeLoader.load(objects);
         routeModels = routeLoader.getRoutes();
+        routeBuilder.setRouteModels(routeLoader.getRoutes());
     }
 
     private void addErrorHandlers(){
@@ -169,7 +130,6 @@ public class WebApplication {
 
 
     public void init(String appClassString){
-        //frontalController= httpContext.getInstance(FrontalController.class);
         try {
             Class<?> appClass = Class.forName(appClassString);
             context.addInstance(appClass);
@@ -183,7 +143,6 @@ public class WebApplication {
             addControllers();
             addErrorHandlers();
             context.initialize();
-            router.init(controllers.toArray());
             logger.debug("There are {} Instance in httpContext", context.countDependencies());
             Class[] classes = ReflexionUtils.getClasses(initializer.getBasePackages()[0]);
             //Class[] classes = ReflexionUtils.getClasses("org.everest");

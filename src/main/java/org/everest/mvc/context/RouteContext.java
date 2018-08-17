@@ -19,6 +19,21 @@ public class RouteContext {
         return (T) ConvertUtils.convert(getParameter(name), type);
     }
 
+    public String getParameter(int index){
+        String name = parameterNames.get(index);
+        return parameters.get(name);
+    }
+
+    public <T> T getParameter(int index, Class<? extends T> type){
+        return (T) ConvertUtils.convert(getParameter(index), type);
+    }
+    public int getIntParameter(int index){
+        return Integer.valueOf(getParameter(index));
+    }
+    public int getIntParameter(String name){
+        return Integer.valueOf(parameters.get(name));
+    }
+
     public Map<String, String> getParameters() {
         return parameters;
     }

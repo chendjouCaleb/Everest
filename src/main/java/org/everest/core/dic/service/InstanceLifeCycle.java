@@ -15,7 +15,7 @@ public class InstanceLifeCycle implements IInstanceLifeCycle {
         }
 
         Instance instance = new Instance();
-        instance.setType(obj.getClass());
+        instance.setRegisteredType(obj.getClass());
         instance.setScope(scope);
         instance.setInstance(obj);
 

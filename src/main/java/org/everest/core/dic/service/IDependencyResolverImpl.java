@@ -1,58 +1,148 @@
 package org.everest.core.dic.service;
 
 import dic.AutoInject;
+import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.logging.log4j.CloseableThreadContext;
 import org.everest.core.dic.DicUtils;
+import org.everest.core.dic.FactoryInstance;
 import org.everest.core.dic.Instance;
+import org.everest.core.dic.TypeInstance;
 import org.everest.core.dic.contract.IRetrieverService;
 import org.everest.core.dic.contract.IDependencyResolver;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.core.dic.exception.DependencyResolutionException;
+import org.everest.core.dic.exception.InstanceException;
+import org.everest.decorator.Factory;
+import org.everest.utils.ReflexionUtils;
+import org.everest.utils.Utils;
+import org.joda.time.chrono.AssembledChronology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class IDependencyResolverImpl implements IDependencyResolver {
+    Logger logger = LoggerFactory.getLogger(IDependencyResolverImpl.class);
+    private IRetrieverService retrieverService;
+    private List<Instance> instances;
+
+    public IDependencyResolverImpl(IRetrieverService retrieverService) {
+        this.retrieverService = retrieverService;
+        this.instances = retrieverService.getInstances();
+    }
+
+    public void setParentToFactoryInstance(){
+        List<FactoryInstance> factoryInstances = retrieverService.getFactoryInstance();
+        factoryInstances.forEach(factoryInstance ->
+                factoryInstance.setParentInstance(retrieverService.getInstance(factoryInstance.getMethod().getDeclaringClass())));
+    }
+
     @Override
-    public void resolveInjection(IRetrieverService retrieverService, Instance instance,
-                                 Map<String, Instance> instances, Collection<String> dependencyKeys) {
-        Field[] fields = instance.getType().getDeclaredFields();
-        for (Field field: fields){
-            AutoWired autoWired = field.getAnnotation(AutoWired.class);
-            AutoInject autoInject = field.getAnnotation(AutoInject.class);
-            try{
-                if(autoWired != null){
-                    field.setAccessible(true);
-                    if(autoWired.qualifier().equals("")){
-                        DicUtils.assignField(field,instance.getInstance(), retrieverService.getInstance(field.getType(), instances).getInstance());
-                    }else {
-                        DicUtils.assignField(field, instance.getInstance(), retrieverService.getInstance(autoWired.qualifier(), instances).getInstance());
-                    }
-                }else if(autoInject != null){
-                    field.setAccessible(true);
-                    DicUtils.assignField(field,instance.getInstance(), retrieverService.getInstance(field.getType(), instances).getInstance());
+    public void resolveInstance(){
+        while (!isComplete()){
+            for (Instance instance:instances){
+                if(instance.getInstance() == null && isResolvable(instance)){
+
+                    resolveInstance(instance);
+                    logger.info("Resolution of: [{}]", instance.getRegisteredType(), instance.getInstance().getClass());
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-                System.out.println("Error occured during the resolving the dependencies of "
-                        + instance.getType().getSimpleName());
-                throw new DependencyResolutionException(e);
             }
-
-
-
         }
     }
 
+    private boolean isResolvable(Instance instance){
+        List<Instance> dependentInstances = retrieverService.getInstances(instance.getDependencies());
+        logger.info("Test of: {}", instance.getRegisteredType());
+        for (Instance instance1: dependentInstances){
 
-    @Override
-    public void resolveMethodInjection(Instance instance, List<String> dependencyKeys) {
+            logger.info("\t instance dependances: {}", instance1.getRegisteredType());
+            if(instance1.getInstance() == null){
+                return false;
+            }
+        }
+        logger.info("Instance of ok!");
+        return true;
+    }
+
+    private boolean isComplete(){
+        for (Instance instance:instances){
+            if(instance.getInstance() == null ){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void resolveInstance(Instance instance){
+        if(instance.getClass().equals(TypeInstance.class)){
+            TypeInstance typeInstance = (TypeInstance) instance;
+            Object[] constructorObjects = retrieverService.getObjects(retrieverService.getInstances(typeInstance.getConstructorDependencies())).toArray();
+            resolveConstructor(typeInstance, constructorObjects);
+            resolveFields(typeInstance);
+            executePostInitialization(typeInstance);
+        }else {
+            FactoryInstance factoryInstance = (FactoryInstance) instance;
+            resolveFactory(factoryInstance);
+        }
+    }
+
+    public void executePostInitialization(TypeInstance instance){
+        try {
+            Method method = instance.getConcreteType().getMethod("afterInitialization");
+            try {
+                method.invoke(instance.getInstance());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException ignore) { }
+    }
+    public void resolveConstructor(TypeInstance instance, Object[] objects){
+        try {
+            Object obj = ConstructorUtils.invokeConstructor(instance.getConcreteType(), objects);
+            instance.setInstance(obj);
+        } catch (Exception e) {
+            throw new InstanceException("Erreur lors de la création de l'instance '" + instance.getRegisteredType() + "'",e);
+        }
+    }
+
+    public void resolveFactory(FactoryInstance instance){
+        Object[] objects = retrieverService.getObjectByRegisteredType(instance.getMethodDependencies()).toArray();
+        try {
+            Object obj = Utils.callRemote(instance.getParentInstance().getInstance(),
+                    instance.getMethod().getName(), objects);
+            instance.setInstance(obj);
+        } catch (Exception e) {
+            throw new InstanceException("Erreur lors de la création de l'instance par méthode '" + instance.getMethod() + "'",e);
+        }
+    }
+
+    public void resolveFields(TypeInstance instance){
+        List<Field> fields = ReflexionUtils.getAllFields(instance.getConcreteType());
+        for (Field field: fields){
+            if(instance.getFieldDependencies().contains(field.getType())){
+                field.setAccessible(true);
+                try {
+                    field.set(instance.getInstance(), retrieverService.getInstance(field.getType()).getInstance());
+                } catch (IllegalAccessException e) {
+                    throw new InstanceException("Erreur lors de la resolution du champ " +
+                            field.getName() + " de la classe " + instance.getConcreteType(), e);
+                }
+            }
+        }
 
     }
 
-    @Override
-    public void resolveConstructorInjection(Instance instance, List<String> dependencyKeys) {
 
-    }
+
 }

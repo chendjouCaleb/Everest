@@ -1,11 +1,11 @@
 package org.everest.exception;
 
-public class ConflictException extends RuntimeException {
+public class ConflictException extends IllegalArgumentException {
     public ConflictException() {
     }
 
-    public ConflictException(String message) {
-        super(message);
+    public ConflictException(String s) {
+        super(s);
     }
 
     public ConflictException(String message, Throwable cause) {
@@ -14,9 +14,5 @@ public class ConflictException extends RuntimeException {
 
     public ConflictException(Throwable cause) {
         super(cause);
-    }
-
-    public ConflictException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

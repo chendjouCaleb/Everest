@@ -29,6 +29,8 @@ public class UrlGenerator {
         }
         url += matrixString;
 
+        //Add slash with url without shash at begin
+        url = "/" + StringUtils.trim(url, "/");
         if(port != 0){
             url = ":" + port + "/" + StringUtils.trim(url, "/");
         }
@@ -108,6 +110,10 @@ public class UrlGenerator {
 
     public UrlGenerator addParam(String key, String name){
         params.put(key, name);
+        return this;
+    }
+    public UrlGenerator addParam(String key, int value){
+        params.put(key, Integer.toString(value));
         return this;
     }
 

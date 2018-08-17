@@ -1,6 +1,5 @@
 package org.everest.mvc.actionResultHandler;
 
-import org.everest.core.dic.decorator.AutoWired;
 import org.everest.decorator.Instance;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.result.ActionResult;
@@ -19,6 +18,8 @@ public class ActionResultHandler {
         addActionResultHandler(new RedirectToRouteResponseHandler());
         addActionResultHandler(new JSONResponseHandler());
         addActionResultHandler(new ViewResultHandler());
+        addActionResultHandler(new ResponseEntityResultHandler());
+        addActionResultHandler(new HttpStatusCodeResponseHandler());
 
     }
     public void addActionResultHandler(IResultHandler<?> handler){
@@ -33,7 +34,10 @@ public class ActionResultHandler {
     }
 
     private void handleStatusCode(HttpContext context){
-        context.getResponse().setStatusCode(((ActionResult)context.getActionResult()).getStatusCode());
+        if (context.getActionResult().getClass().isAssignableFrom(ActionResult.class)){
+            context.getResponse().setStatusCode(((ActionResult)context.getActionResult()).getStatusCode());
+
+        }
     }
 
 }

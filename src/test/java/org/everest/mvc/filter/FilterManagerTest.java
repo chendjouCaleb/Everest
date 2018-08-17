@@ -36,7 +36,7 @@ public class FilterManagerTest {
     public void setUp() throws Exception {
         applicationContext.addClassHandler(new RequestFilterHandler());
         applicationContext.addClassHandler(new ControllerHandler());
-        applicationContext.addByPackage("org.everest.mvc");
+        applicationContext.getContainer().addPackage("org.everest.mvc");
         applicationContext.initialize();
         filterManager = applicationContext.getInstance(FilterManager.class);
 
@@ -67,8 +67,8 @@ public class FilterManagerTest {
     @Test
     public void executeFilter(){
         IFilter filter = new FilterOneMethod();
-        httpContext.setRequest(new Request(null));
-        httpContext.setResponse(new Response(null));
+        httpContext.setRequest(new Request());
+        httpContext.setResponse(new Response());
 
         IFilterResult filterResult = filterManager.executeFilter(filter, httpContext);
         logger.info("Result " + filterResult.getClass());

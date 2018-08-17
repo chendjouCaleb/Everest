@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface RequestBody {
     String value() default "";
+    boolean validate() default false;
 }

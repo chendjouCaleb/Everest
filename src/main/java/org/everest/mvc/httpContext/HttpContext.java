@@ -4,7 +4,7 @@ import org.everest.mvc.context.RouteContext;
 import org.everest.mvc.filter.FilterChain;
 import org.everest.mvc.identity.IdentityAccount;
 import org.everest.mvc.infrastructure.RouteModel;
-import org.everest.mvc.model.BindingState;
+import org.everest.mvc.binding.BindingState;
 import org.everest.mvc.model.Model;
 import org.everest.mvc.router.Route;
 
@@ -24,6 +24,7 @@ public class HttpContext {
     private IdentityAccount identityAccount;
     private RouteModel routeModel;
     private RouteContext routeContext;
+    private boolean restContext;
 
     public Request getRequest() {
         return request;
@@ -136,5 +137,13 @@ public class HttpContext {
         if(route != null)
             return route.getMethod();
         return routeModel.getMethod();
+    }
+
+    public boolean isRestContext() {
+        return restContext;
+    }
+
+    public void setRestContext(boolean restContext) {
+        this.restContext = restContext;
     }
 }
