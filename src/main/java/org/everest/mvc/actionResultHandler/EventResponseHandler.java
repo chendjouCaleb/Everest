@@ -7,9 +7,14 @@ import org.everest.mvc.infrastructure.StaticContext;
 
 
 public class EventResponseHandler implements IResultHandler<Event> {
+    private EventEmitter eventEmitter;
+
+    public EventResponseHandler(EventEmitter eventEmitter) {
+        this.eventEmitter = eventEmitter;
+    }
+
     @Override
     public void handleResponse(HttpContext context, Event event) {
-        EventEmitter eventEmitter = StaticContext.context.getInstance(EventEmitter.class);
        eventEmitter.emit(event.getName(), event.getParams());
     }
 

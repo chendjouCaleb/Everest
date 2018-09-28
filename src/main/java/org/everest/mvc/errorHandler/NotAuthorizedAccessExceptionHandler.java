@@ -15,7 +15,6 @@ public class NotAuthorizedAccessExceptionHandler implements IErrorHandler<NotAut
     @Override
     public ActionResult handleError(HttpContext httpContext, NotAuthorizedAccessException exception) {
         ErrorResponseModel model = new ErrorResponseModel(exception);
-
         return new ResponseEntity<>(model, HttpStatus.UNAUTHORIZED);
     }
 }

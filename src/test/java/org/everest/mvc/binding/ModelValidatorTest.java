@@ -1,5 +1,6 @@
 package org.everest.mvc.binding;
 
+import org.everest.core.dic.Container;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,11 +12,12 @@ import static org.junit.Assert.*;
 
 public class ModelValidatorTest {
     private Logger logger = LoggerFactory.getLogger(ModelValidatorTest.class);
-    private ModelValidator modelValidator = new ModelValidator();
+    private ModelValidator modelValidator;
+    private BindingConfiguration configuration = new BindingConfiguration();
 
     @Before
     public void setUp() throws Exception {
-        modelValidator.initialize(modelValidator.validatorFactory(modelValidator.constraintValidatorFactory()));
+        modelValidator = new ModelValidator(configuration.validatorFactory(new EverestConstraintValidatorFactory(new Container())));
     }
 
     @Test

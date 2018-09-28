@@ -16,19 +16,22 @@ import java.util.Map;
 
 public class RequestBodyResolver implements IVariableResolverByAnnotation<RequestBody> {
     private Logger logger = LoggerFactory.getLogger(RequestBodyResolver.class);
+    private RequestBodyHandler requestBodyHandler;
+    private IModelValidator modelValidator;
+
+    public RequestBodyResolver(RequestBodyHandler requestBodyHandler, IModelValidator modelValidator) {
+        this.requestBodyHandler = requestBodyHandler;
+        this.modelValidator = modelValidator;
+    }
 
     @Override
     public Object getVariable(HttpContext httpContext, Parameter parameter, RequestBody annotation) {
-        RequestBodyHandler handler = StaticContext.context.getInstance(RequestBodyHandler.class);
-        IModelValidator modelValidator = StaticContext.context.getInstance(IModelValidator.class);
 
-Object obj = handler.getBody(httpContext, parameter.getType());
-        logger.info("Request body type: {}", obj.getClass());
-        logger.info("Request body: {}", obj.toString());
-        if(!annotation.value().equals("")){
+        Object obj = requestBodyHandler.getBody(httpContext, parameter.getType());
+        if (!annotation.value().equals("")) {
             httpContext.getModel().addData(annotation.value(), obj);
-        }else {
-            httpContext.getModel().addData(annotation.value(), obj.getClass().getSimpleName().toLowerCase());
+        } else {
+            httpContext.getModel().addData(obj.getClass().getSimpleName().toLowerCase(), obj.getClass().getSimpleName().toLowerCase());
         }
         httpContext.setRequestBody(obj);
 
@@ -37,10 +40,11 @@ Object obj = handler.getBody(httpContext, parameter.getType());
         state.setFieldErrors(errors);
         httpContext.getModel().addData("errors", errors);
         httpContext.getModel().addData("state", state);
+        httpContext.getRequest().addAttribute("state", state);
 
-        if(annotation.validate() && state.getErrors().size() > 0){
-                throw new ObjectValidationException("L'object est invalide", state.getErrors());
-            }
+        if (annotation.validate() && state.getErrors().size() > 0) {
+            throw new ObjectValidationException("L'object est invalide", state.getErrors());
+        }
         httpContext.setBindingState(state);
 
 

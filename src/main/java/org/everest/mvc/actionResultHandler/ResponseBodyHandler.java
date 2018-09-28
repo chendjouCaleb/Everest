@@ -1,27 +1,27 @@
 package org.everest.mvc.actionResultHandler;
 
+import org.everest.decorator.Instance;
 import org.everest.exception.OperationException;
-import org.everest.mvc.http.MediaType;
 import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.infrastructure.StaticContext;
 import org.everest.mvc.responseBody.IResponseBodyTransformer;
-import org.everest.mvc.responseBody.JsonResponseBodyTransformer;
-import org.everest.mvc.responseBody.PlainTextResponseBodyTransformer;
-import org.everest.mvc.result.JSON;
-import org.everest.mvc.service.JSONService;
 import org.everest.utils.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Instance
 public class ResponseBodyHandler {
-    Map<String, IResponseBodyTransformer> transformers = new HashMap<>();
-    public ResponseBodyHandler(){
-        JsonResponseBodyTransformer jsonTransformer = new JsonResponseBodyTransformer();
-        transformers.put(MediaType.TEXT_PLAIN_VALUE, new PlainTextResponseBodyTransformer());
-        transformers.put(MediaType.APPLICATION_JSON_VALUE, jsonTransformer );
-        transformers.put(MediaType.APPLICATION_JSON_UTF8_VALUE, jsonTransformer);
+    private Map<String, IResponseBodyTransformer> transformers = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(ResponseBodyHandler.class);
+
+    public void addTransformers(IResponseBodyTransformer responseBodyTransformer){
+        responseBodyTransformer.getMediaType().forEach(mediaType -> {
+            logger.info("New transformer:[type= {}, class= {}]", mediaType, responseBodyTransformer.getClass().getSimpleName());
+            transformers.put(mediaType, responseBodyTransformer);
+        });
     }
 
     public String handleBody(HttpContext httpContext, Object object) {

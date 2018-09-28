@@ -5,7 +5,6 @@ public class UtilsTest {
 
     @Test
     public void convert(){
-        RequestVariableResolver requestVariableResolver = new RequestVariableResolver();
         String a = "#10";
         System.out.println(a.substring(0));
     }

@@ -17,7 +17,7 @@ public class ModelValidator implements IModelValidator {
     private Logger logger = LoggerFactory.getLogger(ModelValidator.class);
     private Validator validator;
 
-    public void initialize(ValidatorFactory validatorFactory) {
+    public ModelValidator(ValidatorFactory validatorFactory) {
         validator = validatorFactory.getValidator();
         logger.info("Validator provider: " + validator.getClass());
     }
@@ -52,18 +52,17 @@ public class ModelValidator implements IModelValidator {
         return errors;
     }
 
-    @Instance
-    ValidatorFactory validatorFactory(ConstraintValidatorFactory constraintValidatorFactory){
 
-        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
-                .configure().constraintValidatorFactory(constraintValidatorFactory)
-                .buildValidatorFactory();
-        return validatorFactory;
+    public void validateByPattern(String value, String pattern, String errorMessage) {
+        if(errorMessage == null){
+            errorMessage = "La chaine " + value + " est incorrecte";
+        }
+        if (!value.matches(pattern)){
+            throw new ObjectValidationException(errorMessage);
+        }
     }
 
-    @Instance
-    ConstraintValidatorFactory constraintValidatorFactory(){
-        ConstraintValidatorFactoryImpl factory = new ConstraintValidatorFactoryImpl();
-        return factory;
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 }

@@ -12,10 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 public class RedirectToRouteResponseHandler implements IResultHandler<RouteRedirection> {
+    private RouteBuilder routeBuilder;
+
+    public RedirectToRouteResponseHandler(RouteBuilder routeBuilder) {
+        this.routeBuilder = routeBuilder;
+    }
 
     @Override
     public void handleResponse(HttpContext httpContext, RouteRedirection result) {
-        RouteBuilder routeBuilder = StaticContext.context.getInstance(RouteBuilder.class);
         result.getData().forEach((key, value) -> httpContext.getModel().addData(key, value));
         httpContext.getSession().setAttribute("redirectAttributes", result.getData());
         if(httpContext.getSession().getAttribute("flashMessage") == null){
@@ -24,7 +28,7 @@ public class RedirectToRouteResponseHandler implements IResultHandler<RouteRedir
         List<Message> flashMessages = (List<Message>) httpContext.getSession().getAttribute("flashMessage");
         flashMessages.addAll(result.getFlashs());
         if(result.getParameters().size() == 0){
-            httpContext.getResponse().redirect(routeBuilder.url(result.getTarget(), (String[]) result.getParams()));
+            httpContext.getResponse().redirect(routeBuilder.url(result.getTarget(), result.getParams()));
         }else {
             httpContext.getResponse().redirect(routeBuilder.url(result.getTarget(), result.getParameters()));
         }

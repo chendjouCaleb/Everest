@@ -1,14 +1,30 @@
 package org.everest.mvc.service;
 
-import org.everest.core.dic.decorator.AutoWired;
+import org.everest.mvc.http.MediaType;
 import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.infrastructure.StaticContext;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class JsonBodyHandler implements IRequestBodyHandler {
-    JSONService service = StaticContext.context.getInstance(JSONService.class);
+    private JSONService service;
+
+    public JsonBodyHandler(JSONService service) {
+        this.service = service;
+    }
+
     @Override
     public Object getBody(HttpContext httpContext, Class<?> type) {
         String value = httpContext.getRequest().getBodyString();
         return  service.toObject(value, type);
+    }
+
+    @Override
+    public Collection<String> getMediaTypes() {
+        List<String> medias = new ArrayList<>();
+        medias.add(MediaType.APPLICATION_JSON_VALUE);
+        medias.add(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        return medias;
     }
 }

@@ -35,7 +35,7 @@ public class ContainerService implements IContainerService {
     int countInstanceByKey(String key, List<? extends Instance> instances) {
         int counter = 0;
         for (Instance instance : instances) {
-            if (instance.getKey().equals(key)) {
+            if (instance.getKey()!= null && instance.getKey().equals(key)) {
                 counter++;
             }
         }

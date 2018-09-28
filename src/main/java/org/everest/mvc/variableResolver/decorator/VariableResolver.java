@@ -1,8 +1,6 @@
 package org.everest.mvc.variableResolver.decorator;
 
 
-import org.everest.decorator.HandlerBy;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

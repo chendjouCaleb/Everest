@@ -1,5 +1,6 @@
 package org.everest.core.dic;
 
+import org.apache.el.util.ReflectionUtil;
 import org.everest.core.dic.contract.*;
 import org.everest.core.dic.decorator.Bean;
 import org.everest.core.dic.enumeration.Scope;
@@ -9,6 +10,12 @@ import org.everest.decorator.Component;
 import org.everest.decorator.Repository;
 import org.everest.utils.Assert;
 import org.everest.utils.ReflexionUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +35,7 @@ public class Container {
     private InstanceBuilder instanceBuilder = new InstanceBuilder();
     private InstanceValidator instanceValidator = new InstanceValidator();
     private ContainerFilter containerFilter = new ContainerFilter();
+    private ContainerEventHandler containerEventHandler;
 
     private List<String> packageNames = new ArrayList<>();
     private List<Class> candidateClasses = new ArrayList<>();
@@ -46,6 +54,7 @@ public class Container {
         addFactoryAnnotationHandler(Bean.class, new BeanFactoryAnnotationHandler());
         addFactoryAnnotationHandler(org.everest.decorator.Instance.class, new InstanceFactoryAnnotationHandler());
         addTypeFilter(new ControllerFilter());
+        containerEventHandler = new ContainerEventHandler(this);
     }
 
     public void initialize(){
@@ -67,12 +76,31 @@ public class Container {
         dependencyResolver.resolveInstance();
 
         containerService.setInstanceKey(typeInstances);
+        containerEventHandler.executeAfterContainerInitialized();
 
         logger.info("Class candidates: {}", getInstanceList().size());
     }
 
     void initializeContainerFilter(){
-        List<Class> classForFilter = ReflexionUtils.getClasses(packageNames);
+        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
+        classLoadersList.add(ClasspathHelper.contextClassLoader());
+        classLoadersList.add(ClasspathHelper.staticClassLoader());
+        FilterBuilder filterBuilder = new FilterBuilder();
+        packageNames.forEach(name -> filterBuilder.include(FilterBuilder.prefix(name)));
+
+        //filterBuilder.include(FilterBuilder.prefix("org"));
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+                .filterInputsBy(filterBuilder));
+
+        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
+        List<Class> classForFilter = new ArrayList<>();
+        classForFilter.addAll(classes);
+
+        //logger.info();
+
+        logger.info("There are {} class to filter", classes.size());
 
         containerFilter.setMethodAnnotations(factoryAnnotations);
         containerFilter.setTypeAnnotations(typesAnnotations);
@@ -132,16 +160,18 @@ public class Container {
         TypeInstance instance = instanceBuilder.createInstanceByObject(object);
         instance.setScope(Scope.SINGLETON);
         instance.setKey(name);
-        typeInstances.add(instance);
+        instanceList.add(instance);
+        logger.info("new instance " + instance);
         return instance;
+
     }
 
-    public Instance getInstance(String key){
-        return retrieverService.getInstance(key);
+    public Object getInstance(String key){
+        return retrieverService.getInstance(key).getInstance();
     }
 
-    public Instance getInstance(Class clazz){
-        return retrieverService.getInstance(clazz);
+    public <T> T getInstance(Class<? extends T> clazz){
+        return (T) retrieverService.getInstance(clazz).getInstance();
     }
 
 
@@ -175,10 +205,20 @@ public class Container {
         typeFilters.add(typeFilter);
     }
 
+    public ITypeFilter getTypeFilter(Class<? extends ITypeFilter> type){
+        return typeFilters.stream().filter(f -> f.getClass().equals(type))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Aucun ITypeFilter de type '" + type + "' n'a été trouvé"));
+    }
+
     public List<Instance> getInstanceList() {
         List<Instance> instanceList = new ArrayList<>();
         instanceList.addAll(typeInstances);
         instanceList.addAll(factoryInstances);
         return instanceList;
+    }
+
+    public IRetrieverService getRetrieverService() {
+        return retrieverService;
     }
 }

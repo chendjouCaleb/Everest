@@ -43,7 +43,7 @@ public class FilterManager {
             logger.info("\nFilter execution =[{}]", filter.getClass());
             logger.info("Filter Result Class= [{}]", result.getClass());
             if (!result.getClass().equals(Next.class)){
-                httpContext.setActionResult((ActionResult)result);
+                httpContext.setActionResult(result);
                 logger.info("Filter execution Intercepted");
                 return;
             }
@@ -101,7 +101,7 @@ public class FilterManager {
             FilterBy filter = annotation.annotationType().getAnnotation(FilterBy.class);
             if (filter != null) {
                 try {
-                    IFilter instance = (IFilter) applicationContext.getInstance(filter.filter());
+                    IFilter instance = (IFilter) applicationContext.getContainer().getInstance(filter.filter());
                     instance.init(annotation);
                     filters.add(instance);
                 } catch (Exception e) {

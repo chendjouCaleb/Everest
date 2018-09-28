@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public class HttpStatusCodeResponseHandler implements IResultHandler<HttpStatus> {
 
-
-    @Override
     public void handleResponse(HttpContext context, HttpStatus result) {
         context.getResponse().getServletResponse().setStatus(result.value());
         try {

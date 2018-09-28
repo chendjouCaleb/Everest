@@ -1,6 +1,7 @@
 package org.everest.core.dic;
 
 import org.everest.dic.test.repository.GalaxyRepository;
+import org.everest.service.Message;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,11 @@ public class ContainerTest {
        Assert.assertEquals(16, container.getInstanceList().size());
     }
 
+    @Test
+    public void addObjectWithKey(){
+        container.addInstance(new Message(), "message");
+        container.getInstance("message");
+    }
     @Test
     public void printKey(){
         container.getInstanceList().forEach(instance -> logger.info("Type:[{}]; Key:[{}]", instance.getRegisteredType(), instance.getKey()));

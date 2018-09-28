@@ -1,8 +1,6 @@
 package org.everest.mvc.filter;
 
 import org.everest.context.ApplicationContext;
-import org.everest.mvc.classHandler.ControllerHandler;
-import org.everest.mvc.classHandler.RequestFilterHandler;
 import org.everest.mvc.controller.FirstController;
 import org.everest.mvc.filter.method.FilterFourMethod;
 import org.everest.mvc.filter.method.FilterOneMethod;
@@ -34,11 +32,10 @@ public class FilterManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        applicationContext.addClassHandler(new RequestFilterHandler());
-        applicationContext.addClassHandler(new ControllerHandler());
-        applicationContext.getContainer().addPackage("org.everest.mvc");
+
+
         applicationContext.initialize();
-        filterManager = applicationContext.getInstance(FilterManager.class);
+        filterManager = applicationContext.getContainer().getInstance(FilterManager.class);
 
         httpContext = new HttpContext();
         httpContext.setController(new FirstController());

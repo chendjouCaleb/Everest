@@ -1,7 +1,13 @@
 package org.everest.mvc.variableResolver;
 
 
+import org.everest.core.dic.Container;
+import org.everest.core.dic.decorator.AfterContainerInitilized;
+import org.everest.core.dic.handler.ITypeFilter;
 import org.everest.decorator.Component;
+import org.everest.decorator.Instance;
+import org.everest.mvc.classFilter.VariableResolverByAnnotationClassFilter;
+import org.everest.mvc.classFilter.VariableResolverByTypeClassFilter;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.variableResolver.decorator.ResolvedBy;
 import org.everest.mvc.variableResolver.resolver.byAnnotation.*;
@@ -14,31 +20,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
-@Component
+@Instance
 public class RequestVariableResolver {
     private Map<Class<?>, IVariableResolverByAnnotation> variableResolvers = new HashMap<>();
     private Map<Class<?>, IVariableResolverByType> variableResolversByType = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(RequestVariableResolver.class);
-    public RequestVariableResolver(){
-        addVariableResolverByAnnotation(new PathVariableResolver());
-        addVariableResolverByAnnotation(new QueryVariableResolver());
-        addVariableResolverByAnnotation(new ComponentResolver());
-        addVariableResolverByAnnotation(new HttpRequestVariableResolver());
-        addVariableResolverByAnnotation(new SessionAttributeResolver());
-        addVariableResolverByAnnotation(new ModelAttributeVariableResolver());
-        addVariableResolverByAnnotation(new RequestBodyResolver());
-
-        addVariableResolverByType(new RequestRevolver());
-        addVariableResolverByType(new ResponseRevolver());
-        addVariableResolverByType(new SessionRevolver());
-        addVariableResolverByType(new ModelRevolver());
-        addVariableResolverByType(new RouteRevolver());
-        addVariableResolverByType(new HttpContextResolver());
-        addVariableResolverByType(new BindingStateRevolver());
-        addVariableResolverByType(new IdentityAccountResolver());
-        addVariableResolverByType(new RouteContextResolver());
-
-    }
 
     public void addVariableResolverByAnnotation(IVariableResolverByAnnotation variableResolver){
         variableResolvers.put(variableResolver.getClass(), variableResolver);

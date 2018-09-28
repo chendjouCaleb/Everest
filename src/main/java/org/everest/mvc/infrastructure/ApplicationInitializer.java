@@ -3,6 +3,7 @@ package org.everest.mvc.infrastructure;
 import org.everest.context.ApplicationContext;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.mvc.component.MultiPartConfig;
+import org.everest.mvc.http.CORSConfig;
 import org.everest.mvc.renderer.ThymeleafViewRenderer;
 import org.everest.mvc.renderer.ViewRenderer;
 
@@ -39,4 +40,6 @@ public abstract class ApplicationInitializer {
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
+
+    public abstract CORSConfig corsConfig();
 }

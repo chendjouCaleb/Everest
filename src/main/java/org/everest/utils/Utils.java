@@ -15,6 +15,7 @@ public class Utils {
         return method.invoke(instance, argumentsWithSession);
     }
 
+
     public static Object callRemote(Object instance, Method method, Object... arguments) throws Exception {
         method.setAccessible(true);
         Object[] argumentsWithSession = createArguments(arguments);
@@ -64,16 +65,16 @@ public class Utils {
             throwable.printStackTrace();
         }
     }
-    public static void handleError(HttpContext context, Throwable throwable){
-        WebApplication app = WebApplication.getApp();
-        System.out.println("Error was occurred during thr request handling: " + throwable.getClass());
-        for(IErrorHandler errorHandler: app.getErrorHandlers()){
-            if (throwable.getClass().equals(errorHandler.getErrorType())){
-                errorHandler.handleError(context, throwable);
-                return;
-            }
-        }
-        System.out.println("Using the default error Manager");
-        app.getDefaultErrorHandler().handleError(context, throwable);
-    }
+//    public static void handleError(HttpContext context, Throwable throwable){
+//        WebApplication app = WebApplication.getApp();
+//        System.out.println("Error was occurred during thr request handling: " + throwable.getClass());
+//        for(IErrorHandler errorHandler: app.getErrorHandlers()){
+//            if (throwable.getClass().equals(errorHandler.getErrorType())){
+//                errorHandler.handleError(context, throwable);
+//                return;
+//            }
+//        }
+//        System.out.println("Using the default error Manager");
+//        app.getDefaultErrorHandler().handleError(context, throwable);
+//    }
 }

@@ -7,6 +7,7 @@ import org.everest.dic.test.component.NebularComponent;
 import org.everest.dic.test.component.PulsarComponent;
 import org.everest.dic.test.controller.UniverseController;
 import org.everest.dic.test.repository.GalaxyRepository;
+import org.everest.dic.test.repository.IGalaxyRepository;
 import org.everest.dic.test.repository.NebularRepository;
 import org.everest.dic.test.service.GalaxyService;
 import org.everest.dic.test.service.IGalaxyService;
@@ -39,10 +40,10 @@ public class DependencyInspectorTest {
 
     @Test
     public void getDependentTypesWithMethod() throws Exception {
-        Method method = LuminaryFactory.class.getMethod("nebularService", GalaxyRepository.class, NebularRepository.class);
+        Method method = LuminaryFactory.class.getMethod("nebularService", IGalaxyRepository.class, NebularRepository.class);
         List<Class> types = dependencyInspector.getDependentTypesByMethod(method);
         assertEquals(2, types.size());
-        assertEquals(GalaxyRepository.class, types.get(0));
+        assertEquals(IGalaxyRepository.class, types.get(0));
         assertEquals(NebularRepository.class, types.get(1));
     }
 

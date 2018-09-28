@@ -36,6 +36,8 @@ public class Instance {
                 "instance=" + instance +
                 ", key='" + key + '\'' +
                 ", scope=" + scope +
+                ", registeredType=" + registeredType +
+                ", concreteType=" + concreteType +
                 '}';
     }
 

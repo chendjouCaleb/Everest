@@ -17,6 +17,7 @@ import org.everest.dic.test.component.NebularComponent;
 import org.everest.dic.test.component.PulsarComponent;
 import org.everest.dic.test.controller.UniverseController;
 import org.everest.dic.test.repository.GalaxyRepository;
+import org.everest.dic.test.repository.IGalaxyRepository;
 import org.everest.dic.test.repository.NebularRepository;
 import org.everest.dic.test.service.GalaxyService;
 import org.everest.dic.test.service.IGalaxyService;
@@ -94,7 +95,7 @@ public class IDependencyResolverImplTest {
     @Test
     public void resolveFactoryInstance(){
         retrieverService.getInstance(NebularRepository.class).setInstance(new NebularRepository());
-        retrieverService.getInstance(GalaxyRepository.class).setInstance(new GalaxyRepository());
+        retrieverService.getInstance(IGalaxyRepository.class).setInstance(new GalaxyRepository());
         Instance luminaryInstance = retrieverService.getInstance( LuminaryFactory.class);
         luminaryInstance.setInstance(new LuminaryFactory());
         FactoryInstance instance = (FactoryInstance) retrieverService.getInstance(INebularService.class);

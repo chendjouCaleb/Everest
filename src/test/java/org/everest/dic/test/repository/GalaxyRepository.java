@@ -5,5 +5,5 @@ import org.everest.decorator.Repository;
 
 
 @Repository
-public class GalaxyRepository {
+public class GalaxyRepository implements IGalaxyRepository{
 }

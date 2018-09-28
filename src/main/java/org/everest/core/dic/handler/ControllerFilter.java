@@ -4,6 +4,9 @@ public class ControllerFilter implements ITypeFilter {
 
 
     public boolean isAdmissible(Class type) {
-        return type.getName().endsWith("Controller");
+        return
+                type.getName().endsWith("Controller") &&
+                        !type.getSimpleName().equals("HttpController") &&
+                        !type.getSimpleName().equals("Controller");
     }
 }

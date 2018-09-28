@@ -51,15 +51,9 @@ public class Response {
     }
 
     public void render(Request request, String path) throws ServletException, IOException {
-        EventEmitter eventEmitter = StaticContext.context.getInstance(EventEmitter.class);
-        eventEmitter.emit("response.render", request, path);
         twigRender(request, path);
     }
 
-    public String redirectToRoute(String name, Object... params) {
-        Router router = StaticContext.context.getInstance(Router.class);
-        return "redirect:" + router.relativeUrl(name, params);
-    }
 
     public void redirect(String url) {
         try {

@@ -1,6 +1,9 @@
 package org.everest.mvc.errorHandler;
 
+import org.everest.core.dic.Container;
+import org.everest.core.dic.decorator.AfterContainerInitilized;
 import org.everest.core.dic.decorator.AutoWired;
+import org.everest.decorator.Instance;
 import org.everest.mvc.actionResultHandler.ActionResultHandler;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.result.ActionResult;
@@ -10,17 +13,18 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+@Instance
 public class ErrorEventManager {
     private Logger logger = LoggerFactory.getLogger(ErrorEventManager.class);
-    @AutoWired ActionResultHandler resultHandler;
-    DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler();
-    RestDefaultErrorHandler restDefaultErrorHandler = new RestDefaultErrorHandler();
-    Map<Class<? extends Throwable>, IErrorHandler> errorHandlers = new HashMap<>();
+    private ActionResultHandler resultHandler;
+    private DefaultErrorHandler defaultErrorHandler;
+    private RestDefaultErrorHandler restDefaultErrorHandler;
+    private Map<Class<? extends Throwable>, IErrorHandler> errorHandlers = new HashMap<>();
 
-    public ErrorEventManager(){
-        addErrorHandler(new ObjectValidationExceptionHandler());
-        addErrorHandler(new NotAuthorizedAccessExceptionHandler());
+    public ErrorEventManager(ActionResultHandler resultHandler) {
+        this.resultHandler = resultHandler;
     }
+
     public void addErrorHandler(IErrorHandler handler){
         errorHandlers.put(handler.getErrorType(), handler);
     }
@@ -29,6 +33,7 @@ public class ErrorEventManager {
         logger.info("Error type: " + e.getClass());
         IErrorHandler errorHandler = getErrorHandler(e, context);
         logger.info("Error Handler: {}", errorHandler.getClass());
+
         ActionResult result = errorHandler.handleError(context, e);
 
         context.setActionResult(result);
@@ -47,4 +52,11 @@ public class ErrorEventManager {
         return errorHandler;
     }
 
+    @AfterContainerInitilized
+    public void setDefaultErrorHandler(Container container) {
+        this.defaultErrorHandler = (DefaultErrorHandler) container.getRetrieverService()
+                .getInstanceByRegisteredOrConcreteType(DefaultErrorHandler.class).getInstance();
+        this.restDefaultErrorHandler = (RestDefaultErrorHandler) container.getRetrieverService()
+                .getInstanceByRegisteredOrConcreteType(RestDefaultErrorHandler.class).getInstance();
+    }
 }

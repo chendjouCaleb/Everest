@@ -5,7 +5,11 @@ import org.everest.mvc.httpContext.HttpContext;
 
 public class ResponseEntityResultHandler implements IResultHandler<ResponseEntity> {
 
-    private ResponseBodyHandler bodyHandler = new ResponseBodyHandler();
+    private ResponseBodyHandler bodyHandler;
+
+    public ResponseEntityResultHandler(ResponseBodyHandler bodyHandler) {
+        this.bodyHandler = bodyHandler;
+    }
 
     public void handleResponse(HttpContext context, ResponseEntity result) {
         String body = bodyHandler.handleBody(context, result.getBody());

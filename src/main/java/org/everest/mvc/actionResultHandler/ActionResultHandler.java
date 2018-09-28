@@ -11,15 +11,6 @@ import java.util.Map;
 public class ActionResultHandler {
     private Map<Class<?>, IResultHandler<?>> handlers = new HashMap<>();
     public ActionResultHandler(){
-        addActionResultHandler(new StringResponseResolver());
-        addActionResultHandler(new EventResponseHandler());
-        addActionResultHandler(new RenderResponseHandler());
-        addActionResultHandler(new RedirectionResponseHandler());
-        addActionResultHandler(new RedirectToRouteResponseHandler());
-        addActionResultHandler(new JSONResponseHandler());
-        addActionResultHandler(new ViewResultHandler());
-        addActionResultHandler(new ResponseEntityResultHandler());
-        addActionResultHandler(new HttpStatusCodeResponseHandler());
 
     }
     public void addActionResultHandler(IResultHandler<?> handler){
@@ -40,5 +31,8 @@ public class ActionResultHandler {
         }
     }
 
+    public void setHandlers(Map<Class<?>, IResultHandler<?>> handlers) {
+        this.handlers = handlers;
+    }
 }
 

@@ -11,7 +11,7 @@ public class FactoryInstance extends Instance {
 
     @Override
     public List<Class> getDependencies() {
-        System.out.println("Dependencies count: " + super.getDependencies());
+        //System.out.println("Dependencies count: " + super.getDependencies());
         List<Class> dependencies = new ArrayList<>();
         dependencies.add(parentInstance.getRegisteredType());
         dependencies.addAll(methodDependencies);

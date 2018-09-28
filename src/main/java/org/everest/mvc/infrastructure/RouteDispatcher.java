@@ -1,5 +1,6 @@
 package org.everest.mvc.infrastructure;
 
+import org.everest.decorator.Instance;
 import org.everest.exception.RouteNotFoundException;
 import org.everest.mvc.context.RouteContext;
 import org.everest.utils.StringUtils;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Instance
 public class RouteDispatcher {
     private Logger logger = LoggerFactory.getLogger(RouteDispatcher.class);
     public RouteModel getCalledRoute(List<RouteModel> routeModels, String url, String verb){

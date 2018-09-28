@@ -1,5 +1,6 @@
 package org.everest.mvc.infrastructure;
 
+import org.everest.decorator.Instance;
 import org.everest.mvc.httpContext.HttpContext;
 import org.everest.mvc.httpContext.Request;
 import org.everest.mvc.httpContext.Response;
@@ -8,6 +9,7 @@ import org.everest.mvc.model.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 public class HttpContextBuilder {
     public HttpContext build(HttpServletRequest servletRequest, HttpServletResponse servletResponse){

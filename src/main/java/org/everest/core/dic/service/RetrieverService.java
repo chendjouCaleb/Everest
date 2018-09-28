@@ -5,9 +5,12 @@ import org.everest.core.dic.Instance;
 import org.everest.core.dic.TypeInstance;
 import org.everest.core.dic.contract.IRetrieverService;
 import org.everest.core.dic.enumeration.Scope;
+import org.everest.core.dic.handler.ITypeFilter;
 import org.everest.core.dic.handler.InstanceAnnotationHandler;
 import org.everest.exception.InstanceNotFoundException;
+import org.everest.utils.ReflexionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class RetrieverService implements IRetrieverService{
@@ -20,8 +23,12 @@ public class RetrieverService implements IRetrieverService{
 
 
     public Instance getInstance(String key) {
-        return instances.stream().filter(instance -> instance.getKey().equals(key)).findFirst()
-                .orElseThrow(() -> new InstanceNotFoundException("Instance with key '" + key + "' not found"));
+        for (Instance instance: instances){
+            if(instance.getKey() != null && instance.getKey().equals(key)){
+                return instance;
+            }
+        }
+        throw new InstanceNotFoundException("Instance with key '" + key + "' not found");
 
     }
 
@@ -61,7 +68,7 @@ public class RetrieverService implements IRetrieverService{
     @Override
     public List<Object> getObjects(List<Instance> instances){
         List<Object> objects = new ArrayList<>();
-        instances.forEach(instance -> objects.add(instance.getInstance()));
+        instances.forEach(instance -> objects.add(instance.getRegisteredType().cast(instance.getInstance())));
         return objects;
     }
 
@@ -96,5 +103,77 @@ public class RetrieverService implements IRetrieverService{
     @Override
     public List<Instance> getInstances() {
         return instances;
+    }
+
+    @Override
+    public List<Instance> getInstanceBySuperType(Class type) {
+        List<Instance> instanceList = new ArrayList<>();
+        instances.forEach(instance -> {
+            Class superClass = instance.getInstance().getClass().getSuperclass();
+            if(superClass != null && superClass.equals(type)){
+                instanceList.add(instance);
+            }
+        });
+
+        return instanceList;
+    }
+
+    @Override
+    public List<Instance> getInstanceByInterface(Class type) {
+        List<Instance> instanceList = new ArrayList<>();
+        instances.forEach(instance -> {
+            List<Class> classList = Arrays.asList(instance.getInstance().getClass().getInterfaces());
+            if(classList.contains(type)){
+                instanceList.add(instance);
+            }
+        });
+
+        return instanceList;
+    }
+
+    @Override
+    public List<Instance> getInstanceByAnnotation(Class<? extends Annotation> annotation) {
+        List<Instance> instanceList = new ArrayList<>();
+        instances.forEach(instance -> {
+            if(ReflexionUtils.isAnnotatedBy(instance.getInstance().getClass(), annotation)){
+                instanceList.add(instance);
+            }
+        });
+
+        return instanceList;
+    }
+
+    @Override
+    public List<Instance> getInstanceByTypeFilter(ITypeFilter typeFilter) {
+        List<Instance> instanceList = new ArrayList<>();
+        instances.forEach(instance -> {
+            Class classe = instance.getInstance().getClass();
+            if(typeFilter.isAdmissible(classe)){
+                instanceList.add(instance);
+            }
+        });
+
+        return instanceList;
+    }
+
+    @Override
+    public <T> List<T> getObjectBySuperType(Class type) {
+
+        return (List<T>) getObjects(getInstanceBySuperType(type));
+    }
+
+    @Override
+    public <T> List<T> getObjectByInterface(Class<T> type) {
+        return (List<T>) getObjects(getInstanceByInterface(type));
+    }
+
+    @Override
+    public List<Object> getObjectByAnnotation(Class<? extends Annotation> annotation) {
+        return getObjects(getInstanceByAnnotation(annotation));
+    }
+
+    @Override
+    public List<Object> getObjectByTypeFilter(ITypeFilter typeFilter) {
+        return getObjects(getInstanceByTypeFilter(typeFilter));
     }
 }

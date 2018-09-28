@@ -1,6 +1,8 @@
 package org.everest.mvc.infrastructure;
 
 import org.everest.core.dic.decorator.AutoWired;
+import org.everest.decorator.Instance;
+import org.everest.mvc.FilterExecutionException;
 import org.everest.mvc.actionResultHandler.ActionResultHandler;
 import org.everest.mvc.context.RouteContext;
 import org.everest.mvc.errorHandler.ErrorEventManager;
@@ -11,25 +13,17 @@ import org.everest.utils.Utils;
 
 import java.lang.reflect.Method;
 
+@Instance
 public class MvcRunner {
-    @AutoWired
-    private RouteDispatcher routeDispatcher;
-    @AutoWired
-    private RouteLoader routeLoader;
-    @AutoWired
-    private RouteBuilder routeBuilder;
-    @AutoWired
-    private RequestVariableResolver variableResolver;
-    @AutoWired
-    private FilterManager filterManager;
-    @AutoWired
-    private ActionResultHandler actionResultHandler;
-    @AutoWired
-    private ErrorEventManager errorEventManager;
+    @AutoWired private RouteDispatcher routeDispatcher;
+    @AutoWired private RouteLoader routeLoader;
+    @AutoWired private RouteBuilder routeBuilder;
+    @AutoWired private RequestVariableResolver variableResolver;
+    @AutoWired private FilterManager filterManager;
+    @AutoWired private ActionResultHandler actionResultHandler;
+    @AutoWired private ErrorEventManager errorEventManager;
 
     public void run(HttpContext httpContext) {
-
-
 
         try {
 
@@ -55,7 +49,7 @@ public class MvcRunner {
                     try {
                         actionResultHandler.handleActionResult(httpContext);
                     } catch (Exception e) {
-                        throw new ActionExecutionException("Error was occuring during the execution of action: " + httpContext.getController().getClass().getSimpleName() + ":" + routeModel.getMethod().getName(), e);
+                        throw new ActionExecutionException("Error was occurring during the execution of action: " + httpContext.getController().getClass().getSimpleName() + ":" + routeModel.getMethod().getName(), e);
                     }
                 }else {
                     errorEventManager.handleError(result.getError(), httpContext);
@@ -68,6 +62,9 @@ public class MvcRunner {
             httpContext.getModel().getSessionsObjects().forEach((key, value) -> {
                 httpContext.getSession().setAttribute(key, value);
             });
+        }
+        catch (FilterExecutionException ex){
+            errorEventManager.handleError(ex.getCause().getCause(), httpContext);
         }
         catch (Throwable e) {
             errorEventManager.handleError(e, httpContext);

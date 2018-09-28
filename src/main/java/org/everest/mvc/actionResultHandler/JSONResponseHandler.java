@@ -8,10 +8,14 @@ import org.everest.mvc.service.JSONService;
 import java.io.IOException;
 
 public class JSONResponseHandler implements IResultHandler<JSON> {
+    private JSONService jsonService;
+
+    public JSONResponseHandler(JSONService jsonService) {
+        this.jsonService = jsonService;
+    }
 
     @Override
     public void handleResponse(HttpContext httpContext, JSON result) {
-        JSONService jsonService = StaticContext.context.getInstance(JSONService.class);
         try {
             httpContext.getResponse().getServletResponse().setStatus(result.getStatusCode());
             jsonService.sendJSON(httpContext.getResponse(), result.getModel());

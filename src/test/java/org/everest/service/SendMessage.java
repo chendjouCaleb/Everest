@@ -1,7 +1,6 @@
 package org.everest.service;
 
 import dic.AutoInject;
-import dic.OnInit;
 import org.everest.core.dic.decorator.AutoWired;
 
 public class SendMessage implements ISendMessage {
@@ -11,7 +10,6 @@ public class SendMessage implements ISendMessage {
     @AutoWired
     private EmailMessage emailMessage;
 
-    @OnInit
     public void init(){
         System.out.println("Message: " + message.getMessage());
     }

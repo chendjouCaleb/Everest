@@ -54,4 +54,8 @@ public class BindingState {
     public void setObject(Object object) {
         this.object = object;
     }
+
+    public Object getModel() {
+        return object;
+    }
 }

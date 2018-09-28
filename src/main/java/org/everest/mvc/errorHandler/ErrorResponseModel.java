@@ -8,6 +8,7 @@ public class ErrorResponseModel {
         cause = e.getMessage();
     }
     private String classType;
+    private String uriResource;
     private String errorMessage;
     private String message;
     private String cause;
@@ -51,5 +52,13 @@ public class ErrorResponseModel {
 
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getUriResource() {
+        return uriResource;
+    }
+
+    public void setUriResource(String uriResource) {
+        this.uriResource = uriResource;
     }
 }

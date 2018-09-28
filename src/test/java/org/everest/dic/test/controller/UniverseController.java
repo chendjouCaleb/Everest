@@ -1,6 +1,8 @@
 package org.everest.dic.test.controller;
 
 import dic.AutoInject;
+import org.everest.core.dic.Container;
+import org.everest.core.dic.decorator.AfterContainerInitilized;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.core.dic.decorator.Bean;
 import org.everest.core.dic.decorator.Resolve;
@@ -28,5 +30,10 @@ public class UniverseController extends LuminaryController {
         System.out.println(blackHoleComponent);
         System.out.println(pulsarComponent);
         System.out.println("initilisation terminée");
+    }
+
+    @AfterContainerInitilized
+    public void after(Container container){
+        System.out.println("Il y'a " + container.getInstanceList().size() + " instance dans le container ");
     }
 }

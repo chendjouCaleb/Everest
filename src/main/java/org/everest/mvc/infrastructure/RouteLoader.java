@@ -1,5 +1,6 @@
 package org.everest.mvc.infrastructure;
 
+import org.everest.decorator.Instance;
 import org.everest.mvc.component.MappingDescriptor;
 import org.everest.mvc.decorator.HttpMapping;
 import org.everest.mvc.infrastructure.mapping.MappingGetter;
@@ -13,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import static org.everest.utils.StringUtils.trim;
 
+@Instance
 public class RouteLoader {
     private MappingGetter mappingGetter = new MappingGetter();
     private List<ControllerModel> controllers = new ArrayList<>();

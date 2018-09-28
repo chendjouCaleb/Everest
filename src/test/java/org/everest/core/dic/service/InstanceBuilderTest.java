@@ -10,6 +10,7 @@ import org.everest.dic.test.component.NebularComponent;
 import org.everest.dic.test.component.PulsarComponent;
 import org.everest.dic.test.controller.UniverseController;
 import org.everest.dic.test.repository.GalaxyRepository;
+import org.everest.dic.test.repository.IGalaxyRepository;
 import org.everest.dic.test.repository.NebularRepository;
 import org.everest.dic.test.service.GalaxyService;
 import org.everest.dic.test.service.IGalaxyService;
@@ -57,13 +58,13 @@ public class InstanceBuilderTest {
     @Test
     public void createFactoryInstance() throws Exception {
         Instance luminaryInstance = instanceBuilder.createInstance(LuminaryFactory.class);
-        Method method = LuminaryFactory.class.getMethod("nebularService", GalaxyRepository.class, NebularRepository.class);
+        Method method = LuminaryFactory.class.getMethod("nebularService", IGalaxyRepository.class, NebularRepository.class);
         FactoryInstance instance = instanceBuilder.createInstance(method);
         instance.setParentInstance(luminaryInstance);
         assertEquals(method, instance.getMethod());
         assertEquals(INebularService.class, instance.getRegisteredType());
         assertEquals(LuminaryFactory.class, instance.getDependencies().get(0));
-        assertEquals(GalaxyRepository.class, instance.getDependencies().get(1));
+        assertEquals(IGalaxyRepository.class, instance.getDependencies().get(1));
         assertEquals(NebularRepository.class, instance.getDependencies().get(2));
     }
 

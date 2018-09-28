@@ -119,10 +119,13 @@ public class IDependencyResolverImpl implements IDependencyResolver {
     public void resolveFactory(FactoryInstance instance){
         Object[] objects = retrieverService.getObjectByRegisteredType(instance.getMethodDependencies()).toArray();
         try {
-            Object obj = Utils.callRemote(instance.getParentInstance().getInstance(),
-                    instance.getMethod().getName(), objects);
+            //instance.getMethod().setAccessible(true);
+           Object obj = Utils.callRemote(instance.getParentInstance().getInstance(), instance.getMethod(), objects);
+            //Object obj = MethodUtils.invokeMethod(instance.getParentInstance().getInstance(), instance.getMethod(), objects);
             instance.setInstance(obj);
+            instance.setConcreteType(obj.getClass());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new InstanceException("Erreur lors de la création de l'instance par méthode '" + instance.getMethod() + "'",e);
         }
     }

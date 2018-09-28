@@ -28,7 +28,6 @@ public class ViewResultHandler implements IResultHandler<View> {
 
             result.getData().forEach((key, value) -> httpContext.getModel().addData(key, value));
             ApplicationInitializer initializer = StaticContext.applicationInitializer;
-            httpContext.getRequest().addAttribute("html", StaticContext.context.getInstance(Router.class));
             ViewRenderer renderer = initializer.viewRenderer();
             renderer.render(result.getView(), httpContext);
         } catch (Exception e) {

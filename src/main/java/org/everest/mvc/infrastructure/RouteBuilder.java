@@ -1,5 +1,6 @@
 package org.everest.mvc.infrastructure;
 
+import org.everest.decorator.Instance;
 import org.everest.mvc.component.UrlGenerator;
 import org.everest.utils.Assert;
 
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Instance
 public class RouteBuilder {
     private List<RouteModel> routeModels = new ArrayList<>();
 
@@ -32,11 +34,11 @@ public class RouteBuilder {
         return "/"+mapping;
     }
 
-    public String url(String name, String[] params){
+    public String url(String name, Object[] params){
         RouteModel model = getRouteModel(name);
         String mapping = model.getMapping();
-        for (String param:params){
-            mapping = mapping.replaceFirst("\\{[\\w]+\\}", param);
+        for (Object param:params){
+            mapping = mapping.replaceFirst("\\{[\\w]+\\}", param.toString());
         }
         return "/"+mapping;
     }
