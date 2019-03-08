@@ -4,11 +4,9 @@ import org.everest.context.ApplicationContext;
 import org.everest.core.dic.decorator.AutoWired;
 import org.everest.decorator.Instance;
 import org.everest.mvc.FilterExecutionException;
-import org.everest.mvc.actionResultHandler.ActionResultHandler;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.httpContext.decorator.FilterBy;
 import org.everest.mvc.httpContext.decorator.FilterMethod;
-import org.everest.mvc.result.ActionResult;
 import org.everest.mvc.result.IFilterResult;
 import org.everest.mvc.result.Next;
 import org.everest.mvc.variableResolver.RequestVariableResolver;
@@ -28,7 +26,6 @@ public class FilterManager {
     private Logger logger = LoggerFactory.getLogger(FilterManager.class);
     @AutoWired private ApplicationContext applicationContext;
     @AutoWired private RequestVariableResolver variableResolver;
-    @AutoWired private ActionResultHandler resultHandler;
 
     public void handleFilter(HttpContext context) {
         FilterChain filterChain = getFilterChain(context);

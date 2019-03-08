@@ -1,6 +1,6 @@
 package org.everest.mvc.variableResolver.resolver.byAnnotation;
 
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
 import org.everest.mvc.variableResolver.decorator.SessionAttribute;
 

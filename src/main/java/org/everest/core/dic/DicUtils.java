@@ -12,10 +12,8 @@ public class DicUtils {
         Object obj = null;
         try {
             obj = className.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return obj;
     }

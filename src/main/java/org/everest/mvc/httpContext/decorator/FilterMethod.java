@@ -1,7 +1,5 @@
 package org.everest.mvc.httpContext.decorator;
 
-import org.everest.mvc.httpContext.HttpMethod;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

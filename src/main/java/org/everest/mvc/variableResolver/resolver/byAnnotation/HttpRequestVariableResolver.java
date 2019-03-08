@@ -1,7 +1,7 @@
 package org.everest.mvc.variableResolver.resolver.byAnnotation;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
 import org.everest.mvc.variableResolver.decorator.RequestVariable;
 
@@ -12,7 +12,7 @@ public class HttpRequestVariableResolver implements IVariableResolverByAnnotatio
     public Object getVariable(HttpContext httpContext, Parameter parameter, RequestVariable annotation) {
         String name = annotation.value();
 
-        String stringVal = httpContext.getRequest().getParam(name);
+        String stringVal = httpContext.getRequest().forms().get(name).get(0);
         return ConvertUtils.convert(stringVal, parameter.getType());
     }
 }

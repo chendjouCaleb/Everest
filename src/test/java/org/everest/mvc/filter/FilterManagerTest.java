@@ -1,28 +1,30 @@
 package org.everest.mvc.filter;
 
+import Everest.Http.DefaultHttpContext;
 import org.everest.context.ApplicationContext;
 import org.everest.mvc.controller.FirstController;
 import org.everest.mvc.filter.method.FilterFourMethod;
 import org.everest.mvc.filter.method.FilterOneMethod;
 import org.everest.mvc.filter.method.FilterThreeMethod;
 import org.everest.mvc.filter.method.FilterTwoMethod;
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
+import Everest.Http.HttpContext;
+import Everest.Http.HttpRequest;
+import Everest.Http.HttpResponse;
 import org.everest.mvc.result.IFilterResult;
 import org.everest.mvc.result.RouteRedirection;
 import org.everest.mvc.router.Route;
 import org.everest.mvc.router.RouterUtilsTest;
 import org.everest.utils.ReflexionUtils;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FilterManagerTest {
     private Logger logger = LoggerFactory.getLogger(RouterUtilsTest.class);
@@ -30,14 +32,14 @@ public class FilterManagerTest {
     private ApplicationContext applicationContext = new ApplicationContext();
     HttpContext httpContext;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
 
         applicationContext.initialize();
         filterManager = applicationContext.getContainer().getInstance(FilterManager.class);
 
-        httpContext = new HttpContext();
+        httpContext = new DefaultHttpContext();
         httpContext.setController(new FirstController());
         httpContext.setRoute(new Route());
         httpContext.getRoute().setMethod(ReflexionUtils.getMethod(FirstController.class, "firstAction"));
@@ -64,8 +66,7 @@ public class FilterManagerTest {
     @Test
     public void executeFilter(){
         IFilter filter = new FilterOneMethod();
-        httpContext.setRequest(new Request());
-        httpContext.setResponse(new Response());
+
 
         IFilterResult filterResult = filterManager.executeFilter(filter, httpContext);
         logger.info("Result " + filterResult.getClass());

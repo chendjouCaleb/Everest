@@ -2,14 +2,14 @@ package org.everest.mvc.infrastructure;
 
 import org.everest.mvc.controller.UserController;
 import org.everest.mvc.decorator.HttpMapping;
-import org.everest.mvc.httpContext.HttpMethod;
-import org.junit.Test;
+import Everest.Http.HttpMethod;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteLoaderTest {
     private RouteLoader routeLoader = new RouteLoader();

@@ -6,11 +6,14 @@ import org.everest.dic.test.component.PulsarComponent;
 import org.everest.dic.test.controller.LuminaryController;
 import org.everest.dic.test.controller.UniverseController;
 import org.everest.dic.test.repository.GalaxyRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class InstanceValidatorTest {
@@ -25,7 +28,7 @@ public class InstanceValidatorTest {
         instances.add(galaxyRepositoryInstance);
         instanceValidator.checkDependenciesAvailability(instances);
     }
-    @org.junit.Test
+    @Test
      public void checkDependenciesAvailability_With_Dependent_Class_And_Her_Dependencies(){
         Instance luminaryControllerInstance = instanceBuilder.createInstance(LuminaryController.class);
         instances.add(luminaryControllerInstance);
@@ -33,12 +36,12 @@ public class InstanceValidatorTest {
         instanceValidator.checkDependenciesAvailability(instances);
     }
 
-    @Test(expected = NoSuchElementException.class)
     public void checkDependenciesAvailability_With_Dependent_Class_Without_Her_Dependencies(){
         Instance  universeControllerInstance = instanceBuilder.createInstance(UniverseController.class);
         instances.add(universeControllerInstance);
 
-                instanceValidator.checkDependenciesAvailability(instances);
+        assertThrows(NoSuchElementException.class,
+                () -> instanceValidator.checkDependenciesAvailability(instances));
     }
 
     @Test
@@ -50,20 +53,22 @@ public class InstanceValidatorTest {
         instanceValidator.checkCircularDependencies(instances);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void checkCircularDependencies_With_Circular_Dependencies() {
         Instance circularInstance1 = instanceBuilder.createInstance(Circular1.class);
         Instance circularInstance2 = instanceBuilder.createInstance(Circular2.class);
         instances.add(circularInstance1);
         instances.add(circularInstance2);
-        instanceValidator.checkCircularDependencies(instances);
+
+        assertThrows(IllegalArgumentException.class, () -> instanceValidator.checkCircularDependencies(instances));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void checkCircularDependencies_With_Circular_Same_Class() {
         Instance circularInstance = instanceBuilder.createInstance(Circular.class);
         instances.add(circularInstance);
         instanceValidator.checkCircularDependencies(instances);
+        assertThrows(IllegalArgumentException.class, () -> instanceValidator.checkCircularDependencies(instances));
     }
 }
 

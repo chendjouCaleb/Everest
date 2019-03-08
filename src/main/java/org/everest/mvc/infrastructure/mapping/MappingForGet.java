@@ -3,7 +3,7 @@ package org.everest.mvc.infrastructure.mapping;
 import org.everest.mvc.component.MappingDescriptor;
 import org.everest.mvc.decorator.GetMapping;
 import org.everest.mvc.decorator.HttpMapping;
-import org.everest.mvc.httpContext.HttpMethod;
+import Everest.Http.HttpMethod;
 
 public class MappingForGet extends MappingFor<GetMapping>{
     @Override

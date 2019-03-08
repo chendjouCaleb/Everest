@@ -1,21 +1,22 @@
 package org.everest.mvc.http;
 
-import org.apache.commons.lang3.StringUtils;
+import Everest.Http.StatusCode;
 import org.everest.mvc.result.ActionResult;
 
+@Deprecated
 public class ResponseEntity<T> extends ActionResult{
     private T body;
-    private HttpStatus httpStatus;
+    private StatusCode statusCode;
 
-    public ResponseEntity(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
+    public ResponseEntity(StatusCode statusCode) {
+        this.statusCode = statusCode;
     }
 
-    public ResponseEntity(T body, HttpStatus httpStatus) {
+    public ResponseEntity(T body, StatusCode statusCode) {
         this.body = body;
-        this.httpStatus = httpStatus;
+        this.statusCode = statusCode;
     }
-    public static ResponseEntity status(HttpStatus status){
+    public static ResponseEntity status(StatusCode status){
         return new ResponseEntity(status);
     }
 
@@ -27,11 +28,11 @@ public class ResponseEntity<T> extends ActionResult{
         this.body = body;
     }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
+    public StatusCode getHttpStatus() {
+        return statusCode;
     }
 
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
+    public void setStatusCode(StatusCode statusCode) {
+        this.statusCode = statusCode;
     }
 }

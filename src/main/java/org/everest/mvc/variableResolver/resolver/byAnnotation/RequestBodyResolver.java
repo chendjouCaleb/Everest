@@ -3,8 +3,7 @@ package org.everest.mvc.variableResolver.resolver.byAnnotation;
 import org.everest.mvc.binding.BindingState;
 import org.everest.mvc.binding.IModelValidator;
 import org.everest.mvc.binding.ObjectValidationException;
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.infrastructure.StaticContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.service.RequestBodyHandler;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
 import org.everest.mvc.variableResolver.decorator.RequestBody;
@@ -28,19 +27,11 @@ public class RequestBodyResolver implements IVariableResolverByAnnotation<Reques
     public Object getVariable(HttpContext httpContext, Parameter parameter, RequestBody annotation) {
 
         Object obj = requestBodyHandler.getBody(httpContext, parameter.getType());
-        if (!annotation.value().equals("")) {
-            httpContext.getModel().addData(annotation.value(), obj);
-        } else {
-            httpContext.getModel().addData(obj.getClass().getSimpleName().toLowerCase(), obj.getClass().getSimpleName().toLowerCase());
-        }
-        httpContext.setRequestBody(obj);
+
 
         Map<String, String> errors = modelValidator.validate(obj);
         BindingState state = new BindingState(obj);
         state.setFieldErrors(errors);
-        httpContext.getModel().addData("errors", errors);
-        httpContext.getModel().addData("state", state);
-        httpContext.getRequest().addAttribute("state", state);
 
         if (annotation.validate() && state.getErrors().size() > 0) {
             throw new ObjectValidationException("L'object est invalide", state.getErrors());

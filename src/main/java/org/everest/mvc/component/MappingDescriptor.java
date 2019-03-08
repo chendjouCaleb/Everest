@@ -1,7 +1,7 @@
 package org.everest.mvc.component;
 
 import org.everest.mvc.decorator.HttpMapping;
-import org.everest.mvc.httpContext.HttpMethod;
+import Everest.Http.HttpMethod;
 
 public class MappingDescriptor {
     String value;

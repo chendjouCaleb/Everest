@@ -1,21 +1,22 @@
 package org.everest.mvc.binding;
 
 import org.everest.core.dic.Container;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelValidatorTest {
     private Logger logger = LoggerFactory.getLogger(ModelValidatorTest.class);
     private ModelValidator modelValidator;
     private BindingConfiguration configuration = new BindingConfiguration();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         modelValidator = new ModelValidator(configuration.validatorFactory(new EverestConstraintValidatorFactory(new Container())));
     }

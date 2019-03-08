@@ -23,14 +23,14 @@ import org.everest.dic.test.service.GalaxyService;
 import org.everest.dic.test.service.IGalaxyService;
 import org.everest.dic.test.service.INebularService;
 import org.everest.utils.ReflexionUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class IDependencyResolverImplTest {
     IDependencyResolverImpl resolver;
@@ -43,7 +43,7 @@ public class IDependencyResolverImplTest {
     private List<Class<? extends Annotation>> methodAnnotations = new ArrayList<>();
     private List<String> packageNames = new ArrayList<>();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         packageNames.add("org.everest.dic.test.builder");
         packageNames.add("org.everest.dic.test.component");

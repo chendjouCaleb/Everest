@@ -1,8 +1,8 @@
 package org.everest.mvc.service;
 
 import org.everest.decorator.Instance;
-import org.everest.mvc.http.MediaType;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.MediaType;
+import Everest.Http.HttpContext;
 import org.everest.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +27,16 @@ public class RequestBodyHandler {
     }
 
     public <T> T getBody(HttpContext httpContext, Class<T> type) {
-        String contentType = httpContext.getRequest().getContentType();
+        String contentType = httpContext.getRequest().contentType();
         IRequestBodyHandler handler = handlers.get(contentType);
-        if(httpContext.getRequest().getHttpMethod().equals("GET")){
+        if(httpContext.getRequest().method().equals("GET")){
             handler = handlers.get(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         }
         Assert.notNull(handler, "Aucun extracteur trouvé pour le média: " + contentType);
         logger.info("Media Type: " + contentType);
         logger.info("Handler: " + handler.getClass().getSimpleName());
         Object body = handler.getBody(httpContext, type);
-        logger.info("Request body: {}", body.toString());
+        logger.info("HttpRequest setBody: {}", body.toString());
         return (T) body;
     }
 }

@@ -1,16 +1,16 @@
 package org.everest.core.dic;
 
-import org.everest.dic.test.repository.GalaxyRepository;
 import org.everest.service.Message;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContainerTest {
     private Container container = new Container();
@@ -20,7 +20,7 @@ public class ContainerTest {
     private List<Class<? extends Annotation>> methodAnnotations = new ArrayList<>();
     private List<String> packageNames = new ArrayList<>();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         container.addPackage("org.everest.dic.test.builder",
                 "org.everest.dic.test.repository", "org.everest.dic.test.component",
@@ -30,7 +30,7 @@ public class ContainerTest {
 
     @Test
     public void initialize() {
-       Assert.assertEquals(16, container.getInstanceList().size());
+       assertEquals(16, container.getInstanceList().size());
     }
 
     @Test

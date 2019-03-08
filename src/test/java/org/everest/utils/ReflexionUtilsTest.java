@@ -1,14 +1,14 @@
 package org.everest.utils;
 
+import org.everest.mvc.decorator.HttpMapping;
 import org.everest.mvc.httpContext.decorator.FilterMethod;
-import org.everest.mvc.httpContext.decorator.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflexionUtilsTest {
     private Logger logger = LoggerFactory.getLogger(ReflexionUtilsTest.class);
@@ -22,7 +22,7 @@ public class ReflexionUtilsTest {
 
     @Test
     public void findMethodByAnnotation_With_Wrong_Annotation() throws Exception {
-        Method method = ReflexionUtils.findMethodByAnnotation(SimpleClass.class, Path.class);
+        Method method = ReflexionUtils.findMethodByAnnotation(SimpleClass.class, HttpMapping.class);
         assertNull(method);
     }
 

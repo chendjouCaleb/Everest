@@ -1,11 +1,8 @@
 package org.everest.mvc.controller;
 
 import org.everest.mvc.decorator.*;
-import org.everest.mvc.httpContext.HttpMethod;
-import org.everest.mvc.httpContext.decorator.HttpController;
 
 @HttpMapping("/user")
-@HttpController
 public class UserController {
 
     @HttpMapping("/{id}")

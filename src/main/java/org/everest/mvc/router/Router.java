@@ -1,14 +1,10 @@
 package org.everest.mvc.router;
 
-import org.everest.mvc.httpContext.decorator.HttpController;
-import org.everest.mvc.httpContext.decorator.Path;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.mvc.infrastructure.StaticContext;
 import org.everest.mvc.variableResolver.RequestVariableResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 @Deprecated
@@ -32,7 +28,7 @@ public class Router {
         if (route != null) {
             url = route.url(params);
         }
-        return  StaticContext.applicationInitializer.getAppBaseUrl() + url;
+        return  url;
     }
 
     public String htmlLink(String value, String name, Object... params) {
@@ -65,7 +61,7 @@ public class Router {
     }
 
     /**
-     * @param url    "url called by http Request"
+     * @param url    "url called by http HttpRequest"
      * @param method "method of http request"
      * @return "finded route"
      */
@@ -88,29 +84,6 @@ public class Router {
     }
 
     private void populateRoute(Object controller) {
-        HttpController httpController = controller.getClass().getAnnotation(HttpController.class);
-
-        String prefix = httpController.prefix().replaceAll("^/", "").replaceAll("/$", "");
-
-        for (Method method : controller.getClass().getDeclaredMethods()) {
-            Path path = method.getAnnotation(Path.class);
-            if (path != null) {
-                Route route = new Route();
-                route.setMethod(method);
-                route.setHttpMethod(path.httpMethod().toString());
-                route.setName(path.name());
-                route.setController(controller);
-                String finalPath = getPath(path.route(), prefix);
-                String regex = toRegex(finalPath);
-                route.setPath(finalPath);
-                route.setRegex(toRegex(regex));
-                String key = controller.getClass().getSimpleName().replace("Controller", "")
-                        + "." + method.getName() + "#" + path.httpMethod();
-                this.routes.put(key, route);
-
-                logger.info("New route add:  Key=[{}], mapping=[{}], verbs=[{}] ", key,finalPath, path.httpMethod());
-            }
-        }
     }
     private String getPath(String path, String prefix){
         String routePath = path.replaceAll("^/", "").replaceAll("/$", "");

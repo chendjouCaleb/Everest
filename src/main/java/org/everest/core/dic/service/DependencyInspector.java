@@ -1,8 +1,6 @@
 package org.everest.core.dic.service;
 
-import dic.AutoInject;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.core.dic.decorator.Bean;
 import org.everest.core.dic.decorator.Resolve;
 import org.everest.utils.Assert;
 import org.everest.utils.ReflexionUtils;
@@ -23,7 +21,7 @@ public class DependencyInspector {
     public List<Class> getDependentTypesByFields(Class type){
         StringBuilder message = new StringBuilder();
         message.append("Field dependencies: {} => [ ");
-        List<Field> fields = ReflexionUtils.findFieldsByAnnotation(type, AutoWired.class, AutoInject.class, Inject.class, Resolve.class);
+        List<Field> fields = ReflexionUtils.findFieldsByAnnotation(type, AutoWired.class, Inject.class, Resolve.class);
         List<Class> types = new ArrayList<>();
         fields.forEach(field -> {
             types.add(field.getType());

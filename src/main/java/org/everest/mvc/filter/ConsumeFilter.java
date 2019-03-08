@@ -1,7 +1,6 @@
 package org.everest.mvc.filter;
 
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
+import Everest.Http.HttpRequest;
 
 public class ConsumeFilter implements IFilter<Consume> {
     private String mediaType;
@@ -10,7 +9,7 @@ mediaType = annotation.mediaType();
     }
 
 
-    public void execute(Request request) {
+    public void execute(HttpRequest httpRequest) {
 
     }
 

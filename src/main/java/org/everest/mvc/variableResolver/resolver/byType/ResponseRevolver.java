@@ -1,19 +1,19 @@
 package org.everest.mvc.variableResolver.resolver.byType;
 
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.httpContext.Response;
+import Everest.Http.HttpContext;
+import Everest.Http.HttpResponse;
 import org.everest.mvc.variableResolver.IVariableResolverByType;
 
 import java.lang.reflect.Parameter;
 
-public class ResponseRevolver implements IVariableResolverByType<Response> {
+public class ResponseRevolver implements IVariableResolverByType<HttpResponse> {
     @Override
-    public Class<Response> getType() {
-        return Response.class;
+    public Class<HttpResponse> getType() {
+        return HttpResponse.class;
     }
 
     @Override
-    public Response getValue(HttpContext httpContext, Parameter parameter) {
+    public HttpResponse getValue(HttpContext httpContext, Parameter parameter) {
         return httpContext.getResponse();
     }
 }

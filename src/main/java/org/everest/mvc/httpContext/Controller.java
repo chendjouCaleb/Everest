@@ -1,5 +1,6 @@
 package org.everest.mvc.httpContext;
 
+import Everest.Http.StatusCode;
 import org.everest.mvc.http.ResponseEntity;
 import org.everest.mvc.result.*;
 
@@ -24,23 +25,32 @@ public abstract class Controller {
     final protected Redirection Redirection(String url){
         return new Redirection(url);
     }
-    final protected Redirection Redirection(String url, HttpStatus status){
-        return (Redirection) new Redirection(url).statusCode(status.value());
-    }
 
-    protected  <T> ResponseEntity<T> ResponseEntity(T entity, org.everest.mvc.http.HttpStatus status){
+    protected  <T> ResponseEntity<T> ResponseEntity(T entity, StatusCode status){
         return new ResponseEntity<>(entity, status);
     }
 
-    protected org.everest.mvc.http.HttpStatus Ok(){
-        return org.everest.mvc.http.HttpStatus.OK;
+    protected StatusCode Ok(){
+        return StatusCode.OK;
     }
 
     protected  <T> ResponseEntity<T> ResponseEntity(T entity){
-        return new ResponseEntity<>(entity, org.everest.mvc.http.HttpStatus.OK);
+        return new ResponseEntity<>(entity, StatusCode.OK);
     }
     protected  <T> ResponseEntity<T> Ok(T entity){
-        return new ResponseEntity<>(entity, org.everest.mvc.http.HttpStatus.OK);
+        return new ResponseEntity<>(entity, StatusCode.OK);
+    }
+
+    protected  <T> ResponseEntity<T> Created(T entity){
+        return new ResponseEntity<>(entity, StatusCode.CREATED);
+    }
+
+    protected StatusCode NoContent(){
+        return StatusCode.NO_CONTENT;
+    }
+
+    protected  <T> ResponseEntity<T> NoFound(T entity){
+        return new ResponseEntity<>(entity, StatusCode.NOT_FOUND);
     }
 
     final protected JSON Json(Object models){

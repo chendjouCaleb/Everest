@@ -1,67 +1,73 @@
 package org.everest.context;
 
 
+import Everest.Middleware.IMiddleware;
+import Everest.Middleware.MiddlewarePipeline;
+import Everest.Middleware.MiddlewarePipelineConfigurer;
+import Everest.Middleware.MiddlewareRegister;
+import Everest.Mvc.ExceptionHandler.ExceptionHandlerProvider;
+import Everest.Mvc.ExceptionHandler.ExceptionStatusCodeGetter;
 import org.everest.core.dic.Container;
 import org.everest.core.dic.decorator.AfterContainerInitilized;
 import org.everest.core.event.EventEmitter;
 import org.everest.decorator.Listener;
-import org.everest.mvc.actionResultHandler.ActionResultHandler;
-import org.everest.mvc.actionResultHandler.IResultHandler;
-import org.everest.mvc.actionResultHandler.ResponseBodyHandler;
+import Everest.Mvc.ActionResultExecutor.ActionResultExecutorProvider;
+import Everest.Mvc.ActionResultExecutor.IResultExecutor;
+import Everest.Mvc.ResponseFormatter.ResponseFormatterSelector;
 import org.everest.mvc.binding.IConverter;
 import org.everest.mvc.binding.IModelBinder;
-import org.everest.mvc.binding.IModelValidator;
-import org.everest.mvc.binding.ModelValidator;
 import org.everest.mvc.classFilter.*;
-import org.everest.mvc.errorHandler.ErrorEventManager;
-import org.everest.mvc.errorHandler.IErrorHandler;
+import Everest.Mvc.ExceptionHandler.IExceptionHandler;
 import org.everest.mvc.filter.Filter;
 import org.everest.mvc.httpContext.Controller;
+import org.everest.mvc.infrastructure.MvcStartup;
 import org.everest.mvc.infrastructure.RouteBuilder;
 import org.everest.mvc.infrastructure.RouteLoader;
-import org.everest.mvc.responseBody.IResponseBodyTransformer;
+import Everest.Mvc.ResponseFormatter.IResponseFormatter;
 import org.everest.mvc.service.IRequestBodyHandler;
 import org.everest.mvc.service.RequestBodyHandler;
 import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
 import org.everest.mvc.variableResolver.IVariableResolverByType;
 import org.everest.mvc.variableResolver.RequestVariableResolver;
-import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.*;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 public class ApplicationContext {
     private Logger logger = LoggerFactory.getLogger(ApplicationContext.class);
     private Container container;
-    private List<IResultHandler> actionResultHandlers = new ArrayList<>();
+    private List<IResultExecutor> actionResultHandlers = new ArrayList<>();
     private List<Filter> requestFilters = new ArrayList<>();
     private List<Object> eventListeners = new ArrayList<>();
     private List<IConverter> converters = new ArrayList<>();
-    private List<IErrorHandler> errorHandlers = new ArrayList<>();
+    private List<IExceptionHandler> errorHandlers = new ArrayList<>();
     private List<IVariableResolverByType> variableResolverByTypes = new ArrayList<>();
     private List<IVariableResolverByAnnotation> variableResolverByAnnotations = new ArrayList<>();
     private List<IRequestBodyHandler> requestBodyHandlers = new ArrayList<>();
-    private List<IResponseBodyTransformer> responseBodyTransformers = new ArrayList<>();
+    private List<IResponseFormatter> responseBodyTransformers = new ArrayList<>();
     private List<ConstraintValidator> constraintValidators = new ArrayList<>();
     private List<Controller> controllers = new ArrayList<>();
+    private List<IMiddleware> middlewares = new ArrayList<>();
+    private MiddlewareRegister middlewareRegister = new MiddlewareRegister();
     public ApplicationContext(){
         container = new Container();
-        container.addPackage("org.everest.mvc");
+        container.addPackage("org.everest.mvc", "Everest.Mvc", "Everest.Middleware");
         container.addSingletonObject(this);
         container.addTypeFilter(new RequestFilterClass());
         container.addTypeFilter(new EventListenerClassFilter());
         container.addTypeFilter(new ConverterClassFilter());
-        container.addTypeFilter(new ErrorManagerClassFilter());
+        container.addTypeFilter(new ExceptionHandlerClassFilter());
         container.addTypeFilter(new VariableResolverByAnnotationClassFilter());
         container.addTypeFilter(new VariableResolverByTypeClassFilter());
-        container.addTypeFilter(new ActionResultHandlerClassFilter());
+        container.addTypeFilter(new ActionResultResultClassFilter());
         container.addTypeFilter(new RequestBodyHandlerClassFilter());
-        container.addTypeFilter(new ResponseBodyTransformerClassFilter());
+        container.addTypeFilter(new ResponseFormatterClassFilter());
         container.addTypeFilter(new ValidatorClassFilter());
+        container.addTypeFilter(new RepositoryClassFilter());
+        container.addTypeFilter(new MiddlewareClassFilter());
 
     }
 
@@ -82,16 +88,16 @@ public class ApplicationContext {
 
     @AfterContainerInitilized
     public void setActionResultHandlers(Container container) {
-        this.actionResultHandlers = container.getRetrieverService().getObjectByInterface(IResultHandler.class);
-        ActionResultHandler actionResultHandler = container.getInstance(ActionResultHandler.class);
-        actionResultHandlers.forEach(actionResultHandler::addActionResultHandler);
+        this.actionResultHandlers = container.getRetrieverService().getObjectByInterface(IResultExecutor.class);
+        ActionResultExecutorProvider actionResultExecutorProvider = container.getInstance(ActionResultExecutorProvider.class);
+        actionResultHandlers.forEach(actionResultExecutorProvider::addExecutor);
         logger.info("Action Result Handlers = {}", actionResultHandlers.size());
     }
 
     @AfterContainerInitilized
     public void setRequestFilters(Container container) {
         this.requestFilters = container.getRetrieverService().getObjectBySuperType(Filter.class);
-        logger.info("Request Filters = {}", requestFilters.size());
+        logger.info("HttpRequest Filters = {}", requestFilters.size());
     }
 
     @AfterContainerInitilized
@@ -112,9 +118,14 @@ public class ApplicationContext {
 
     @AfterContainerInitilized
     public void setErrorHandlers(Container container) {
-        this.errorHandlers = container.getRetrieverService().getObjectByInterface(IErrorHandler.class);
-        ErrorEventManager errorEventManager = container.getInstance(ErrorEventManager.class);
-        errorHandlers.forEach(errorEventManager::addErrorHandler);
+        this.errorHandlers = container.getRetrieverService().getObjectByInterface(IExceptionHandler.class);
+        ExceptionHandlerProvider handlerProvider = container.getInstance(ExceptionHandlerProvider.class);
+        errorHandlers.forEach(handlerProvider::addExceptionHandler);
+
+        MvcStartup startup = (MvcStartup) container.getRetrieverService().getObjectBySuperType(MvcStartup.class).get(0);
+
+        ExceptionStatusCodeGetter statusCodeGetter = container.getInstance(ExceptionStatusCodeGetter.class);
+        startup.setExceptionStatusCode(statusCodeGetter);
         logger.info("Error Handlers = {}", errorHandlers.size());
     }
 
@@ -145,10 +156,10 @@ public class ApplicationContext {
 
     @AfterContainerInitilized
     public void setResponseBodyTransformers(Container container) {
-        this.responseBodyTransformers = container.getRetrieverService().getObjectByInterface(IResponseBodyTransformer.class);
-        ResponseBodyHandler responseBodyHandler = container.getInstance(ResponseBodyHandler.class);
-        responseBodyTransformers.forEach(responseBodyHandler::addTransformers);
-        logger.info("Response Body Transformers = {}", responseBodyTransformers.size());
+        this.responseBodyTransformers = container.getRetrieverService().getObjectByInterface(IResponseFormatter.class);
+        ResponseFormatterSelector responseFormatterSelector = container.getInstance(ResponseFormatterSelector.class);
+        responseBodyTransformers.forEach(responseFormatterSelector::addFormatter);
+        logger.info("HttpResponse Body Transformers = {}", responseBodyTransformers.size());
     }
 
     @AfterContainerInitilized
@@ -169,6 +180,20 @@ public class ApplicationContext {
         logger.info("Controllers = {}", controllers.size());
     }
 
+    @AfterContainerInitilized
+    public void setMiddlewares(Container container){
+        this.middlewares = container.getRetrieverService().getObjectByInterface(IMiddleware.class);
+        logger.debug("Application have {} middlewares", middlewares.size());
+
+        MvcStartup startup = (MvcStartup) container.getRetrieverService().getObjectBySuperType(MvcStartup.class).get(0);
+
+        startup.setMiddlewareChain(middlewareRegister);
+
+        MiddlewarePipeline pipeline = container.getInstance(MiddlewarePipeline.class);
+        MiddlewarePipelineConfigurer configurer = new MiddlewarePipelineConfigurer(pipeline);
+        configurer.configure(middlewareRegister, middlewares);
+    }
+
     @Override
     public String toString() {
         return "ApplicationContext{" +
@@ -187,7 +212,7 @@ public class ApplicationContext {
                 '}';
     }
 
-    public List<IResultHandler> getActionResultHandlers() {
+    public List<IResultExecutor> getActionResultHandlers() {
         return actionResultHandlers;
     }
 
@@ -203,7 +228,7 @@ public class ApplicationContext {
         return converters;
     }
 
-    public List<IErrorHandler> getErrorHandlers() {
+    public List<IExceptionHandler> getErrorHandlers() {
         return errorHandlers;
     }
 
@@ -219,7 +244,7 @@ public class ApplicationContext {
         return requestBodyHandlers;
     }
 
-    public List<IResponseBodyTransformer> getResponseBodyTransformers() {
+    public List<IResponseFormatter> getResponseBodyTransformers() {
         return responseBodyTransformers;
     }
 

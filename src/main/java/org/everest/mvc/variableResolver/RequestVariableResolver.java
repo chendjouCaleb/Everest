@@ -1,17 +1,9 @@
 package org.everest.mvc.variableResolver;
 
 
-import org.everest.core.dic.Container;
-import org.everest.core.dic.decorator.AfterContainerInitilized;
-import org.everest.core.dic.handler.ITypeFilter;
-import org.everest.decorator.Component;
 import org.everest.decorator.Instance;
-import org.everest.mvc.classFilter.VariableResolverByAnnotationClassFilter;
-import org.everest.mvc.classFilter.VariableResolverByTypeClassFilter;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.variableResolver.decorator.ResolvedBy;
-import org.everest.mvc.variableResolver.resolver.byAnnotation.*;
-import org.everest.mvc.variableResolver.resolver.byType.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

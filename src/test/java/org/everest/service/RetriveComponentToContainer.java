@@ -1,11 +1,11 @@
 package org.everest.service;
 
 import org.everest.core.dic.Container;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public class RetriveComponentToContainer {
     Container container;
-    @Before
+    @BeforeEach
     public void initComponent(){
         container = new Container();
 //        container.addComponentByFactory(FactoryClass.class);

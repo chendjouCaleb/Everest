@@ -1,7 +1,7 @@
 package org.everest.mvc.variableResolver.resolver.byType;
 
 import org.everest.mvc.context.RouteContext;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.variableResolver.IVariableResolverByType;
 
 import java.lang.reflect.Parameter;

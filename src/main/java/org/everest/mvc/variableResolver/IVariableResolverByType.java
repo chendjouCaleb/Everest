@@ -1,10 +1,7 @@
 package org.everest.mvc.variableResolver;
 
 
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
-import org.everest.mvc.router.Route;
+import Everest.Http.HttpContext;
 
 import java.lang.reflect.Parameter;
 

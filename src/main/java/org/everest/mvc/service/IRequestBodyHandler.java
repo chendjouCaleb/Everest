@@ -1,6 +1,6 @@
 package org.everest.mvc.service;
 
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 
 import java.util.Collection;
 

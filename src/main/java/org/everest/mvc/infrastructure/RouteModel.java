@@ -1,7 +1,7 @@
 package org.everest.mvc.infrastructure;
 
 import org.everest.mvc.component.MappingDescriptor;
-import org.everest.mvc.httpContext.HttpMethod;
+import Everest.Http.HttpMethod;
 
 import java.lang.reflect.Method;
 

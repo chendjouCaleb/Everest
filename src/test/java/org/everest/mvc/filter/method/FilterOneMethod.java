@@ -1,12 +1,10 @@
 package org.everest.mvc.filter.method;
 
+import Everest.Http.HttpRequest;
+import Everest.Http.HttpResponse;
 import org.everest.decorator.RequestFilter;
 import org.everest.mvc.filter.Filter;
-import org.everest.mvc.filter.IFilter;
-import org.everest.mvc.filter.FilterChain;
 import org.everest.mvc.filter.annatotion.FilterOne;
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
 import org.everest.mvc.result.IFilterResult;
 import org.everest.mvc.result.Next;
 
@@ -17,7 +15,7 @@ public class FilterOneMethod extends Filter<FilterOne> {
 
     }
 
-    public IFilterResult execute(Request request, Response Response) {
+    public IFilterResult execute(HttpRequest httpRequest, HttpResponse HttpResponse) {
         return new Next();
     }
 }

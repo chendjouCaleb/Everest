@@ -1,6 +1,6 @@
 package org.everest.mvc.variableResolver.resolver.byType;
 
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.router.Route;
 import org.everest.mvc.variableResolver.IVariableResolverByType;
 

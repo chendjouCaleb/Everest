@@ -1,6 +1,6 @@
 package org.everest.mvc.variableResolver.resolver.byType;
 
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Http.HttpContext;
 import org.everest.mvc.model.Model;
 import org.everest.mvc.variableResolver.IVariableResolverByType;
 
@@ -15,7 +15,6 @@ public class ModelRevolver implements IVariableResolverByType<Model> {
     @Override
     public Model getValue(HttpContext httpContext, Parameter parameter) {
         Model model = httpContext.getModel();
-        httpContext.getRequest().addAttribute("model", model.getObjects());
         return model;
     }
 

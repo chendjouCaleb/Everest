@@ -1,10 +1,8 @@
 package org.everest.mvc.service;
 
 import org.everest.mvc.binding.IModelBinder;
-import org.everest.mvc.binding.ModelBinder;
-import org.everest.mvc.http.MediaType;
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.infrastructure.StaticContext;
+import Everest.Http.MediaType;
+import Everest.Http.HttpContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +18,7 @@ public class DefaultRequestBodyHandler implements IRequestBodyHandler{
 
     @Override
     public Object getBody(HttpContext httpContext, Class<?> type) {
-        Map<String, ?> map = httpContext.getRequest().getServletRequest().getParameterMap();
+        Map<String, ?> map = httpContext.getRequest().forms();
         return modelBinder.bind(type,map );
     }
 

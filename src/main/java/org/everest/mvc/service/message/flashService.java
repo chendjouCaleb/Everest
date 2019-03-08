@@ -1,25 +1,25 @@
 package org.everest.mvc.service.message;
 
-import org.everest.mvc.httpContext.Request;
+import Everest.Http.HttpRequest;
 
 public class flashService {
-    public void sendFlash(Request request, String message, String type){
+    public void sendFlash(HttpRequest httpRequest, String message, String type){
         new Message(message, type);
     }
 
-    public void sendSuccessFlash(Request request, String message){
+    public void sendSuccessFlash(HttpRequest httpRequest, String message){
         new Message(message, "success");
     }
 
-    public void sendDangerFlash(Request request, String message){
+    public void sendDangerFlash(HttpRequest httpRequest, String message){
         new Message(message, "danger");
     }
 
-    public void sendWarningFlash(Request request, String message){
+    public void sendWarningFlash(HttpRequest httpRequest, String message){
         new Message(message, "primary");
     }
 
-    public void sendInfoFlash(Request request, String message){
+    public void sendInfoFlash(HttpRequest httpRequest, String message){
         new Message(message, "info");
     }
 }

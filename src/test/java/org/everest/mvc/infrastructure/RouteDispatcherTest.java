@@ -1,19 +1,17 @@
 package org.everest.mvc.infrastructure;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.collections.MapUtils;
 import org.everest.mvc.context.RouteContext;
 import org.everest.mvc.controller.CommentController;
 import org.everest.mvc.controller.UserController;
-import org.everest.mvc.httpContext.HttpMethod;
-import org.junit.Before;
-import org.junit.Test;
+import Everest.Http.HttpMethod;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteDispatcherTest {
     private RouteLoader routeLoader = new RouteLoader();
@@ -21,7 +19,7 @@ public class RouteDispatcherTest {
     private UserController controller = new UserController();
     private List<RouteModel> routeModels = new ArrayList<>();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         List<Object> list = new ArrayList<>();

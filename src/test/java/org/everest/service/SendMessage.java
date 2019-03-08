@@ -1,10 +1,10 @@
 package org.everest.service;
 
-import dic.AutoInject;
 import org.everest.core.dic.decorator.AutoWired;
+import org.everest.core.dic.decorator.Resolve;
 
 public class SendMessage implements ISendMessage {
-    @AutoInject
+    @Resolve
     public Message message;
 
     @AutoWired

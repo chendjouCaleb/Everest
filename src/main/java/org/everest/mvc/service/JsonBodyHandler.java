@@ -1,22 +1,37 @@
 package org.everest.mvc.service;
 
-import org.everest.mvc.http.MediaType;
-import org.everest.mvc.httpContext.HttpContext;
+import Everest.Core.Exception.InputOutputException;
+import Everest.Http.MediaType;
+import Everest.Http.HttpContext;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class JsonBodyHandler implements IRequestBodyHandler {
-    private JSONService service;
+    private JsonConverter service;
 
-    public JsonBodyHandler(JSONService service) {
+    public JsonBodyHandler(JsonConverter service) {
         this.service = service;
     }
 
     @Override
     public Object getBody(HttpContext httpContext, Class<?> type) {
-        String value = httpContext.getRequest().getBodyString();
+        BufferedReader reader = httpContext.getRequest().reader();
+        StringBuilder builder = new StringBuilder();
+        String line;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                reader.close();
+            } catch (IOException e) {
+                throw new InputOutputException(e);
+            }
+
+        String value =builder.toString();
         return  service.toObject(value, type);
     }
 

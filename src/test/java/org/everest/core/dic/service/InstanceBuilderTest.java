@@ -15,11 +15,11 @@ import org.everest.dic.test.repository.NebularRepository;
 import org.everest.dic.test.service.GalaxyService;
 import org.everest.dic.test.service.IGalaxyService;
 import org.everest.dic.test.service.INebularService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InstanceBuilderTest {
     private InstanceBuilder instanceBuilder = new InstanceBuilder();

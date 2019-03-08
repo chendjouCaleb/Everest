@@ -1,14 +1,12 @@
 package org.everest.mvc.filter.method;
 
+import Everest.Http.HttpRequest;
 import org.everest.decorator.RequestFilter;
 import org.everest.mvc.filter.Filter;
-import org.everest.mvc.filter.IFilter;
 import org.everest.mvc.filter.annatotion.FilterTwo;
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
+import Everest.Http.HttpResponse;
 import org.everest.mvc.httpContext.decorator.FilterMethod;
 import org.everest.mvc.result.Next;
-import org.everest.mvc.result.RouteRedirection;
 
 @RequestFilter
 public class FilterTwoMethod extends Filter<FilterTwo> {
@@ -17,7 +15,7 @@ public class FilterTwoMethod extends Filter<FilterTwo> {
     }
 
     @FilterMethod
-    public Next executeFilter(Request request, Response Response) {
+    public Next executeFilter(HttpRequest httpRequest, HttpResponse HttpResponse) {
         return Next();
     }
 }

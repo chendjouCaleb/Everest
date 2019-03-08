@@ -1,9 +1,5 @@
 package org.everest.utils;
 
-import org.everest.mvc.httpContext.HttpContext;
-import org.everest.mvc.infrastructure.WebApplication;
-import org.everest.mvc.errorHandler.IErrorHandler;
-
 import java.lang.reflect.Method;
 
 public class Utils {
@@ -65,16 +61,16 @@ public class Utils {
             throwable.printStackTrace();
         }
     }
-//    public static void handleError(HttpContext context, Throwable throwable){
+//    public static void handleException(HttpContext context, Throwable throwable){
 //        WebApplication app = WebApplication.getApp();
 //        System.out.println("Error was occurred during thr request handling: " + throwable.getClass());
-//        for(IErrorHandler errorHandler: app.getErrorHandlers()){
+//        for(IExceptionHandler errorHandler: app.getErrorHandlers()){
 //            if (throwable.getClass().equals(errorHandler.getErrorType())){
-//                errorHandler.handleError(context, throwable);
+//                errorHandler.handleException(context, throwable);
 //                return;
 //            }
 //        }
 //        System.out.println("Using the default error Manager");
-//        app.getDefaultErrorHandler().handleError(context, throwable);
+//        app.getDefaultErrorHandler().handleException(context, throwable);
 //    }
 }

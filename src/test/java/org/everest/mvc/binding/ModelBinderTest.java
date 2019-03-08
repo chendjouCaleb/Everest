@@ -1,12 +1,14 @@
 package org.everest.mvc.binding;
 import org.joda.time.DateTime;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class ModelBinderTest {
@@ -27,8 +29,8 @@ public class ModelBinderTest {
         values.put("name", "voie lactée");
 
         Luminary luminary = modelBinder.bind(Luminary.class, values);
-        Assert.assertEquals(20, luminary.getDistance());
-        Assert.assertEquals("voie lactée", luminary.getName());
+        assertEquals(20, luminary.getDistance());
+        assertEquals("voie lactée", luminary.getName());
     }
 
     @Test
@@ -41,11 +43,11 @@ public class ModelBinderTest {
 
         Galaxy galaxy = modelBinder.bind(Galaxy.class, values);
         logger.info(galaxy.toString());
-        Assert.assertEquals(20, galaxy.getDistance());
-        Assert.assertEquals("voie lactée", galaxy.getName());
-        Assert.assertArrayEquals(new String[]{"soleil", "VY Canis Majoris"}, galaxy.getStars());
+        assertEquals(20, galaxy.getDistance());
+        assertEquals("voie lactée", galaxy.getName());
+        assertArrayEquals(new String[]{"soleil", "VY Canis Majoris"}, galaxy.getStars());
         DateTime dateTime = new DateTime(1996,12,12,0,0,0);
-        Assert.assertEquals(dateTime, galaxy.getDiscoveryDate());
+        assertEquals(dateTime, galaxy.getDiscoveryDate());
 
     }
 

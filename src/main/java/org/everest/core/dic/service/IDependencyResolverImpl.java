@@ -1,34 +1,21 @@
 package org.everest.core.dic.service;
 
-import dic.AutoInject;
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.beanutils.MethodUtils;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.logging.log4j.CloseableThreadContext;
-import org.everest.core.dic.DicUtils;
 import org.everest.core.dic.FactoryInstance;
 import org.everest.core.dic.Instance;
 import org.everest.core.dic.TypeInstance;
-import org.everest.core.dic.contract.IRetrieverService;
 import org.everest.core.dic.contract.IDependencyResolver;
-import org.everest.core.dic.decorator.AutoWired;
-import org.everest.core.dic.exception.DependencyResolutionException;
+import org.everest.core.dic.contract.IRetrieverService;
 import org.everest.core.dic.exception.InstanceException;
-import org.everest.decorator.Factory;
 import org.everest.utils.ReflexionUtils;
 import org.everest.utils.Utils;
-import org.joda.time.chrono.AssembledChronology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class IDependencyResolverImpl implements IDependencyResolver {
     Logger logger = LoggerFactory.getLogger(IDependencyResolverImpl.class);

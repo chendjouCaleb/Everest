@@ -1,8 +1,9 @@
 package org.everest.mvc.infrastructure;
 
 import org.everest.mvc.controller.UserController;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteBuilderTest {
     private Logger logger = LoggerFactory.getLogger(RouteBuilderTest.class);
@@ -19,7 +20,7 @@ public class RouteBuilderTest {
     private UserController controller = new UserController();
     private RouteBuilder routeBuilder = new RouteBuilder();
     private Map<String, String> params = new HashMap<>();
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         List list = new ArrayList();
         list.add(controller);

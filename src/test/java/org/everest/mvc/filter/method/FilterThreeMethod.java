@@ -1,12 +1,11 @@
 package org.everest.mvc.filter.method;
 
+import Everest.Http.HttpRequest;
 import org.everest.decorator.RequestFilter;
 import org.everest.mvc.filter.Filter;
 import org.everest.mvc.filter.annatotion.FilterThree;
-import org.everest.mvc.httpContext.Request;
-import org.everest.mvc.httpContext.Response;
+import Everest.Http.HttpResponse;
 import org.everest.mvc.result.IFilterResult;
-import org.everest.mvc.result.Render;
 
 @RequestFilter
 public class FilterThreeMethod extends Filter<FilterThree> {
@@ -15,7 +14,7 @@ public class FilterThreeMethod extends Filter<FilterThree> {
 
     }
 
-    public IFilterResult execute(Request request, Response Response) {
+    public IFilterResult execute(HttpRequest httpRequest, HttpResponse HttpResponse) {
         return RouteRedirection("");
     }
 }

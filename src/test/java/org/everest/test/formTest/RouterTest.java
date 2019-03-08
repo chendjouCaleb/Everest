@@ -1,6 +1,6 @@
 package org.everest.test.formTest;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RouterTest {
     Class<?> controllers[] = {UserController.class, PostController.class};

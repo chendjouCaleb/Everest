@@ -1,10 +1,10 @@
 package org.everest.mvc.http;
 
 public class CORSConfig {
-    Boolean allowCredentials = true;
-    String allowedOrigin;
-    String allowedMethods;
-    String allowedHeaders = "Origin, Content-Type, X-Auth-Token, Authorization";
+   private Boolean allowCredentials = true;
+   private String allowedOrigin;
+   private String allowedMethods;
+   private String allowedHeaders = "Origin, Content-Type, X-Auth-Token, Authorization";
 
     public Boolean getAllowCredentials() {
         return allowCredentials;

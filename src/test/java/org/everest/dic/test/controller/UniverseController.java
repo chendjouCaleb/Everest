@@ -1,17 +1,13 @@
 package org.everest.dic.test.controller;
 
-import dic.AutoInject;
 import org.everest.core.dic.Container;
 import org.everest.core.dic.decorator.AfterContainerInitilized;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.core.dic.decorator.Bean;
 import org.everest.core.dic.decorator.Resolve;
-import org.everest.decorator.Component;
-import org.everest.decorator.Instance;
-import org.everest.dic.test.component.*;
-import org.everest.dic.test.service.GalaxyService;
+import org.everest.dic.test.component.BlackHoleComponent;
+import org.everest.dic.test.component.HeapComponent;
+import org.everest.dic.test.component.NebularComponent;
 import org.everest.dic.test.service.IGalaxyService;
-import org.everest.dic.test.service.PlanetService;
 
 
 public class UniverseController extends LuminaryController {

@@ -1,6 +1,6 @@
 package org.everest.service;
 
-import dic.AutoInject;
+import org.everest.core.dic.decorator.Resolve;
 import org.everest.decorator.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class EmailMessage extends SendMessage{
     public EmailMessage(){
 
     }
-    @AutoInject
+    @Resolve
     private Message message;
 
     private String destinator;

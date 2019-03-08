@@ -7,8 +7,9 @@ import org.everest.decorator.Factory;
 import org.everest.decorator.Instance;
 import org.everest.decorator.Repository;
 import org.everest.utils.ReflexionUtils;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class ContainerFilterTest {
@@ -26,7 +27,7 @@ public class ContainerFilterTest {
     private List<Class> rawClasses = new ArrayList<>();
     private ContainerFilter containerFilter;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         containerFilter = new ContainerFilter();
         rawClasses = ReflexionUtils.getClasses("org.everest.dic.test.builder","org.everest.dic.test.component",
