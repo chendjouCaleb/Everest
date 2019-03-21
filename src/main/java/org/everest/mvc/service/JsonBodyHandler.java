@@ -31,7 +31,7 @@ public class JsonBodyHandler implements IRequestBodyHandler {
                 throw new InputOutputException(e);
             }
 
-        String value =builder.toString();
+        String value = builder.toString();
         return  service.toObject(value, type);
     }
 

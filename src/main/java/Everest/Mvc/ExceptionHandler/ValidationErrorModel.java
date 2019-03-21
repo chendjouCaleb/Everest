@@ -33,4 +33,12 @@ public class ValidationErrorModel extends ErrorResponseModel{
     public void setObjectErrors(List<String> objectErrors) {
         this.objectErrors = objectErrors;
     }
+
+    @Override
+    public String toString() {
+        return "ValidationErrorModel{" +
+                "fieldErrors=" + fieldErrors +
+                ", objectErrors=" + objectErrors +
+                '}';
+    }
 }

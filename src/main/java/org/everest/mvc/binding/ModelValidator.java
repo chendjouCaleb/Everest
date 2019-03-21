@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.*;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,23 @@ public class ModelValidator implements IModelValidator {
         if (!value.matches(pattern)){
             throw new ObjectValidationException(errorMessage);
         }
+    }
+
+    @Override
+    public BindingState validate(Object object, Method method, Object[] params) {
+        BindingState state = new BindingState();
+
+        Set<ConstraintViolation<Object>> er = validator.forExecutables().validateParameters(object, method, params);
+        for (ConstraintViolation violation : er) {
+            String key = violation.getPropertyPath().toString();
+            if (key.equals("")) {
+                state.addError(violation.getMessage());
+            } else {
+                state.addError(key, violation.getMessage());
+            }
+        }
+
+        return state;
     }
 
     public void setValidator(Validator validator) {

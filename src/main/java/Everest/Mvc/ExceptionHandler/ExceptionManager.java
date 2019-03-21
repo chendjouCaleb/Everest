@@ -37,8 +37,10 @@ public class ExceptionManager {
 
         try {
             IExceptionHandler exceptionHandler = handlerProvider.getExceptionHandler(rootException.getClass());
+            logger.info("Exception handlers: {}.", exceptionHandler.getClass());
             exceptionHandler.handleException(exceptionContext);
         }catch (NoSuchElementException e){
+            logger.info("The default exception handlers is used.");
             defaultExceptionHandler.handleException(exceptionContext);
         }
 

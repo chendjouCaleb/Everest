@@ -106,4 +106,9 @@ public abstract class HttpResponse {
      * @param content Content to write in response
      */
     public abstract void write(String content);
+
+    /**
+     * Reset the http response.
+     */
+    public abstract void reset();
 }

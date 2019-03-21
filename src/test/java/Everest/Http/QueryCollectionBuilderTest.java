@@ -26,8 +26,16 @@ class QueryCollectionBuilderTest {
     }
 
     @Test
+    void WithOneKeyValue(){
+        QueryCollection collection = new QueryCollectionBuilder("name=Facult%C3%A9%20de%20G%C3%A9nie%20Industrielle")
+                .parse().getCollection();
+
+        System.out.println(collection.get("name"));
+    }
+
+    @Test
     void simpleKeyValue(){
-        QueryCollection collection = new QueryCollectionBuilder("?name1=value1&name2=value2")
+        QueryCollection collection = new QueryCollectionBuilder("name1=value1&name2=value2")
                 .parse().getCollection();
         assertEquals(2, collection.size());
 

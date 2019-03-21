@@ -1,13 +1,17 @@
 package org.everest.mvc.variableResolver.decorator;
 
-import org.everest.mvc.variableResolver.resolver.byAnnotation.RequestBodyResolver;
+import Everest.Mvc.ValueResolver.AnnotationResolver.RequestBodyResolverValueResolver;
+import Everest.Mvc.ValueResolver.ValueResolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@ResolvedBy(RequestBodyResolver.class)
+/**
+ * @deprecated Use {@link Everest.Mvc.ValueResolver.Annotations.BodyValue} instead.
+ */
+@ValueResolver(RequestBodyResolverValueResolver.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface RequestBody {

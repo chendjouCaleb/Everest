@@ -25,6 +25,7 @@ public class BindingState {
         return errors;
     }
 
+    public BindingState(){}
     public BindingState(Object o){
         this.object = o;
         validate();

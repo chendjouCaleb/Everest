@@ -7,6 +7,9 @@ import Everest.Middleware.MiddlewarePipelineConfigurer;
 import Everest.Middleware.MiddlewareRegister;
 import Everest.Mvc.ExceptionHandler.ExceptionHandlerProvider;
 import Everest.Mvc.ExceptionHandler.ExceptionStatusCodeGetter;
+import Everest.Mvc.ValueResolver.IAnnotationValueResolver;
+import Everest.Mvc.ValueResolver.ITypedValueResolver;
+import Everest.Mvc.ValueResolver.ValueResolverProvider;
 import org.everest.core.dic.Container;
 import org.everest.core.dic.decorator.AfterContainerInitilized;
 import org.everest.core.event.EventEmitter;
@@ -26,9 +29,6 @@ import org.everest.mvc.infrastructure.RouteLoader;
 import Everest.Mvc.ResponseFormatter.IResponseFormatter;
 import org.everest.mvc.service.IRequestBodyHandler;
 import org.everest.mvc.service.RequestBodyHandler;
-import org.everest.mvc.variableResolver.IVariableResolverByAnnotation;
-import org.everest.mvc.variableResolver.IVariableResolverByType;
-import org.everest.mvc.variableResolver.RequestVariableResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +44,8 @@ public class ApplicationContext {
     private List<Object> eventListeners = new ArrayList<>();
     private List<IConverter> converters = new ArrayList<>();
     private List<IExceptionHandler> errorHandlers = new ArrayList<>();
-    private List<IVariableResolverByType> variableResolverByTypes = new ArrayList<>();
-    private List<IVariableResolverByAnnotation> variableResolverByAnnotations = new ArrayList<>();
+    private List<ITypedValueResolver> variableResolverByTypes = new ArrayList<>();
+    private List<IAnnotationValueResolver> variableResolverByAnnotations = new ArrayList<>();
     private List<IRequestBodyHandler> requestBodyHandlers = new ArrayList<>();
     private List<IResponseFormatter> responseBodyTransformers = new ArrayList<>();
     private List<ConstraintValidator> constraintValidators = new ArrayList<>();
@@ -60,8 +60,8 @@ public class ApplicationContext {
         container.addTypeFilter(new EventListenerClassFilter());
         container.addTypeFilter(new ConverterClassFilter());
         container.addTypeFilter(new ExceptionHandlerClassFilter());
-        container.addTypeFilter(new VariableResolverByAnnotationClassFilter());
-        container.addTypeFilter(new VariableResolverByTypeClassFilter());
+        container.addTypeFilter(new AnnotationValueResolverClassFilter());
+        container.addTypeFilter(new TypedValueResolverClassFilter());
         container.addTypeFilter(new ActionResultResultClassFilter());
         container.addTypeFilter(new RequestBodyHandlerClassFilter());
         container.addTypeFilter(new ResponseFormatterClassFilter());
@@ -130,19 +130,19 @@ public class ApplicationContext {
     }
 
     @AfterContainerInitilized
-    public void setVariableResolverByTypes(Container container) {
-        this.variableResolverByTypes = container.getRetrieverService().getObjectByInterface(IVariableResolverByType.class);
-        RequestVariableResolver variableResolver = container.getInstance(RequestVariableResolver.class);
-        variableResolverByTypes.forEach(variableResolver::addVariableResolverByType);
-        logger.info("Variable Resolver By Types = {}", variableResolverByTypes.size());
+    public void setValueTypeResolvers(Container container) {
+        this.variableResolverByTypes = container.getRetrieverService().getObjectByInterface(ITypedValueResolver.class);
+        ValueResolverProvider provider = container.getInstance(ValueResolverProvider.class);
+        variableResolverByTypes.forEach(provider::addResolver);
+        logger.info("Variable ValueResolver By Types = {}", variableResolverByTypes.size());
     }
 
     @AfterContainerInitilized
     public void setVariableResolverByAnnotations(Container container) {
-        this.variableResolverByAnnotations = container.getRetrieverService().getObjectByInterface(IVariableResolverByAnnotation.class);
-        RequestVariableResolver variableResolver = container.getInstance(RequestVariableResolver.class);
-        variableResolverByAnnotations.forEach(variableResolver::addVariableResolverByAnnotation);
-        logger.info("Variable Resolver By Annotations = {}", variableResolverByAnnotations.size());
+        this.variableResolverByAnnotations = container.getRetrieverService().getObjectByInterface(IAnnotationValueResolver.class);
+        ValueResolverProvider provider = container.getInstance(ValueResolverProvider.class);
+        variableResolverByAnnotations.forEach(provider::addResolver);
+        logger.info("Variable ValueResolver By Annotations = {}", variableResolverByAnnotations.size());
     }
 
     @AfterContainerInitilized
@@ -232,11 +232,11 @@ public class ApplicationContext {
         return errorHandlers;
     }
 
-    public List<IVariableResolverByType> getVariableResolverByTypes() {
+    public List<ITypedValueResolver> getVariableResolverByTypes() {
         return variableResolverByTypes;
     }
 
-    public List<IVariableResolverByAnnotation> getVariableResolverByAnnotations() {
+    public List<IAnnotationValueResolver> getVariableResolverByAnnotations() {
         return variableResolverByAnnotations;
     }
 

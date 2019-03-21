@@ -2,6 +2,8 @@ package Everest.Servlet.Http;
 
 import Everest.Core.Exception.InputOutputException;
 import Everest.Http.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -14,6 +16,7 @@ import java.util.Enumeration;
  * The {@link Everest.Http.HttpRequest} provider by servletAPI
  */
 public class ServletRequestImpl extends HttpRequest {
+    private Logger logger = LoggerFactory.getLogger(ServletRequestImpl.class);
     private HttpServletRequest servletRequest;
     private QueryCollection queryCollection;
     private FormCollection formCollection;
@@ -27,6 +30,7 @@ public class ServletRequestImpl extends HttpRequest {
         this.servletRequest = servletRequest;
 
         String queryString = servletRequest.getQueryString();
+        logger.info("Query string = {}", queryString);
 
         this.queryCollection = new QueryCollectionBuilder(queryString).parse().getCollection();
 
@@ -77,7 +81,7 @@ public class ServletRequestImpl extends HttpRequest {
 
     @Override
     public HeaderCollection headers() {
-        return null;
+        return headerCollection;
     }
 
     @Override

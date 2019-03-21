@@ -5,8 +5,10 @@ import Everest.Mvc.Result.EntityResult;
 import org.everest.mvc.binding.ObjectValidationException;
 import org.everest.mvc.http.ResponseEntity;
 import Everest.Http.HttpContext;
+import org.everest.mvc.model.ModelValidationException;
 import org.everest.mvc.result.ActionResult;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -14,8 +16,9 @@ public class ObjectValidationExceptionHandler implements IExceptionHandler {
 
     @Override
     public Collection<Class<? extends Throwable>> getExceptionTypes() {
-
-        return Collections.singleton(ObjectValidationException.class);
+        ArrayList<Class<? extends Throwable>> list = new ArrayList<>();
+        list.add(ObjectValidationException.class);
+        return list;
     }
 
     @Override

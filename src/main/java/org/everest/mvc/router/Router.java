@@ -1,7 +1,7 @@
 package org.everest.mvc.router;
 
+import Everest.Mvc.ValueResolver.MethodValueResolver;
 import org.everest.core.dic.decorator.AutoWired;
-import org.everest.mvc.variableResolver.RequestVariableResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +13,9 @@ public class Router {
     private Logger logger = LoggerFactory.getLogger(Router.class);
 
     @AutoWired
-    private RequestVariableResolver variableResolver;
+    private MethodValueResolver variableResolver;
     public Router() {
-        //variableResolver = new RequestVariableResolver();
+        //variableResolver = new MethodValueResolver();
     }
 
     public Route getCalledRoute(String pathInfo, String httpMethod) {

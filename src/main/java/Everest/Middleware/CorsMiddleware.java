@@ -17,11 +17,9 @@ public class CorsMiddleware implements IMiddleware {
     }
 
     public void execute(MiddlewareChain chain, HttpContext httpContext) {
-        if(httpContext.getRequest().method().equals("OPTIONS")){
-            httpContext.getResponse().setStatusCode(200);
-            httpContext.getResponse().write("");
-            configureCors(httpContext.getResponse());
-        }else {
+        httpContext.getResponse().setStatusCode(200);
+        configureCors(httpContext.getResponse());
+        if (!httpContext.getRequest().method().equals("OPTIONS")) {
             chain.executeNext(httpContext);
         }
     }

@@ -29,8 +29,12 @@ public class QueryCollectionBuilder {
             return this;
         }
 
-        // Remove the '?'
-        queryString = queryString.substring(1);
+        // Remove the the eventual '?'
+        if(queryString.startsWith("?")){
+            queryString = queryString.substring(1);
+        }
+
+
         String[] keyValues = queryString.split("&");
         for (String keyValue: keyValues){
             String[] keyValuePair= keyValue.split("=");

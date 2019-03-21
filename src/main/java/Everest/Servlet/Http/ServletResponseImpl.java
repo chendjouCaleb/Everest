@@ -5,6 +5,8 @@ import Everest.Core.Exception.InputOutputException;
 import Everest.Core.Exception.InvalidOperationException;
 import Everest.Http.HeaderCollection;
 import Everest.Http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.io.Writer;
  * The {@link Everest.Http.HttpResponse} provider by servletAPI
  */
 public class ServletResponseImpl extends HttpResponse {
+    private Logger logger = LoggerFactory.getLogger(ServletResponseImpl.class);
     private HttpServletResponse servletResponse;
 
     public ServletResponseImpl(HttpServletResponse servletResponse) {
@@ -22,6 +25,8 @@ public class ServletResponseImpl extends HttpResponse {
             throw new NullPointerException("The HttpServletResponse is null");
         }
         this.servletResponse = servletResponse;
+
+        servletResponse.setCharacterEncoding("UTF-8");
     }
 
     private Long contentLength;
@@ -49,7 +54,7 @@ public class ServletResponseImpl extends HttpResponse {
 
     @Override
     public void addHeader(String key, String value) {
-        servletResponse.setHeader(key, value);
+        servletResponse.addHeader(key, value);
     }
 
     @Override
@@ -104,6 +109,7 @@ public class ServletResponseImpl extends HttpResponse {
     @Override
     public Writer writer() {
         try {
+            logger.info("The response writer is called");
             return servletResponse.getWriter();
         }catch (IOException e) {
             throw new InputOutputException(e);
@@ -118,5 +124,10 @@ public class ServletResponseImpl extends HttpResponse {
         } catch (IOException e) {
             throw new InputOutputException(e);
         }
+    }
+
+    @Override
+    public void reset() {
+        servletResponse.reset();
     }
 }

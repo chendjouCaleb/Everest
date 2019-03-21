@@ -2,32 +2,20 @@ package Everest.Mvc.ExceptionHandler;
 
 public class ErrorResponseModel {
     public ErrorResponseModel(Throwable e){
-        classType = e.getClass().getSimpleName();
-        errorMessage = e.getMessage();
+        errorType = e.getClass().getSimpleName();
         message = e.getMessage();
-        cause = e.getMessage();
     }
-    private String classType;
-    private String uriResource;
-    private String errorMessage;
+    private String errorType;
+    private String helpLink;
     private String message;
-    private String cause;
     private int statusCode;
 
-    public String getClassType() {
-        return classType;
+    public String getErrorType() {
+        return errorType;
     }
 
-    public void setClassType(String classType) {
-        this.classType = classType;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setErrorType(String errorType) {
+        this.errorType = errorType;
     }
 
     public String getMessage() {
@@ -38,13 +26,6 @@ public class ErrorResponseModel {
         this.message = message;
     }
 
-    public String getCause() {
-        return cause;
-    }
-
-    public void setCause(String cause) {
-        this.cause = cause;
-    }
 
     public int getStatusCode() {
         return statusCode;
@@ -54,11 +35,21 @@ public class ErrorResponseModel {
         this.statusCode = statusCode;
     }
 
-    public String getUriResource() {
-        return uriResource;
+    public String getHelpLink() {
+        return helpLink;
     }
 
-    public void setUriResource(String uriResource) {
-        this.uriResource = uriResource;
+    public void setHelpLink(String helpLink) {
+        this.helpLink = helpLink;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorResponseModel{" +
+                "errorType='" + errorType + '\'' +
+                ", helpLink='" + helpLink + '\'' +
+                ", message='" + message + '\'' +
+                ", statusCode=" + statusCode +
+                '}';
     }
 }

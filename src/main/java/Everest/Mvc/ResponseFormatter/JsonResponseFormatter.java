@@ -2,8 +2,11 @@ package Everest.Mvc.ResponseFormatter;
 
 import Everest.Http.MediaType;
 import org.everest.mvc.service.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonResponseFormatter implements IResponseFormatter {
+    private Logger logger = LoggerFactory.getLogger(JsonResponseFormatter.class);
     private JsonConverter jsonConverter;
 
     public JsonResponseFormatter(JsonConverter jsonConverter) {
@@ -20,7 +23,9 @@ public class JsonResponseFormatter implements IResponseFormatter {
 
 
     public void writeResponseBody(ResponseFormatContext context) {
+        logger.info("Response object: {}", context.getObject());
         String response = jsonConverter.toJSON(context.getObject());
+        logger.info("Json response: {}", response);
         context.getHttpContext().getResponse().write(response);
     }
 }

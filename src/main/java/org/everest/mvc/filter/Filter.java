@@ -3,6 +3,9 @@ package org.everest.mvc.filter;
 import org.everest.mvc.result.*;
 
 public abstract class Filter<T> implements IFilter<T>{
+    @Override
+    public void init(T annotation) { }
+
     protected Next Next(){
         return new Next();
     }

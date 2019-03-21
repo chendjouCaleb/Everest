@@ -89,6 +89,11 @@ this.contentLength = contentLength;
         }
     }
 
+    @Override
+    public void reset() {
+
+    }
+
     public void setContentLength(Long contentLength) {
         this.contentLength = contentLength;
     }

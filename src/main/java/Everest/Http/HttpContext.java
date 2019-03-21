@@ -1,6 +1,6 @@
 package Everest.Http;
 
-import org.everest.mvc.context.RouteContext;
+import org.everest.mvc.context.RouteData;
 import org.everest.mvc.filter.FilterChain;
 import org.everest.mvc.infrastructure.RouteModel;
 import org.everest.mvc.binding.BindingState;
@@ -8,7 +8,6 @@ import org.everest.mvc.model.Model;
 import org.everest.mvc.router.Route;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * Encapsulates all HTTP-specific information about an individual HTTP request.
@@ -34,7 +33,7 @@ public abstract class HttpContext {
     /**
      * Gets or sets a key/value collection that can be used to share data within the scope of this request.
      */
-    private ItemCollection items;
+    private ItemCollection items = new ItemCollection();
 
     /**
      * Additional options for the HttpContext
@@ -48,7 +47,7 @@ public abstract class HttpContext {
     private BindingState bindingState;
     private Object requestBody;
     private RouteModel routeModel;
-    private RouteContext routeContext;
+    private RouteData routeData;
     private boolean restContext;
 
     public HttpRequest getRequest() {
@@ -142,12 +141,12 @@ public abstract class HttpContext {
         this.routeModel = routeModel;
     }
 
-    public RouteContext getRouteContext() {
-        return routeContext;
+    public RouteData getRouteData() {
+        return routeData;
     }
 
-    public void setRouteContext(RouteContext routeContext) {
-        this.routeContext = routeContext;
+    public void setRouteData(RouteData routeData) {
+        this.routeData = routeData;
     }
 
     public Method getMethod(){
@@ -170,5 +169,13 @@ public abstract class HttpContext {
 
     public void setOptions(HttpContextOptions options) {
         this.options = options;
+    }
+
+    public ConnectionInfo getConnectionInfo() {
+        return connectionInfo;
+    }
+
+    public ItemCollection getItems() {
+        return items;
     }
 }

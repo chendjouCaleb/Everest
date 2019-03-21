@@ -11,7 +11,7 @@ public class HttpContextOptions implements Map<Object, Object>{
     private Map<Object, Object> items = new HashMap<>();
 
     public HttpContextOptions(){
-        this.setResponseContentType(MediaType.APPLICATION_JSON_VALUE);
+        this.setResponseContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
     }
 
     @Override

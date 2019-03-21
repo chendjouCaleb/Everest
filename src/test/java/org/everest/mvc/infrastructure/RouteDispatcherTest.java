@@ -1,6 +1,6 @@
 package org.everest.mvc.infrastructure;
 
-import org.everest.mvc.context.RouteContext;
+import org.everest.mvc.context.RouteData;
 import org.everest.mvc.controller.CommentController;
 import org.everest.mvc.controller.UserController;
 import Everest.Http.HttpMethod;
@@ -48,24 +48,24 @@ public class RouteDispatcherTest {
     @Test
     public void getRouteContext(){
         RouteModel routeModel = dispatcher.getCalledRoute(routeModels, "/user/1", "GET");
-        RouteContext routeContext = dispatcher.createRouteContext(routeModel, "/user/1");
-        assertEquals(1, routeContext.getParameterNames().size());
-        assertEquals(1, routeContext.getParameters().size());
-        assertEquals("1", routeContext.getParameters().get("id"));
+        RouteData routeData = dispatcher.createRouteContext(routeModel, "/user/1");
+        assertEquals(1, routeData.getParameterNames().size());
+        assertEquals(1, routeData.getParameters().size());
+        assertEquals("1", routeData.getParameters().get("id"));
     }
     @Test
     public void getRouteContext_With_Complex_url(){
         String urlMapping = "/user/{userId}/comment/{commentId}/response/{responseID}.{length}-{id}";
         String url = "/user/10/comment/20/response/30.25-id";
         RouteModel routeModel = dispatcher.getCalledRoute(routeModels, url, "GET");
-        RouteContext routeContext = dispatcher.createRouteContext(routeModel, url);
-        assertEquals(5, routeContext.getParameterNames().size());
-        assertEquals(5, routeContext.getParameters().size());
-        assertEquals("id", routeContext.getParameter("id"));
-        assertEquals(new Integer(10), routeContext.getParameter("userId", Integer.class));
-        assertEquals(new Integer(20), routeContext.getParameter("commentId", Integer.class));
-        assertEquals(new Integer(30), routeContext.getParameter("responseID", Integer.class));
-        assertEquals(new Integer(25), routeContext.getParameter("length", Integer.class));
+        RouteData routeData = dispatcher.createRouteContext(routeModel, url);
+        assertEquals(5, routeData.getParameterNames().size());
+        assertEquals(5, routeData.getParameters().size());
+        assertEquals("id", routeData.getParameter("id"));
+        assertEquals(new Integer(10), routeData.getParameter("userId", Integer.class));
+        assertEquals(new Integer(20), routeData.getParameter("commentId", Integer.class));
+        assertEquals(new Integer(30), routeData.getParameter("responseID", Integer.class));
+        assertEquals(new Integer(25), routeData.getParameter("length", Integer.class));
 
     }
 

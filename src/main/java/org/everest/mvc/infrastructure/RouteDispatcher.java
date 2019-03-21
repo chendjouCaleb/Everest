@@ -2,7 +2,7 @@ package org.everest.mvc.infrastructure;
 
 import org.everest.decorator.Instance;
 import org.everest.exception.RouteNotFoundException;
-import org.everest.mvc.context.RouteContext;
+import org.everest.mvc.context.RouteData;
 import org.everest.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +28,12 @@ public class RouteDispatcher {
         throw new RouteNotFoundException("Aucune route correspondant à " + url + "#" + verb + " n'a été trouvée");
     }
 
-    public RouteContext createRouteContext(RouteModel routeModel, String url){
-        RouteContext routeContext = new RouteContext();
-        routeContext.setParameterNames(extractParamsName(routeModel.getMapping()));
-        routeContext.setParameters(routeParams(routeModel.getMapping(), url));
+    public RouteData createRouteContext(RouteModel routeModel, String url){
+        RouteData routeData = new RouteData();
+        routeData.setParameterNames(extractParamsName(routeModel.getMapping()));
+        routeData.setParameters(routeParams(routeModel.getMapping(), url));
 
-        return routeContext;
+        return routeData;
 
     }
 

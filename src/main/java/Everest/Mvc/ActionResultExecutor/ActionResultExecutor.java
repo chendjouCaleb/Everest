@@ -1,11 +1,14 @@
 package Everest.Mvc.ActionResultExecutor;
 
+import Everest.Core.Exception.InputOutputException;
 import Everest.Http.HttpContext;
 import Everest.Http.HttpResponse;
 import Everest.Http.StatusCode;
 import Everest.Mvc.Result.EntityResult;
 import org.everest.decorator.Instance;
 import Everest.Mvc.ActionInvocation.ActionInvocationResult;
+
+import java.io.IOException;
 
 /**
  * The component that execute the result returned by an action methods
@@ -53,6 +56,10 @@ public class ActionResultExecutor {
             result.setObjectResult(entityResult);
         }
 
-        resultExecutor.execute(context, result.getObjectResult());
+        try {
+            resultExecutor.execute(context, result.getObjectResult());
+        } catch (IOException e) {
+            throw new InputOutputException(e);
+        }
     }
 }
